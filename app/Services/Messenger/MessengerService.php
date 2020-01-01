@@ -12,10 +12,6 @@ class MessengerService extends Service
 {
 
     protected $thread, $participant, $message, $call;
-//    public function __construct(Request $request)
-//    {
-//        parent::__construct($request);
-//    }
 
     public function authorize($thread = null, $load = null)
     {
@@ -299,7 +295,6 @@ class MessengerService extends Service
                     }
                     else $error = $call['error'];
                 break;
-
                 case 'join_call':
                     $call = CallService::JoinCall($this->thread, $this->currentProfile());
                     if($call['state']){
