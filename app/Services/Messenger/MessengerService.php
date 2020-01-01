@@ -4,6 +4,7 @@ namespace App\Services\Messenger;
 
 use App\Services\Service;
 use App\Models\Messages\Thread;
+use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Validator;
 use Exception;
@@ -213,6 +214,13 @@ class MessengerService extends Service
                     }
                     else $error = $settings['error'];
                 break;
+                case 'store_messenger_avatar':
+                    $avatar = self::StoreMessengerAvatar($this->request, $this->currentProfile());
+                    if($avatar['state']){
+                        $data = $avatar['data'];
+                    }
+                    else $error = $avatar['error'];
+                break;
                 case 'store_private':
                     $thread = ThreadService::StorePrivateThread($this->request, $this->currentProfile());
                     if($thread['state']){
@@ -399,6 +407,25 @@ class MessengerService extends Service
         return [
             'state' => false,
             'error' => $error ? $error : "Unable to authorize your request"
+        ];
+    }
+
+    private static function StoreMessengerAvatar(Request $request, $model)
+    {
+        $dispatch = new UploadService($request);
+        $dispatch = $dispatch->newUpload(strtolower(class_basename($model)).'_photo');
+        if(!$dispatch['state']){
+            return [
+                'state' => false,
+                'error' => $dispatch['error']
+            ];
+        }
+        $model->info->picture = $dispatch['text'];
+        $model->info->save();
+        session()->flash('info_message', 'Avatar uploaded');
+        return [
+            "state" => true,
+            "data" => $dispatch['text']
         ];
     }
 

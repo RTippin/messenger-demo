@@ -2219,6 +2219,21 @@ window.ThreadManager = (function () {
                 fail_alert : true,
                 bypass : true
             })
+        },
+        uploadMessengerAvatar : function () {
+            let data = new FormData();
+            data.append('image_file', $('#messenger_avatar_upload')[0].files[0]);
+            data.append('type', 'messenger_avatar');
+            $('.tooltip').remove();
+            TippinManager.alert().fillModal({loader : true, no_close : true, body : null, title : 'Uploading...'});
+            TippinManager.xhr().payload({
+                route : '/messenger/update/messenger_avatar',
+                data : data,
+                success : function(){
+                    window.location.reload()
+                },
+                fail_alert : true
+            });
         }
     },
     Calls = {

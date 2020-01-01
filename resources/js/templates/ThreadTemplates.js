@@ -55,7 +55,7 @@ window.ThreadTemplates = (function () {
                 '</div>'
         },
         global_settings : function(data){
-            return '<div class="form-group col-12 text-center">\n' +
+            return '<div class="form-group col-12">\n' +
                 '<label class="control-label d-block h5 font-weight-bold" for="online_status_switch">Online Status</label>\n' +
                 '<div id="online_status_switch" class="btn-group btn-group-toggle" data-toggle="buttons">\n' +
                 '<label data-toggle="tooltip" title="Online" data-placement="left" class="pointer_area btn btn-success '+(data.online_status === 1 ? 'active glowing_btn' : '')+'">\n' +
@@ -68,7 +68,12 @@ window.ThreadTemplates = (function () {
                 '<input type="radio" name="online_status" value="0" autocomplete="off" '+(data.online_status === 0 ? 'checked' : '')+'><i class="fas fa-power-off"></i>\n' +
                 '</label>\n' +
                 '</div>\n' +
-                '</div><hr>'+
+                '<div class="float-right mt-n3">' +
+                '    <div data-toggle="tooltip" title="Upload avatar" data-placement="left" onclick="$(\'#messenger_avatar_upload\').click()" class="pointer_area d-inline">\n' +
+                '         <i class="mr-2 fas fa-cloud-upload-alt"></i><img alt="Avatar" height="60" width="60" class="rounded-circle avatar-is-'+(data.online_status === 1 ? "online" : data.online_status === 2 ? "away" : "offline")+'" src="'+TippinManager.common().slug+'"/>\n' +
+                '    </div>\n' +
+                '    <input onchange="ThreadManager.newForms().uploadMessengerAvatar()" class="NS" id="messenger_avatar_upload" type="file" name="messenger_avatar_upload" accept="image/*">'+
+                '</div></div><hr>'+
                 '<table class="table mb-0 table-sm table-hover"><tbody>\n' +
                 '<tr class="'+(data.message_popups ? 'bg-light' : '')+'">\n' +
                 '<td class="pointer_area" onclick="$(\'#message_popups\').click()"><div class="h4 mt-1"><i class="fas fa-caret-right"></i> <span class="h5">Message Popups</span></div></td>\n' +
