@@ -1,0 +1,27 @@
+#my_video_ctrn.mine_wb_call {
+  position: fixed;
+  right: 2px;
+  top: 58px;
+  width: 140px;
+}
+
+#my_video_ctrn.mine_video_call {
+  position: fixed;
+  left: 50%;
+  bottom: 58px;
+  margin-left: -120px;
+  width: 240px;
+}
+
+#videos{
+  margin-bottom: 60px;
+}
+
+.group_stream.embed-responsive{
+  max-height: calc(100vh*.80);
+}
+
+.medium-image-call{
+  height: 150px;
+  width: 150px;
+}

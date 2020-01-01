@@ -1,0 +1,449 @@
+<?php
+
+namespace App\Services\Messenger;
+
+use App\Services\Service;
+use App\Models\Messages\Thread;
+use Illuminate\Http\Request;
+use Validator;
+use Exception;
+
+class MessengerService extends Service
+{
+
+    protected $thread, $participant, $message, $call;
+//    public function __construct(Request $request)
+//    {
+//        parent::__construct($request);
+//    }
+
+    public function authorize($thread = null, $load = null)
+    {
+        if($thread instanceof Thread){
+            $_thread = ($load ? $thread->load($load) : $thread);
+        }
+        else if($thread){
+            $_thread = ThreadService::LocateThread($thread, $load);
+        }
+        else{
+            $_thread = ThreadService::LocateThread($this->request->thread_id, $load);
+        }
+        if($_thread && $_thread instanceof Thread){
+            $participant = ParticipantService::LocateParticipant($_thread, $this->currentProfile());
+            if($participant){
+                $this->thread = $_thread;
+                $this->participant = $participant;
+                return [
+                    "state" => true,
+                    "participant" => $participant,
+                    "thread" => $_thread
+                ];
+            }
+        }
+        return [
+            "state" => false
+        ];
+    }
+
+    public function routeRequest($type, $auth = true)
+    {
+        $data = null;
+        $error = null;
+        $type_loads = [
+            'load_thread' => ['participants.owner.info', 'activeCall', 'messages', 'calls'],
+            'load_private' => ['participants', 'messages.owner.info', 'activeCall', 'calls.participants.owner'],
+            'load_group' => ['participants.owner.info', 'participants.owner.messengerSettings', 'activeCall', 'messages.owner.info', 'calls.participants.owner'],
+            'bobble_heads' => ['participants.owner.info', 'participants.owner.messengerSettings'],
+            'recent_messages' => ['participants.owner', 'messages.owner.info', 'calls.participants.owner'],
+            'messages' => ['participants.owner', 'messages.owner.info', 'calls.participants.owner'],
+            'thread_logs' => ['messages.owner.info', 'calls.participants.owner'],
+            'participants' => ['participants.owner.info', 'participants.owner.messengerSettings'],
+            'add_participants' => ['participants.owner.info', 'participants.owner.messengerSettings'],
+            'group_settings' => ['participants'],
+            'mark_read' => ['participants'],
+            'group_invite' => ['groupInviteLink.thread'],
+            'check_archive_thread' => ['participants.owner.info', 'messages'],
+            'view_call' => ['participants.owner.info', 'activeCall']
+        ];
+        $authorize = $auth ? $this->authorize(null, (isset($type_loads[$type]) ? $type_loads[$type] : null)) : ['state' => true];
+        if($authorize['state']) {
+            switch ($type){
+                case 'initiate_thread':
+                    $thread = ThreadService::LocateThread($this->request->thread_id, null);
+                    if($thread){
+                        if(ThreadService::IsPrivate($thread) && $this->authorize($thread, $type_loads['load_private'])['state']){
+                            ParticipantService::MarkRead($this->participant);
+                            $data = MessengerRepo::MakePrivateThread($this->thread, $this->currentProfile());
+                        }
+                        if(ThreadService::IsGroup($thread) && $this->authorize($thread, $type_loads['load_group'])['state']){
+                            ParticipantService::MarkRead($this->participant);
+                            $data = MessengerRepo::MakeGroupThread($this->thread, $this->currentProfile());
+                        }
+                    }
+                    $error = 'Unable to locate that conversation';
+                break;
+                case 'load_thread':
+                    $data = MessengerRepo::MakeThread($this->thread, $this->currentProfile());
+                break;
+                case 'load_private':
+                    ParticipantService::MarkRead($this->participant);
+                    $data = MessengerRepo::MakePrivateThread($this->thread, $this->currentProfile());
+                break;
+                case 'is_unread':
+                    $data = ThreadService::IsUnread($this->thread, $this->participant);
+                break;
+                case 'load_group':
+                    ParticipantService::MarkRead($this->participant);
+                    $data = MessengerRepo::MakeGroupThread($this->thread, $this->currentProfile());
+                break;
+                case 'mark_read':
+                    $data = ParticipantService::MarkRead($this->participant);
+                break;
+                case 'bobble_heads':
+                    $data = MessengerRepo::MakeBobbleHeads($this->thread, $this->currentProfile());
+                break;
+                case 'recent_messages':
+                    $data = MessengerRepo::MakeThreadMessages($this->thread, MessageService::PullMessagesMethod($this->thread));
+                break;
+                case 'messages':
+                    $data = MessengerRepo::MakeThreadMessages($this->thread, MessageService::PullMessagesMethod($this->thread, 25, ['type' => 'history', 'message_id' => $this->request->message_id]));
+                break;
+                case 'thread_logs':
+                    $data = MessengerRepo::MakeThreadMessages($this->thread, MessageService::PullMessagesMethod($this->thread, null, ['type' => 'logs']));
+                break;
+                case 'participants':
+                    $error = "Permission denied";
+                    if(ThreadService::IsGroup($this->thread)){
+                        $data = [
+                            "participants" => ThreadService::OtherParticipants($this->thread, $this->participant),
+                            "owner" => ThreadService::IsThreadAdmin($this->thread, $this->participant)
+                        ];
+                    }
+                break;
+                case 'add_participants':
+                    $error = "Permission denied";
+                    if(ThreadService::CanAddParticipants($this->thread, $this->participant)){
+                        $data = ThreadService::ContactsFilterAdd($this->thread, $this->currentProfile()->load(['networks.party.info', 'networks.party.messengerSettings']));
+                    }
+                break;
+                case 'group_settings':
+                    $error = "Permission denied";
+                    if(ThreadService::IsThreadAdmin($this->thread, $this->participant)){
+                        $data = MessengerRepo::MakeGroupSettings($this->thread);
+                    }
+                break;
+                case 'group_invite':
+                    $error = "Permission denied";
+                    if(ThreadService::IsThreadAdmin($this->thread, $this->participant)){
+                        $verify = InvitationService::ValidateInviteLink($this->thread->groupInviteLink);
+                        $data = [
+                            "has_invite" => $verify,
+                            "invite" => $verify ? MessengerRepo::MakeGroupInvite($this->thread->groupInviteLink) : null
+                        ];
+                    }
+                break;
+                case 'archive_thread':
+                    $check = ThreadService::CheckArchiveThread($this->thread, $this->participant);
+                    if($check['state']){
+                        $data = $check['data'];
+                    }
+                    else $error = $check['error'];
+                break;
+                case 'invitation_join':
+                    $check = InvitationService::CanJoinWithInvite($this->request, $this->currentProfile());
+                    if($check['state']){
+                        $data = $check['data'];
+                    }
+                    else $error = $check['error'];
+                break;
+                case 'view_call':
+                    $view = CallService::ViewCall($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    if($view['state']){
+                        $data = $view['data'];
+                    }
+                    else $error = $view['error'];
+                break;
+                case 'call_heartbeat':
+                    $heartbeat = CallService::CallHeartbeat($this->request, $this->thread, $this->currentProfile());
+                    if($heartbeat['state']){
+                        $data = $heartbeat['data'];
+                    }
+                    else $error = $heartbeat['error'];
+                break;
+            }
+            if($data){
+                return [
+                    'state' => true,
+                    'data' => $data
+                ];
+            }
+        }
+        return [
+            'state' => false,
+            'error' => $error ? $error : "Unable to authorize your request"
+        ];
+    }
+
+    public function routeCreate($type, $auth = true)
+    {
+        $data = null;
+        $error = null;
+        $type_loads = [
+            'store_message' => ['participants.owner.devices'],
+            'leave_group' => ['participants.owner.devices'],
+            'add_group_participants' => ['participants'],
+            'admin_group_settings' => ['participants'],
+            'store_group_invitation' => ['participants', 'groupInviteLink'],
+            'participant_admin_grant' => ['participants'],
+            'reload_participant' => ['participants'],
+            'send_knock' => ['participants.owner.devices', 'participants.owner.messengerSettings'],
+            'initiate_call' => ['participants.owner', 'activeCall'],
+            'join_call' => ['participants.owner', 'activeCall.participants']
+        ];
+        $authorize = $auth ? $this->authorize(null, (isset($type_loads[$type]) ? $type_loads[$type] : null)) : ['state' => true];
+        if($authorize['state']) {
+            switch ($type) {
+                case 'send_knock':
+                    $knock = ThreadService::SendKnock($this->thread, $this->participant, $this->currentProfile());
+                    if($knock['state']){
+                        $data = $knock['data'];
+                    }
+                    else $error = $knock['error'];
+                break;
+                case 'store_messenger_settings':
+                    $settings = self::StoreMessengerSettings($this->request, $this->currentProfile());
+                    if($settings['state']){
+                        $data = MessengerRepo::MakeMessengerSettings($settings['model']);
+                    }
+                    else $error = $settings['error'];
+                break;
+                case 'store_private':
+                    $thread = ThreadService::StorePrivateThread($this->request, $this->currentProfile());
+                    if($thread['state']){
+                        $data = $thread['thread_id'];
+                    }
+                    else $error = $thread['error'];
+                break;
+                case 'store_group':
+                    $thread = ThreadService::StoreGroupThread($this->request, $this->currentProfile());
+                    if($thread['state']){
+                        $data = $thread['thread_id'];
+                    }
+                    else $error = $thread['error'];
+                break;
+                case 'store_message':
+                    $message = MessageService::StoreNewMessage($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    if($message['state']){
+                        ParticipantService::MarkRead($this->participant);
+                        $data = MessengerRepo::MakeMessage($this->thread, $message['data']);
+                    }
+                    else $error = $message['error'];
+                break;
+                case 'add_group_participants':
+                    $adding = ParticipantService::AddParticipantsGroupCheck($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    if($adding['state']){
+                        $data = $adding['data'];
+                    }
+                    else $error = $adding['error'];
+                break;
+                case 'admin_group_settings':
+                    $settings = ThreadService::StoreGroupSettings($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    if($settings['state']){
+                        $data = $settings['data'];
+                    }
+                    else $error = $settings['error'];
+                break;
+                case 'store_group_invitation':
+                    $invitation = InvitationService::GenerateGroupInvitation($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    if($invitation['state']){
+                        $data = $invitation['data'];
+                    }
+                    else $error = $invitation['error'];
+                break;
+                case 'participant_admin_grant':
+                    $action = ParticipantService::ModifyParticipantAdmin($this->request, $this->thread, $this->participant, $this->currentProfile(), true);
+                    if($action['state']){
+                        $data = $action['data'];
+                    }
+                    else $error = $action['error'];
+                break;
+                case 'store_avatar':
+                    $avatar = ThreadService::UpdateGroupAvatar($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    if($avatar['state']){
+                        $data = $avatar['data'];
+                    }
+                    else $error = $avatar['error'];
+                break;
+                case 'reload_participant':
+                    $party = ParticipantService::LocateParticipantWithID($this->thread, $this->request->input('p_id'));
+                    $admin = ThreadService::IsThreadAdmin($this->thread, $this->participant);
+                    if($party){
+                        $data = [
+                            'participant' => $party,
+                            'admin' => $admin
+                        ];
+                    }
+                    else $error = 'Not found';
+                break;
+                case 'invitation_join':
+                    $join = InvitationService::JoinParticipantWithInvite($this->request, $this->currentProfile());
+                    if($join['state']){
+                        $data = true;
+                    }
+                    else $error = $join['error'];
+                break;
+                case 'initiate_call':
+                    $call = CallService::StartNewCall($this->currentProfile(), $this->thread, $this->participant);
+                    if($call['state']){
+                        $data = $call['data'];
+                    }
+                    else $error = $call['error'];
+                break;
+
+                case 'join_call':
+                    $call = CallService::JoinCall($this->thread, $this->currentProfile());
+                    if($call['state']){
+                        $data = $call['data'];
+                    }
+                    else $error = $call['error'];
+                break;
+            }
+            if($data){
+                return [
+                    'state' => true,
+                    'data' => $data
+                ];
+            }
+        }
+        return [
+            'state' => false,
+            'error' => $error ? $error : "Unable to authorize your request"
+        ];
+    }
+
+    public function routeDestroy($type, $auth = true)
+    {
+        $data = null;
+        $error = null;
+        $type_loads = [
+            'leave_group' => ['participants.owner.devices'],
+            'admin_remove_participant' => ['participants.owner.devices'],
+            'remove_group_invitation' => ['participants', 'groupInviteLink'],
+            'remove_message' => ['participants', 'messages'],
+            'participant_admin_revoke' => ['participants'],
+            'leave_call' => ['activeCall.participants'],
+            'end_call' => ['participants.owner', 'activeCall.participants']
+        ];
+        $authorize = $auth ? $this->authorize(null, (isset($type_loads[$type]) ? $type_loads[$type] : null)) : ['state' => true];
+        if($authorize['state']) {
+            switch ($type) {
+                case 'leave_group':
+                    $leaving = ParticipantService::LeaveGroupCheck($this->thread, $this->participant, $this->currentProfile());
+                    if($leaving['state']){
+                        $data = $leaving['data'];
+                    }
+                    else $error = $leaving['error'];
+                break;
+                case 'admin_remove_participant':
+                    $kicking = ParticipantService::KickParticipantGroup($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    if($kicking['state']){
+                        $data = $kicking['data'];
+                    }
+                    else $error = $kicking['error'];
+                break;
+                case 'remove_group_invitation':
+                    $removing = InvitationService::DestroyGroupInvitation($this->request, $this->thread, $this->participant);
+                    if($removing['state']){
+                        $data = true;
+                    }
+                    else $error = $removing['error'];
+                break;
+                case 'remove_message':
+                    $message = MessageService::DestroyMessageCheck($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    if($message['state']){
+                        $data = true;
+                    }
+                    else $error = $message['error'];
+                break;
+                case 'participant_admin_revoke':
+                    $action = ParticipantService::ModifyParticipantAdmin($this->request, $this->thread, $this->participant, $this->currentProfile(), false);
+                    if($action['state']){
+                        $data = $action['data'];
+                    }
+                    else $error = $action['error'];
+                break;
+                case 'archive_thread':
+                    $thread = ThreadService::ProcessArchiveThread($this->thread, $this->participant, $this->currentProfile());
+                    if($thread['state']){
+                        $data = $thread['data'];
+                    }
+                    else $error = $thread['error'];
+                break;
+                case 'leave_call':
+                    $call = CallService::LeaveCall($this->thread, $this->currentProfile());
+                    if($call['state']){
+                        $data = $call['data'];
+                    }
+                    else $error = $call['error'];
+                break;
+                case 'end_call':
+                    $call = CallService::EndCall($this->thread, $this->participant);
+                    if($call['state']){
+                        $data = $call['data'];
+                    }
+                    else $error = $call['error'];
+                break;
+            }
+            if($data){
+                return [
+                    'state' => true,
+                    'data' => $data
+                ];
+            }
+        }
+        return [
+            'state' => false,
+            'error' => $error ? $error : "Unable to authorize your request"
+        ];
+    }
+
+    private static function StoreMessengerSettings(Request $request, $model)
+    {
+        $validator = Validator::make($request->all(),
+            [
+                'message_popups' => 'required|boolean',
+                'message_sound' => 'required|boolean',
+                'call_ringtone_sound' => 'required|boolean',
+                'knoks' => 'required|boolean',
+                'calls_outside_networks' => 'required|boolean',
+                'online_status' => 'required|between:0,2'
+            ]
+        );
+        if($validator->fails()){
+            return [
+                'state' => false,
+                'error' => 'Unable to save your settings'
+            ];
+        }
+        try{
+            $model->messengerSettings->message_popups = $request->input('message_popups');
+            $model->messengerSettings->message_sound = $request->input('message_sound');
+            $model->messengerSettings->call_ringtone_sound = $request->input('call_ringtone_sound');
+            $model->messengerSettings->knoks = $request->input('knoks');
+            $model->messengerSettings->calls_outside_networks = $request->input('calls_outside_networks');
+            $model->messengerSettings->online_status = $request->input('online_status');
+            $model->messengerSettings->save();
+            return [
+                'state' => true,
+                'model' => $model
+            ];
+        }catch (Exception $e){
+            report($e);
+            return [
+                'state' => false,
+                'error' => 'Server Error'
+            ];
+        }
+    }
+
+}

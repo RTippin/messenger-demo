@@ -1,0 +1,1 @@
+window.emojione = require('emojione');
