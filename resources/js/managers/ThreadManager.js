@@ -57,6 +57,7 @@ window.ThreadManager = (function () {
             thread_search_input : $("#thread_search_input"),
             thread_search_bar : $("#threads_search_bar"),
             drag_drop_zone : $('#drag_drop_overlay'),
+            messenger_avatar_upload : document.getElementById('messenger_avatar_upload'),
             msg_panel : null,
             doc_file : null,
             img_file : null,
@@ -202,6 +203,7 @@ window.ThreadManager = (function () {
                     }
                 };
                 let elm = document.getElementById('message_container');
+                opt.elements.messenger_avatar_upload.addEventListener('change', methods.uploadMessengerAvatar, false);
                 opt.elements.thread_search_input.on("keyup mouseup", methods.checkThreadFilters);
                 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                     elm.addEventListener(eventName, methods.fileDragDrop, false)
@@ -301,6 +303,7 @@ window.ThreadManager = (function () {
                     thread_search_input : opt.elements.thread_search_input,
                     thread_search_bar : opt.elements.thread_search_bar,
                     drag_drop_zone : opt.elements.drag_drop_zone,
+                    messenger_avatar_upload : opt.elements.messenger_avatar_upload,
                     msg_panel : null,
                     doc_file : null,
                     img_file : null,
@@ -1681,9 +1684,61 @@ window.ThreadManager = (function () {
                 fail_alert : true,
                 close_modal : true
             });
+        },
+        uploadMessengerAvatar : function () {
+            if(opt.states.lock || !opt.elements.messenger_avatar_upload.files.length) return;
+            let data = new FormData();
+            data.append('image_file', opt.elements.messenger_avatar_upload.files[0]);
+            data.append('type', 'store_messenger_avatar');
+            $('.tooltip').remove();
+            TippinManager.alert().fillModal({loader : true, no_close : true, body : null, title : 'Uploading...'});
+            TippinManager.xhr().payload({
+                route : '/messenger/update/store_messenger_avatar',
+                data : data,
+                success : methods.manageNewAvatar,
+                fail_alert : true,
+                close_modal : true
+            });
+        },
+        removeMessengerAvatar : function () {
+            TippinManager.xhr().payload({
+                route : '/messenger/update/remove_messenger_avatar',
+                data : {
+                    type : 'remove_messenger_avatar'
+                },
+                success : methods.manageNewAvatar,
+                fail_alert : true,
+                close_modal : true
+            });
+        },
+        manageNewAvatar : function (data) {
+            TippinManager.forms().updateSlug(data.avatar);
+            $('.my-global-avatar').attr('src', data.avatar);
+            opt.elements.messenger_avatar_upload.value = '';
+            TippinManager.alert().Alert({
+                toast : true,
+                theme : 'success',
+                title : 'Your avatar has been updated'
+            })
         }
     },
     archive = {
+        Avatar : function(){
+            TippinManager.alert().Modal({
+                backdrop_ctrl : false,
+                size : 'sm',
+                body : false,
+                centered : true,
+                unlock_buttons : false,
+                title: 'Remove Avatar?',
+                theme: 'danger',
+                cb_btn_txt: 'Remove',
+                cb_btn_theme : 'danger',
+                cb_btn_icon:'trash',
+                icon: 'trash',
+                callback : methods.removeMessengerAvatar
+            });
+        },
         Message : function(arg){
             if(!opt.thread.id) return;
             let msg = $("#message_"+arg.id);
@@ -2219,21 +2274,6 @@ window.ThreadManager = (function () {
                 fail_alert : true,
                 bypass : true
             })
-        },
-        uploadMessengerAvatar : function () {
-            let data = new FormData();
-            data.append('image_file', $('#messenger_avatar_upload')[0].files[0]);
-            data.append('type', 'messenger_avatar');
-            $('.tooltip').remove();
-            TippinManager.alert().fillModal({loader : true, no_close : true, body : null, title : 'Uploading...'});
-            TippinManager.xhr().payload({
-                route : '/messenger/update/messenger_avatar',
-                data : data,
-                success : function(){
-                    window.location.reload()
-                },
-                fail_alert : true
-            });
         }
     },
     Calls = {

@@ -10,7 +10,7 @@
             <div class="card bg-transparent h-100">
                 <div class="card-header bg-white px-1 d-flex justify-content-between">
                     <div id="my_avatar_status">
-                        <img data-toggle="tooltip" data-placement="right" title="You are {{$current_model->onlineStatus()}}" class="ml-1 rounded-circle medium-image avatar-is-{{$current_model->onlineStatus()}}" src="{{$current_model->avatar}}" />
+                        <img data-toggle="tooltip" data-placement="right" title="You are {{$current_model->onlineStatus()}}" class="my-global-avatar ml-1 rounded-circle medium-image avatar-is-{{$current_model->onlineStatus()}}" src="{{$current_model->avatar}}" />
                     </div>
                     <span class="{{$user_agent->isMobile() ? '' : 'd-none d-md-inline'}} h4 font-weight-bold">Messenger</span>
                     <div class="dropdown">
@@ -60,4 +60,5 @@
         </div>
     </div>
 </div>
+<input style="display: none;" class="NS" id="messenger_avatar_upload" type="file" name="messenger_avatar_upload" accept="image/*">
 @stop

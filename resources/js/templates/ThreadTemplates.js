@@ -55,8 +55,8 @@ window.ThreadTemplates = (function () {
                 '</div>'
         },
         global_settings : function(data){
-            return '<div class="form-group col-12">\n' +
-                '<label class="control-label d-block h5 font-weight-bold" for="online_status_switch">Online Status</label>\n' +
+            return '<div class="form-row">\n' +
+                '<div class="col-6"><label class="control-label d-block h5 font-weight-bold" for="online_status_switch">Online Status</label>\n' +
                 '<div id="online_status_switch" class="btn-group btn-group-toggle" data-toggle="buttons">\n' +
                 '<label data-toggle="tooltip" title="Online" data-placement="left" class="pointer_area btn btn-success '+(data.online_status === 1 ? 'active glowing_btn' : '')+'">\n' +
                 '<input type="radio" name="online_status" value="1" autocomplete="off" '+(data.online_status === 1 ? 'checked' : '')+'><i class="fas fa-wifi"></i>\n' +
@@ -67,13 +67,17 @@ window.ThreadTemplates = (function () {
                 '<label data-toggle="tooltip" title="Offline" data-placement="right" class="pointer_area btn btn-dark '+(data.online_status === 0 ? 'active glowing_btn' : '')+'">\n' +
                 '<input type="radio" name="online_status" value="0" autocomplete="off" '+(data.online_status === 0 ? 'checked' : '')+'><i class="fas fa-power-off"></i>\n' +
                 '</label>\n' +
-                '</div>\n' +
-                '<div class="float-right mt-n3">' +
-                '    <div data-toggle="tooltip" title="Upload avatar" data-placement="left" onclick="$(\'#messenger_avatar_upload\').click()" class="pointer_area d-inline">\n' +
-                '         <i class="mr-2 fas fa-cloud-upload-alt"></i><img alt="Avatar" height="60" width="60" class="rounded-circle avatar-is-'+(data.online_status === 1 ? "online" : data.online_status === 2 ? "away" : "offline")+'" src="'+TippinManager.common().slug+'"/>\n' +
+                '</div></div>\n' +
+                '<div class="col-6 mt-1 text-right">' +
+                '    <div class="btn-group-vertical mr-1">' +
+                '        <button data-toggle="tooltip" data-placement="left" title="Upload Avatar" onclick="$(\'#messenger_avatar_upload\').click()" class="btn btn-sm btn-outline-success"><i class="fas fa-cloud-upload-alt"></i></button>'+
+                '        <button data-toggle="tooltip" data-placement="left" title="Remove Avatar" onclick="ThreadManager.archive().Avatar()" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>' +
+                '    </div>'+
+                '    <div data-toggle="tooltip" title="Upload avatar" data-placement="right" onclick="$(\'#messenger_avatar_upload\').click()" class="pointer_area d-inline">\n' +
+                '         <img alt="Avatar" height="62" width="62" class="rounded avatar-is-'+(data.online_status === 1 ? "online" : data.online_status === 2 ? "away" : "offline")+'" src="'+TippinManager.common().slug+'"/>\n' +
                 '    </div>\n' +
-                '    <input onchange="ThreadManager.newForms().uploadMessengerAvatar()" class="NS" id="messenger_avatar_upload" type="file" name="messenger_avatar_upload" accept="image/*">'+
-                '</div></div><hr>'+
+                '</div>' +
+                '</div><hr>'+
                 '<table class="table mb-0 table-sm table-hover"><tbody>\n' +
                 '<tr class="'+(data.message_popups ? 'bg-light' : '')+'">\n' +
                 '<td class="pointer_area" onclick="$(\'#message_popups\').click()"><div class="h4 mt-1"><i class="fas fa-caret-right"></i> <span class="h5">Message Popups</span></div></td>\n' +
@@ -444,7 +448,7 @@ window.ThreadTemplates = (function () {
                 case 1: online = 'online'; break;
                 case 2: online = 'away'; break;
             }
-            return '<img data-toggle="tooltip" data-placement="right" title="You are '+online+'" class="ml-1 rounded-circle medium-image avatar-is-'+online+'" src="'+TippinManager.common().slug+'" />'
+            return '<img data-toggle="tooltip" data-placement="right" title="You are '+online+'" class="my-global-avatar ml-1 rounded-circle medium-image avatar-is-'+online+'" src="'+TippinManager.common().slug+'" />'
         },
         show_thread_avatar : function(avatar){
             TippinManager.alert().Modal({

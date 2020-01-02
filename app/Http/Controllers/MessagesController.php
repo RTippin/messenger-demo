@@ -170,10 +170,17 @@ class MessagesController extends Controller
                 }
                 return response()->json(['errors' => ['forms' => $dispatch["error"]]], 400);
             break;
-            case 'messenger_avatar':
+            case 'store_messenger_avatar':
                 $dispatch = $this->messenger->routeCreate('store_messenger_avatar', false);
                 if($dispatch["state"]){
-                    return response()->json(['state' => true, 'avatar' => $dispatch['data']]);
+                    return response()->json(['avatar' => $dispatch['data']]);
+                }
+                return response()->json(['errors' => ['forms' => $dispatch["error"]]], 400);
+                break;
+            case 'remove_messenger_avatar':
+                $dispatch = $this->messenger->routeDestroy('remove_messenger_avatar', false);
+                if($dispatch["state"]){
+                    return response()->json(['avatar' => $dispatch['data']]);
                 }
                 return response()->json(['errors' => ['forms' => $dispatch["error"]]], 400);
             break;

@@ -561,6 +561,9 @@ window.TippinManager = (function () {
         }
     },
     forms = {
+        updateSlug : function(slug){
+            opt.slug = slug;
+        },
         Logout : function(){
             if(opt.model === 'guest') return;
             TippinManager.alert().Modal({

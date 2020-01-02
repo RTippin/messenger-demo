@@ -8,6 +8,7 @@ use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Validator;
 use Exception;
+use File;
 
 class MessengerService extends Service
 {
@@ -340,6 +341,13 @@ class MessengerService extends Service
         $authorize = $auth ? $this->authorize(null, (isset($type_loads[$type]) ? $type_loads[$type] : null)) : ['state' => true];
         if($authorize['state']) {
             switch ($type) {
+                case 'remove_messenger_avatar':
+                    $avatar = self::RemoveMessengerAvatar($this->currentProfile());
+                    if($avatar['state']){
+                        $data = $avatar['data'];
+                    }
+                    else $error = $avatar['error'];
+                break;
                 case 'leave_group':
                     $leaving = ParticipantService::LeaveGroupCheck($this->thread, $this->participant, $this->currentProfile());
                     if($leaving['state']){
@@ -412,21 +420,52 @@ class MessengerService extends Service
 
     private static function StoreMessengerAvatar(Request $request, $model)
     {
-        $dispatch = new UploadService($request);
-        $dispatch = $dispatch->newUpload(strtolower(class_basename($model)).'_photo');
-        if(!$dispatch['state']){
+        try{
+            $dispatch = new UploadService($request);
+            $dispatch = $dispatch->newUpload(strtolower(class_basename($model)).'_photo');
+            if(!$dispatch['state']){
+                return [
+                    'state' => false,
+                    'error' => $dispatch['error']
+                ];
+            }
+            $model->info->picture = $dispatch['text'];
+            $model->info->save();
+            return [
+                'state' => true,
+                'data' => $model->avatar
+            ];
+        }catch (Exception $e){
+            report($e);
             return [
                 'state' => false,
-                'error' => $dispatch['error']
+                'error' => 'Unable to update your avatar'
             ];
         }
-        $model->info->picture = $dispatch['text'];
-        $model->info->save();
-        session()->flash('info_message', 'Avatar uploaded');
-        return [
-            "state" => true,
-            "data" => $dispatch['text']
-        ];
+
+    }
+
+    private static function RemoveMessengerAvatar($model)
+    {
+        try{
+            $old = $model->info->picture;
+            $file_path = storage_path('app/public/'.strtolower(class_basename($model)).'/profile/'.$old);
+            if(file_exists($file_path)){
+                File::delete($file_path);
+            }
+            $model->info->picture = null;
+            $model->info->save();
+            return [
+                "state" => true,
+                "data" => $model->avatar
+            ];
+        }catch (Exception $e){
+            report($e);
+            return [
+                'state' => false,
+                'error' => 'Unable to update your avatar'
+            ];
+        }
     }
 
     private static function StoreMessengerSettings(Request $request, $model)
