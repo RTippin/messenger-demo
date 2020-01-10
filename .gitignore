@@ -12,7 +12,6 @@ npm-debug.log
 yarn-error.log
 /public/pma
 /public/js
-/storage
 /.idea
 /public/css/app.css
 /public/css/messages.css
@@ -26,7 +25,6 @@ _ide_helper.php
 
 #\.env\.example
 
-/storage/framework/views
 
 # OSX
 #
