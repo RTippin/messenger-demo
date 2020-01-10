@@ -2,23 +2,23 @@
 @stack('js')
 <!-- Here Tippin loads and initializes special things across the site -->
 <script>
-@if(Auth::check())
+@if(messenger_profile())
     TippinManager.init({
         load : {
             NotifyManager : {
-                message_popups : {{$current_model->messengerSettings->message_popups}},
-                message_sound : {{$current_model->messengerSettings->message_sound}},
-                call_ringtone_sound : {{$current_model->messengerSettings->call_ringtone_sound}},
+                message_popups : {{messenger_profile()->messenger->message_popups}},
+                message_sound : {{messenger_profile()->messenger->message_sound}},
+                call_ringtone_sound : {{messenger_profile()->messenger->call_ringtone_sound}},
                 src : '{{mix("js/managers/NotifyManager.js")}}'
             },
         @stack('TippinManager-load')
         },
         common : {
-            model : '{{strtolower(class_basename($current_model))}}',
-            id : '{{$current_model->id}}',
-            name : '{{ $current_model->name }}',
-            slug : '{{ $current_model->avatar}}',
-            mobile : {{ $user_agent->isMobile() ? 'true' : 'false' }},
+            model : '{{messenger_alias()}}',
+            id : '{{messenger_profile()->id}}',
+            name : '{{ messenger_profile()->name }}',
+            slug : '{{ messenger_profile()->avatar}}',
+            mobile : {{ agent()->isMobile() ? 'true' : 'false' }},
             {{config('app.env') === 'local' ? 'debug : true' : ''}}
         },
         modules : {

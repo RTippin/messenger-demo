@@ -3,7 +3,6 @@
 namespace App\Models\Messages;
 
 use App\Traits\Uuids;
-use Auth;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -11,6 +10,8 @@ class Thread extends Eloquent
 {
     use SoftDeletes, Uuids;
     public $incrementing = false;
+
+    public $keyType = 'string';
 
     /**
      * The database table used by the model.
@@ -92,7 +93,6 @@ class Thread extends Eloquent
 
     public function otherParty()
     {
-        $id = session()->get('business_Session') ? session()->get('business_Session') : Auth::id();
-        return $this->participants->where('owner_id', '!=', $id)->first();
+        return messenger_profile() ? $this->participants->where('owner_id', '!=', messenger_profile()->id)->first() : null;
     }
 }

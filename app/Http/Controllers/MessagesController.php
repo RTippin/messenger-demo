@@ -11,10 +11,10 @@ use View;
 
 class MessagesController extends Controller
 {
-    protected $messenger;
+    protected $messenger, $request;
     public function __construct(Request $request, MessengerService $messenger)
     {
-        parent::__construct($request);
+        $this->request = $request;
         $this->messenger = $messenger;
     }
 
@@ -27,21 +27,21 @@ class MessagesController extends Controller
     {
         switch($this->request->type){
             case 'settings':
-                return response()->json(MessengerRepo::MakeMessengerSettings($this->modelType()));
+                return response()->json(MessengerRepo::MakeMessenger(messenger_profile()));
             break;
             case 'threads':
                 return response()->json([
-                    'threads' => MessengerRepo::MakeProfileThreads($this->modelType())
+                    'threads' => MessengerRepo::MakeProfileThreads(messenger_profile())
                 ]);
             break;
             case 'contacts':
                 return response()->json([
-                    'html' => View::make('messenger.partials.contacts')->with('networks', $this->modelType()->networks->load(['party.info', 'party.messengerSettings']))->render()
+                    'html' => View::make('messenger.partials.contacts')->with('networks', messenger_profile()->networks->load(['party.messenger']))->render()
                 ]);
             break;
             case 'new_group':
                 return response()->json([
-                    'html' => View::make('messenger.partials.addGroupContacts')->with('networks', $this->modelType()->networks->load(['party.info', 'party.messengerSettings']))->render()
+                    'html' => View::make('messenger.partials.addGroupContacts')->with('networks', messenger_profile()->networks->load(['party.messenger']))->render()
                 ]);
             break;
             case 'load_thread':
@@ -52,7 +52,7 @@ class MessagesController extends Controller
             break;
             case 'unread_count':
                 return response()->json([
-                    'total_unread' => $this->modelType()->unreadThreadsCount()
+                    'total_unread' => messenger_profile()->unreadThreadsCount()
                 ]);
             break;
             case 'is_unread':
@@ -176,7 +176,7 @@ class MessagesController extends Controller
                     return response()->json(['avatar' => $dispatch['data']]);
                 }
                 return response()->json(['errors' => ['forms' => $dispatch["error"]]], 400);
-                break;
+            break;
             case 'remove_messenger_avatar':
                 $dispatch = $this->messenger->routeDestroy('remove_messenger_avatar', false);
                 if($dispatch["state"]){
@@ -340,10 +340,10 @@ class MessagesController extends Controller
     public function CreateOrRedirect()
     {
         if(!$this->request->expectsJson()){
-            return view('messenger.portal')->with('slug', $this->request->slug)->with('type', $this->request->type)->with('mode', 3);
+            return view('messenger.portal')->with('slug', $this->request->slug)->with('type', $this->request->alias)->with('mode', 3);
         }
-        $threads = ThreadService::LocateThreads($this->modelType(), 1, ['participants']);
-        $check = ThreadService::LocateExistingPrivate($threads, ['check' => $this->request->type, 'slug' => $this->request->slug]);
+        $threads = ThreadService::LocateThreads(messenger_profile(), 1, ['participants']);
+        $check = ThreadService::LocateExistingPrivate($threads, ['check' => 'profile', 'alias' => $this->request->alias, 'slug' => $this->request->slug]);
         if($check['state']){
             return response()->json([
                 'exist' => true,
@@ -368,7 +368,7 @@ class MessagesController extends Controller
 
     public function openCall()
     {
-        if(!config('app.calls')){
+        if(!config('messenger.calls')){
             return response()->view('errors.custom', ['err' => 'callError'], 403);
         }
         $dispatch = $this->messenger->routeRequest('view_call');

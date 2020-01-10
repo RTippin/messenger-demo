@@ -13,7 +13,7 @@
         <img class="pl-2" id="RTlog" height="95" src="{{asset('images/tipz.png')}}">
     </div>
         <h3 class="display-4"><i class="fas fa-user-plus"></i> Sign Up</h3>
-        <p class="h4">Sign up to use our Laravel Messenger demo! All accounts will be wiped overnight each day.</p>
+        <p class="h4">Sign up to use our Laravel Messenger demo! All accounts and files uploaded will be wiped once each week.</p>
     </div>
 </div>
 @include('auth.partials.register')

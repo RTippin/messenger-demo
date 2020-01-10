@@ -118,6 +118,12 @@ window.TippinManager = (function () {
         }
     },
     format = {
+        makeUtcLocal : function(date){
+            return moment.utc(date).local().format('YYYY-MM-DD HH:mm:ss')
+        },
+        makeTimeAgo : function(date){
+            return moment(format.makeUtcLocal(date)).fromNow()
+        },
         escapeHtml : function(text) {
             let map = {
                 '&': '&amp;',
@@ -146,8 +152,9 @@ window.TippinManager = (function () {
         },
         timeDiffInMinutes : function (date1, date2) {
             if(!date1 || !date2) return 0;
-            let d1 = new Date(date1).getTime(), d2 = new Date(date2).getTime(), diff = (d1 - d2);
-            return Math.round(Math.floor((diff/1000)/60))
+            let d1 = moment(format.makeUtcLocal(date1)),
+                d2 = moment(format.makeUtcLocal(date2));
+            return d1.diff(d2, 'minutes')
         }
     },
     buttons = {

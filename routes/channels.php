@@ -2,7 +2,7 @@
 
 use App\Broadcasting\CallChannel;
 use App\Broadcasting\ThreadChannel;
-use App\Broadcasting\UserChannel;
+use App\Broadcasting\ModelChannel;
 /*
 |--------------------------------------------------------------------------
 | Broadcast Channels
@@ -14,7 +14,7 @@ use App\Broadcasting\UserChannel;
 |
 */
 
-Broadcast::channel('user_notify_{id}', UserChannel::class);
+Broadcast::channel('{alias}_notify_{id}', ModelChannel::class);
 
 Broadcast::channel('thread_{thread}', ThreadChannel::class);
 

@@ -12,6 +12,8 @@ class Message extends Eloquent
     use SoftDeletes, Uuids;
     public $incrementing = false;
 
+    public $keyType = 'string';
+
     /**
      * The database table used by the model.
      *
@@ -31,7 +33,7 @@ class Message extends Eloquent
      *
      * @var array
      */
-    protected $fillable = ['thread_id','mtype', 'body','owner_type','owner_id'];
+    protected $guarded = [];
 
     /**
      * The attributes that should be mutated to dates.

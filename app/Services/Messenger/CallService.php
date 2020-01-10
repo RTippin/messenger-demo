@@ -202,7 +202,7 @@ class CallService
 
     public static function StartNewCall($model, Thread $thread = null, Participant $participant = null, $mode = 'call')
     {
-        if(!config('app.calls')){
+        if(!config('messenger.calls')){
             return [
                 'state' => false,
                 'error' => 'This feature is currently unavailable, please try again later'
@@ -247,7 +247,7 @@ class CallService
 
     public static function JoinCall(Thread $thread, $model)
     {
-        if(!config('app.calls')){
+        if(!config('messenger.calls')){
             return [
                 'state' => false,
                 'error' => 'This feature is currently unavailable, please try again later'

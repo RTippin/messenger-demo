@@ -6,8 +6,12 @@
                     <i class="fas fa-info-circle"></i> About
                 </div>
                 <div class="card-body py-2 h5 mb-0">
-                    <p class="lead">Welcome to a demo app profile on Laravel messenger demo app by Richard Tippin. Working to release this messenger as a suite to use with laravel.
-                        Includes real-time messaging, group messaging, read receipts, video calls with screen sharing, group invitation links, and more!</p>
+                    <p class="lead">Welcome to Tippin's Laravel Messenger demo app! We will be adding documentation soon, and working towards
+                        releasing this as an entire suite/package! The source code for this demo project can be found on
+                        <a target="_blank" href="https://github.com/RTippin">Tippin's Github</a>. You may sign up anytime and test
+                        out our features currently provided, such as real time messaging/video calling/screen sharing/group messaging,
+                        etc. We also provide a list of pre-populated users to choose from on the login page.
+                        We will reset this database and all uploaded files once each week</p>
                 </div>
             </div>
         </div>
@@ -17,7 +21,7 @@
                     <i class="fas fa-network-wired"></i> Friends
                 </div>
                 <div class="card-body bg-transparent">
-                    @if($userViewing->networks->count())
+                    @if($profile->owner->networks->count())
                         <div class="table-responsive-sm">
                             <table id="user_networks_table" class="table table-sm table-hover table-striped rounded">
                                 <thead>
@@ -26,7 +30,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($userViewing->networks as $network)
+                                @foreach($profile->owner->networks as $network)
                                     <tr>
                                         <td>
                                             <div class="table_links">

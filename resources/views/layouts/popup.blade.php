@@ -3,7 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="KCULpGQAVEiYeRxNnbS01EdgWd4MM1hfmt29fFmZLi0" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="manifest" href="{{asset('manifest.json')}}">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Tipz">
+    <meta name="apple-mobile-web-app-title" content="Tipz">
+    <meta name="theme-color" content="#282c30">
+    <meta name="msapplication-navbutton-color" content="#282c30">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="msapplication-starturl" content="/">
     <link rel="icon" type="image/png" sizes="200x200" href="{{asset('images/tipz.png')}}">
     <link rel="apple-touch-icon" type="image/png" sizes="200x200" href="{{asset('images/tipz.png')}}">
     <meta name="csrf-token" content="{{ csrf_token() }}">

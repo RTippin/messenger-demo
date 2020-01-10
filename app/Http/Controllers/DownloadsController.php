@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Services\Messenger\MessageService;
 use App\Services\Messenger\MessengerService;
-use App\Models\User\UserInfo;
 use Illuminate\Http\Request;
 
 class DownloadsController extends Controller
 {
-    protected $messenger;
+    protected $messenger, $request;
     public function __construct(Request $request, MessengerService $messenger)
     {
-        parent::__construct($request);
+        $this->request = $request;
         $this->messenger = $messenger;
     }
 

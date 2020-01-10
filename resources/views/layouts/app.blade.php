@@ -3,7 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="KCULpGQAVEiYeRxNnbS01EdgWd4MM1hfmt29fFmZLi0" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="manifest" href="{{asset('manifest.json')}}">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Tipz">
+    <meta name="apple-mobile-web-app-title" content="Tipz">
+    <meta name="theme-color" content="#282c30">
+    <meta name="msapplication-navbutton-color" content="#282c30">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="msapplication-starturl" content="/">
     <link rel="icon" type="image/png" sizes="200x200" href="{{asset('images/tipz.png')}}">
     <link rel="apple-touch-icon" type="image/png" sizes="200x200" href="{{asset('images/tipz.png')}}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -17,7 +27,7 @@
 </head>
 <body>
 <wrapper class="d-flex flex-column">
-    <nav id="RT_navbar" class="{{request()->is('messenger/*') && $user_agent->isMobile() ? 'NS' : ''}} navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+    <nav id="RT_navbar" class="{{request()->is('messenger/*') && agent()->isMobile() ? 'NS' : ''}} navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="/">
             <img src="{{ asset('images/tipz.png') }}" width="30" height="30" class="d-inline-block align-top" alt="Tipz">
             Tipz Messenger
@@ -35,7 +45,7 @@
                     </div>
                 </div>
             </form>
-            @if (Auth::check())
+            @auth
                 @include('layouts.nav.user')
             @else
                 @include('layouts.nav.guest')
@@ -47,7 +57,7 @@
             <div id="alert_container"></div>
         </div>
     </div>
-@if($user_agent->isMobile() && request()->is('messenger/*'))
+@if(agent()->isMobile() && request()->is('messenger/*'))
     <main id="RT_main_section" class="pt-0 mt-3 flex-fill">
 @else
     <main id="RT_main_section" class="{{request()->is('messenger*') ? 'pt-5' : 'py-5'}} mt-4 flex-fill">

@@ -2,11 +2,10 @@
 
 namespace App\Traits;
 
-use App\User;
 use Cache;
 use Illuminate\Database\Eloquent\Builder;
 
-trait Messagable
+trait HasMessenger
 {
 
     /**
@@ -15,9 +14,14 @@ trait Messagable
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      *
      */
-    public function messengerSettings()
+    public function messenger()
     {
-        return $this->morphOne('App\Models\Messages\MessengerSettings', 'owner');
+        return $this->morphOne('App\Models\Messages\Messenger', 'owner');
+    }
+
+    public function slug($full = false)
+    {
+        return $full ? route('model_profile', [get_messenger_alias($this->messenger->owner), $this->messenger->slug], false) : $this->messenger->slug;
     }
 
     public function getOnlineStatusNumberAttribute()
@@ -27,12 +31,12 @@ trait Messagable
 
     public function isOnline()
     {
-        $online = Cache::has(strtolower(class_basename($this)).'_online_'.$this->id);
-        $away = Cache::has(strtolower(class_basename($this)).'_away_'.$this->id);
-        if($this->messengerSettings->online_status === 0){
+        $online = Cache::has(get_messenger_alias($this).'_online_'.$this->id);
+        $away = Cache::has(get_messenger_alias($this).'_away_'.$this->id);
+        if($this->messenger->online_status === 0){
             return 0;
         }
-        if($online && $this->messengerSettings->online_status === 2){
+        if($online && $this->messenger->online_status === 2){
             return 2;
         }
 
@@ -41,12 +45,12 @@ trait Messagable
 
     public function onlineStatus()
     {
-        $online = Cache::has(strtolower(class_basename($this)).'_online_'.$this->id);
-        $away = Cache::has(strtolower(class_basename($this)).'_away_'.$this->id);
-        if($this->messengerSettings->online_status === 0){
+        $online = Cache::has(get_messenger_alias($this).'_online_'.$this->id);
+        $away = Cache::has(get_messenger_alias($this).'_away_'.$this->id);
+        if($this->messenger->online_status === 0){
             return 'offline';
         }
-        if($online && $this->messengerSettings->online_status === 2){
+        if($online && $this->messenger->online_status === 2){
             return 'away';
         }
 
@@ -117,13 +121,11 @@ trait Messagable
 
     public function avatar($full = false)
     {
-        $type = class_basename($this);
-        switch($type){
-            case "User":
-                return route('profile_img', [$this->slug(), ($full ? 'full' : 'thumb'), ($this->info->picture ? $this->info->picture : 'users.png')], false);
-            break;
+        $alias = get_messenger_alias($this);
+        if($alias){
+            return route('profile_img', [$alias, $this->slug(), ($full ? 'full' : 'thumb'), ($this->messenger->picture ? $this->messenger->picture : 'users.png')], false);
         }
-        return route('profile_img', ['ghost', ($full ? 'full' : 'thumb'), 'users.png'], false);
+        return route('profile_img', ['ghost', 'ghost', 'thumb', 'users.png'], false);
     }
 
     /**

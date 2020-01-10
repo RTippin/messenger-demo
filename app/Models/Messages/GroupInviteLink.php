@@ -13,6 +13,7 @@ class GroupInviteLink extends Model
 {
     use Uuids, SoftDeletes;
     public $incrementing = false;
+    public $keyType = 'string';
     protected $table = 'thread_invites';
     protected $dates = ['expires_at'];
 

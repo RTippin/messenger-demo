@@ -80,9 +80,9 @@ class ParticipantService
             $names = ''; $ids = collect([]);
             foreach($request->input('recipients') as $key => $value){
                 $arr = explode('_', $value['value']);
-                $type = (in_array($arr[0], ['C','U'])) ? ($arr[0] === "C" ? 2 : 1) : null;
-                if($type === null || count($arr) < 2) continue;
-                $profile = User::find($arr[1]);
+                $class = get_alias_class($arr[0]);
+                if(!$class) continue;
+                $profile = $class::find($arr[1]);
                 if(!$profile || self::LocateParticipant($thread, $profile)) continue;
                 if(self::StoreOrRestoreParticipant($thread, $profile)){
                     $names .= $profile->name.', ';

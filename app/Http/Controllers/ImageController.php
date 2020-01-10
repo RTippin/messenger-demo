@@ -15,10 +15,10 @@ use Exception;
 class ImageController extends Controller
 {
 
-    protected $uploadService, $messenger;
+    protected $uploadService, $messenger, $request;
     public function __construct(Request $request, UploadService $uploadService, MessengerService $messenger)
     {
-        parent::__construct($request);
+        $this->request = $request;
         $this->uploadService = $uploadService;
         $this->messenger = $messenger;
     }
@@ -125,9 +125,6 @@ class ImageController extends Controller
                         header("Content-type: image/gif");
                         readfile($file_path);
                     }
-                    if($this->request->is('*api*')){
-                        return Image::make($this->makeImageThumb($file_path))->response();
-                    }
                     return Image::make($this->makeImageFull($file_path))->response($extension, 70);
                 }
             }
@@ -135,15 +132,12 @@ class ImageController extends Controller
         return Image::make($this->makeDefaultImage(1))->response();
     }
 
-    public function ProfileImageView($slug, $full = null, $image = null, $full_two = null)
+    public function ProfileImageView($alias, $slug, $full = null, $image = null, $full_two = null)
     {
-        if($full === 'redirect'){
-            return redirect()->route('user_profile', $slug);
-        }
-        if(!$image){
+        if(!$image || !$slug || !$alias){
             return Image::make($this->makeDefaultImage(2))->response();
         }
-        $file_path = storage_path('app/public/user/profile/'.$image);
+        $file_path = storage_path('app/public/profile/'.$alias.'/'.$image);
         if(file_exists($file_path)){
             $extension = File::extension($file_path);
             if($full === 'full' || $full_two === 'full'){

@@ -1,9 +1,5 @@
 window.ThreadTemplates = (function () {
     var methods = {
-        makeTimeAgo : function(date){
-            if(typeof $.fn.timeago !== 'undefined') return jQuery.timeago(date);
-            return ''
-        },
         makeLinks : function(body){
             return autolinker.link(body)
         },
@@ -187,7 +183,7 @@ window.ThreadTemplates = (function () {
                 '<div class="thread-list-status">'+templates.thread_status(data)+'</div> '+
                 '<a onclick="ThreadManager.load().initiate_thread({thread_id : \''+data.thread_id+'\'}); return false;" href="/messenger/'+data.thread_id+'">' +
                 '<div class="media"><div class="media-left media-middle"><img src="'+data.avatar+'" class="media-object rounded-circle thread-list-avatar avatar-is-'+(data.online === 1 ? "online" : data.online === 2 ? "away" : "offline")+'" /></div>' +
-                '<div class="media-body thread_body_li"><div class="header d-inline"><small><div class="d-none d-lg-block float-right date"><time class="timeago" datetime="'+data.updated_at+'">'+methods.makeTimeAgo(data.updated_at)+'</time></div></small>' +
+                '<div class="media-body thread_body_li"><div class="header d-inline"><small><div class="d-none d-lg-block float-right date"><time class="timeago" datetime="'+data.utc_updated_at+'">'+TippinManager.format().makeTimeAgo(data.utc_updated_at)+'</time></div></small>' +
                 '<div class="from">'+data.name+'</div></div><div class="description">' +
                 templates.thread_body(data) +
                 '</div></div></div></a></li>'
@@ -197,7 +193,7 @@ window.ThreadTemplates = (function () {
                 '<div class="thread-list-status">'+templates.thread_status(data)+'</div> '+
                 '<a onclick="ThreadManager.load().initiate_thread({thread_id : \''+data.thread_id+'\'}); return false;" href="/messenger/'+data.thread_id+'">' +
                 '<div class="media"><div class="media-left media-middle"><img src="'+data.avatar+'/thumb" class="show_group_avatar_'+data.thread_id+' media-object rounded-circle thread-list-avatar thread-group-avatar '+(selected ? "avatar-is-online" : "avatar-is-offline")+'" /></div>' +
-                '<div class="media-body thread_body_li"><div class="header d-inline"><small><div class="d-none d-lg-block float-right date"><time class="timeago" datetime="'+data.updated_at+'">'+methods.makeTimeAgo(data.updated_at)+'</time></div></small>' +
+                '<div class="media-body thread_body_li"><div class="header d-inline"><small><div class="d-none d-lg-block float-right date"><time class="timeago" datetime="'+data.utc_updated_at+'">'+TippinManager.format().makeTimeAgo(data.utc_updated_at)+'</time></div></small>' +
                 '<div class="from"><span class="font-weight-bold">'+data.name+'</span></div></div><div class="description">' +
                 templates.thread_body(data) +
                 '</div></div></div></a></li>'
@@ -240,7 +236,7 @@ window.ThreadTemplates = (function () {
         },
         pending_message : function(data){
             return '<div id="pending_message_'+data.message_id+'" class="message my-message"><div class="message-body"><div class="message-body-inner"><div class="message-info">' +
-                '<h5> <i class="far fa-clock"></i>less than a minute ago</h5></div><hr><div class="message-text">' +
+                '<h5> <i class="far fa-clock"></i>a few seconds ago</h5></div><hr><div class="message-text">' +
                 templates.message_body(data, true) +
                 '</div></div></div>' +
                 '<div id="pending_message_loading_'+data.message_id+'" class="float-right mr-1 pt-2 h6 text-primary NS"><span title="Sending..." class="spinner-border spinner-border-sm"></span></div>' +
@@ -256,26 +252,26 @@ window.ThreadTemplates = (function () {
         },
         my_message : function(data){
             return '<div id="message_'+data.message_id+'" class="message my-message"><div class="message-body"><div class="message-body-inner"><div class="message-info">' +
-                '<h5> <i class="far fa-clock"></i><time title="'+data.created_at+'" class="timeago" datetime="'+data.created_at+'">'+methods.makeTimeAgo(data.created_at)+'</time></h5></div><hr><div class="message-text">' +
+                '<h5> <i class="far fa-clock"></i><time title="'+TippinManager.format().makeUtcLocal(data.utc_created_at)+'" class="timeago" datetime="'+data.utc_created_at+'">'+TippinManager.format().makeTimeAgo(data.utc_created_at)+'</time></h5></div><hr><div class="message-text">' +
                 templates.message_body(data, false) +
                 '</div></div></div>'+templates.my_message_archive(data, false)+'<div class="clearfix"></div></div>'
         },
         my_message_grouped : function(data){
             return '<div id="message_'+data.message_id+'" class="message grouped-message my-message"><div class="message-body"><div class="message-body-inner">' +
-                '<div title="'+TippinManager.format().escapeHtml(data.name)+' on '+data.created_at+'" class="message-text pt-2">' +
+                '<div title="'+TippinManager.format().escapeHtml(data.name)+' on '+TippinManager.format().makeUtcLocal(data.utc_created_at)+'" class="message-text pt-2">' +
                 templates.message_body(data, false) +
                 '</div></div></div>'+templates.my_message_archive(data, true)+'<div class="clearfix"></div></div>'
         },
         message : function(data){
             return '<div id="message_'+data.message_id+'" class="message info"><a href="'+data.slug+'" target="_blank"><img title="'+TippinManager.format().escapeHtml(data.name)+'" class="rounded-circle message-avatar" src="'+data.avatar+'"></a>' +
                 '<div class="message-body"><div class="message-body-inner"><div class="message-info">' +
-                '<h4>'+data.name+'</h4><h5> <i class="far fa-clock"></i><time title="'+data.created_at+'" class="timeago" datetime="'+data.created_at+'">'+methods.makeTimeAgo(data.created_at)+'</time></h5></div><hr><div class="message-text">' +
+                '<h4>'+data.name+'</h4><h5> <i class="far fa-clock"></i><time title="'+TippinManager.format().makeUtcLocal(data.utc_created_at)+'" class="timeago" datetime="'+data.utc_created_at+'">'+TippinManager.format().makeTimeAgo(data.utc_created_at)+'</time></h5></div><hr><div class="message-text">' +
                 templates.message_body(data, false) +
                 '</div></div></div>' +templates.message_archive(data, false)+ '<div class="clearfix"></div></div>'
         },
         message_grouped : function(data){
             return '<div id="message_'+data.message_id+'" class="message grouped-message info"><div class="message-body"><div class="message-body-inner">' +
-                '<div title="'+TippinManager.format().escapeHtml(data.name)+' on '+data.created_at+'" class="message-text pt-2">' +
+                '<div title="'+TippinManager.format().escapeHtml(data.name)+' on '+TippinManager.format().makeUtcLocal(data.utc_created_at)+'" class="message-text pt-2">' +
                 templates.message_body(data, false) +
                 '</div></div></div> '+templates.message_archive(data, true)+' <div class="clearfix"></div></div>'
         },
@@ -323,7 +319,7 @@ window.ThreadTemplates = (function () {
                 break;
             }
             return '<div id="message_'+data.message_id+'" class="system-message alert-warning rounded py-1 w-100 text-center" ' +
-                    'title="'+TippinManager.format().escapeHtml(data.name)+' on '+data.created_at+'"><i class="'+icon+'"></i> ' +
+                    'title="'+TippinManager.format().escapeHtml(data.name)+' on '+TippinManager.format().makeUtcLocal(data.utc_created_at)+'"><i class="'+icon+'"></i> ' +
                     '<strong>'+data.name+'</strong> '+TippinManager.format().escapeHtml(data.body)+'</div>';
         },
         thread_call_state : function(data){
@@ -428,8 +424,8 @@ window.ThreadTemplates = (function () {
             let status;
             switch(data.online){
                 case 0:
-                    if(data.last_active){
-                        status = 'last seen '+methods.makeTimeAgo(data.last_active);
+                    if(data.utc_last_active){
+                        status = 'last seen '+TippinManager.format().makeTimeAgo(data.utc_last_active);
                     }
                     else{
                         status = 'is offline';
@@ -645,7 +641,7 @@ window.ThreadTemplates = (function () {
                 '                    <div class="row justify-content-center h5">\n' +
                 '                        <span class="mb-2 mx-1 badge badge-pill badge-warning">Max Use: '+(invite.max_use > 0 ? invite.max_use : "No limit")+'</span>\n' +
                 '                        <span class="mb-2 mx-1 badge badge-pill badge-warning">Current Use: '+invite.uses+'</span>\n' +
-                '                        <span class="mb-2 mx-1 badge badge-pill badge-warning">Expires: '+(invite.expires ? invite.expires : "Never")+'</span>\n' +
+                '                        <span class="mb-2 mx-1 badge badge-pill badge-warning">Expires: '+(invite.expires ? TippinManager.format().makeTimeAgo(invite.expires) : "Never")+'</span>\n' +
                 '                    </div>\n' +
                 '                </div>\n' +
                 '                <button id="grp_inv_remove_btn" type="button" class="btn btn-sm btn-block btn-danger"><i class="fas fa-trash"></i> Remove</button>\n' +

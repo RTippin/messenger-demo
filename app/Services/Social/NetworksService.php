@@ -1,27 +1,27 @@
 <?php
 
 namespace App\Services\Social;
+use App\Models\Messages\Messenger;
 use App\Models\Networks\Networks;
 use App\Models\Networks\PendingNetworks;
 use App\Notifications\NetworksAccept;
 use App\Notifications\NetworksAdd;
-use App\Services\Service;
-use App\Models\User\UserInfo;
+use App\Services\Messenger\MessengerRepo;
 use Illuminate\Http\Request;
 use Exception;
 
-class NetworksService extends Service
+class NetworksService
 {
-    protected $party;
+    protected $party, $request;
     public function __construct(Request $request)
     {
-        parent::__construct($request);
+        $this->request = $request;
     }
 
     public function handleActions()
     {
         $this->partyModel();
-        if(!$this->party || $this->party->id === $this->modelType()->id){
+        if(!$this->party || $this->party->id === messenger_profile()->id){
             return array("state" => false, "error" => "Unable to locate party");
         }
         switch($this->request->input('action')){
@@ -48,16 +48,16 @@ class NetworksService extends Service
     {
         $friends = collect([]);
         try{
-            $model->pendingReceivedNetworks->reverse()->each(function ($friend) use($friends){
+            $model->pendingReceivedNetworks->reverse()->each(function ($friend) use($friends, $model){
                 $friends->push([
                     'id' => $friend->id,
                     'owner_id' => $friend->sender->id,
                     'name' => $friend->sender->name,
                     'slug' => $friend->sender->slug(),
                     'avatar' => $friend->sender->avatar,
-                    'type' => strtolower(class_basename($friend->sender)),
-                    'time_ago' => $friend->created_at->diffForHumans(),
-                    'created_at' => $friend->created_at->toDateTimeString()
+                    'type' => get_messenger_alias($friend->sender),
+                    'created_at' => MessengerRepo::FormatDateTimezone($friend->created_at, $model)->toDateTimeString(),
+                    'utc_created_at' => $friend->created_at->toDateTimeString()
                 ]);
             });
         }catch (Exception $e){
@@ -68,13 +68,13 @@ class NetworksService extends Service
 
     private function exist()
     {
-        return $this->modelType()->networkStatus($this->party);
+        return messenger_profile()->networkStatus($this->party);
     }
 
     private function partyModel()
     {
-        $slug = UserInfo::where('slug', $this->request->input('slug'))->first();
-        $this->party = ($slug ? $slug->user : null);
+        $slug = Messenger::where('slug', $this->request->input('slug'))->first();
+        $this->party = ($slug ? $slug->owner : null);
     }
 
     private function addToNetwork()
@@ -83,8 +83,8 @@ class NetworksService extends Service
             return array("state" => false, "error" => "Unable to proceed");
         }
         $data = PendingNetworks::firstOrCreate([
-            'sender_id' => $this->modelType()->id,
-            'sender_type' => get_class($this->modelType()),
+            'sender_id' => messenger_profile()->id,
+            'sender_type' => get_class(messenger_profile()),
             'recipient_id' => $this->party->id,
             'recipient_type' => get_class($this->party)
         ]);
@@ -97,8 +97,8 @@ class NetworksService extends Service
         if($this->exist() !== 2){
             return array("state" => false, "error" => "Unable to proceed");
         }
-        $this->modelType()->pendingSentNetworks()->where('recipient_id', $this->party->id)->where('recipient_type', get_class($this->party))->delete();
-        $this->party->notifications()->where('type', 'App\Notifications\NetworksAdd')->where('data', 'LIKE', '%'.$this->modelType()->id.'%')->delete();
+        messenger_profile()->pendingSentNetworks()->where('recipient_id', $this->party->id)->where('recipient_type', get_class($this->party))->delete();
+        $this->party->notifications()->where('type', 'App\Notifications\NetworksAdd')->where('data', 'LIKE', '%'.messenger_profile()->id.'%')->delete();
         return array("state" => true, "msg" => "Removed friend request to ".$this->party->name, "case" => 0);
     }
 
@@ -107,8 +107,8 @@ class NetworksService extends Service
         if($this->exist() !== 3){
             return array("state" => false, "error" => "Unable to proceed");
         }
-        $this->party->pendingSentNetworks()->where('recipient_id', $this->modelType()->id)->where('recipient_type', get_class($this->modelType()))->delete();
-        $notification = $this->modelType()->notifications()->where('type', 'App\Notifications\NetworksAdd')->where('data', 'LIKE', '%'.$this->party->id.'%')->latest()->first();
+        $this->party->pendingSentNetworks()->where('recipient_id', messenger_profile()->id)->where('recipient_type', get_class(messenger_profile()))->delete();
+        $notification = messenger_profile()->notifications()->where('type', 'App\Notifications\NetworksAdd')->where('data', 'LIKE', '%'.$this->party->id.'%')->latest()->first();
         if($notification){
             $new_data = collect([
                 "action" => false,
@@ -126,8 +126,8 @@ class NetworksService extends Service
         if($this->exist() !== 3){
             return array("state" => false, "error" => "Unable to proceed");
         }
-        $this->party->pendingSentNetworks()->where('recipient_id', $this->modelType()->id)->where('recipient_type', get_class($this->modelType()))->delete();
-        $this->modelType()->notifications()->where('type', 'App\Notifications\NetworksAdd')->where('data', 'LIKE', '%'.$this->party->id.'%')->delete();
+        $this->party->pendingSentNetworks()->where('recipient_id', messenger_profile()->id)->where('recipient_type', get_class(messenger_profile()))->delete();
+        messenger_profile()->notifications()->where('type', 'App\Notifications\NetworksAdd')->where('data', 'LIKE', '%'.$this->party->id.'%')->delete();
         return array("state" => true, "msg" => "You denied the friend request from ".$this->party->name, "case" => 0);
     }
 
@@ -136,24 +136,24 @@ class NetworksService extends Service
         if($this->exist() !== 1){
             return array("state" => false, "error" => "Unable to proceed");
         }
-        $this->modelType()->networks()->where('party_id', $this->party->id)->where('party_type', get_class($this->party))->delete();
-        $this->party->networks()->where('party_id', $this->modelType()->id)->where('party_type', get_class($this->modelType()))->delete();
+        messenger_profile()->networks()->where('party_id', $this->party->id)->where('party_type', get_class($this->party))->delete();
+        $this->party->networks()->where('party_id', messenger_profile()->id)->where('party_type', get_class(messenger_profile()))->delete();
         return array("state" => true, "msg" => "You have removed ".$this->party->name." from your friends", "case" => 0);
     }
 
     private function joinNetworks($type)
     {
         Networks::firstOrCreate([
-            'owner_id' => $this->modelType()->id,
-            'owner_type' => get_class($this->modelType()),
+            'owner_id' => messenger_profile()->id,
+            'owner_type' => get_class(messenger_profile()),
             'party_id' => $this->party->id,
             'party_type' => get_class($this->party)
         ]);
         $data = Networks::firstOrCreate([
             'owner_id' => $this->party->id,
             'owner_type' => get_class($this->party),
-            'party_id' => $this->modelType()->id,
-            'party_type' => get_class($this->modelType())
+            'party_id' => messenger_profile()->id,
+            'party_type' => get_class(messenger_profile())
         ]);
         $this->broadcastNetworkActivity(["data" => $data, "action" => false, "type" => $type]);
         return array("state" => true, "msg" => $this->party->name." is now in your friends list", "case" => 1);

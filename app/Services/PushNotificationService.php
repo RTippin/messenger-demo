@@ -10,7 +10,7 @@ class PushNotificationService
     protected $apple, $google;
     public function sendPushNotify($devices, $data, $voip = false)
     {
-        if(!config('app.mobile_notify') || !$devices->count()){
+        if(!config('messenger.mobile_notify') || !$devices->count()){
             return;
         }
         $this->apple = [];
@@ -60,7 +60,7 @@ class PushNotificationService
             ],
             'extraPayLoad' => $data['data']
         ])
-        ->setUrl((config('app.env') === 'production') ? 'ssl://gateway.push.apple.com' : 'ssl://gateway.sandbox.push.apple.com')
+        ->setUrl((config('app.env') === 'production') ? 'ssl://gateway.push.apple.com:2195' : 'ssl://gateway.sandbox.push.apple.com:2195')
         ->setDevicesToken($this->apple)
         ->send();
     }

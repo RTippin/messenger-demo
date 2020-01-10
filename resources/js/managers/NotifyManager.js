@@ -547,7 +547,7 @@ window.NotifyManager = (function () {
                 '            <img class="rounded media-object" height="50" width="50" src="'+friend.avatar+'">\n' +
                 '        </div>\n' +
                 '        <div class="media-body">\n' +
-                '        <span class="mt-n1 float-right small">'+friend.time_ago+' <i class="far fa-clock"></i></span>'+
+                '        <span class="mt-n1 float-right small">'+TippinManager.format().makeTimeAgo(friend.utc_created_at)+' <i class="far fa-clock"></i></span>'+
                 '            <h6 onclick="window.location.href=\'/'+friend.type+'/profile/'+friend.slug+'\'" class="ml-2 mb-1 font-weight-bold">'+friend.name+'</h6>\n' +
                 '            <div id="friend_actions_'+friend.id+'" class="mt-2 col-12 px-0">' +
                 '               <span class="float-right">' +

@@ -1,25 +1,26 @@
 <?php
 namespace App;
-use App\Models\Messages\MessengerSettings;
-use App\Models\User\UserInfo;
+use App\Models\Messages\Messenger;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class GhostUser extends Eloquent
 {
     protected $guarded = [];
+    public $keyType = 'string';
     protected $attributes = [
         'id' => '12345678-aaaa-4321-9df7-c8296b601234',
         'firstName' => 'Ghost',
         'lastName' => 'User',
-        'email' => 'ghost@ghost.com'
+        'email' => 'ghost@tippindev.com'
     ];
 
-    public function messengerSettings()
+    public function messenger()
     {
         return $this->newBelongsTo($this->newQuery(), $this, '', '', '')->withDefault(function(){
-            return new MessengerSettings([
+            return new Messenger([
                 'owner_id' => $this->id,
                 'owner_type' => 'App\User',
+                'slug' => 'ghost',
                 'online_status' => 0,
                 'knoks' => 0
             ]);
@@ -63,7 +64,7 @@ class GhostUser extends Eloquent
 
     public function slug($full = false)
     {
-        return $full ? route('user_profile', 'ghost', false) : 'ghost';
+        return $full ? route('model_profile', 'ghost', false) : 'ghost';
     }
 
     public function getNameAttribute()
@@ -74,15 +75,5 @@ class GhostUser extends Eloquent
     public function getJSNameAttribute()
     {
         return "Ghost User";
-    }
-
-    public function info()
-    {
-        return $this->newBelongsTo($this->newQuery(), $this, '', '', '')->withDefault(function(){
-            return new UserInfo([
-                'user_id' => $this->id,
-                'slug' => 'ghost'
-            ]);
-        });
     }
 }

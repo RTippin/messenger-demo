@@ -4,15 +4,19 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use File;
+use Illuminate\Http\Request;
 use Validator;
-use Image;
 
-class UploadService extends Service
+class UploadService
 {
-    protected $extra;
+    protected $extra, $request;
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
 
     /**
-     * call upload, only specify -> newUpload($type) -> message_photo, message_doc, company_image, user_image)
+     * call upload, only specify -> newUpload($type) -> message_photo, message_doc, user_image)
      * will always return array where state is bool, and text is file name or error message
      * @param null $type
      * @param null $extra
@@ -24,14 +28,17 @@ class UploadService extends Service
             $this->extra = $extra;
             return $this->startUpload($type);
         }
-        return array("state" => false, "error" => "Upload type not set!");
+        return [
+            'state' => false,
+            'error' => 'Upload type not set!'
+        ];
     }
 
     private function startUpload($type)
     {
         switch($type){
             case 'message_photo':
-            case 'user_photo':
+            case 'messenger_avatar':
                 return $this->grabFile('image_file', 1, $type);
             break;
             case 'message_doc':
@@ -41,7 +48,10 @@ class UploadService extends Service
                 return $this->grabFile('avatar_image_file', 1, $type);
             break;
         }
-        return array("state" => false, "error" => "Upload type not set!");
+        return [
+            'state' => false,
+            'error' => 'Upload type not set!'
+        ];
     }
 
     private function validate($file, $rules)
@@ -100,8 +110,8 @@ class UploadService extends Service
                 $destination = 'public/messenger/documents';
                 $name = $this->nameFile($file, 'document');
             break;
-            case 'user_photo':
-                $destination = 'public/user/profile';
+            case 'messenger_avatar':
+                $destination = 'public/profile/'.messenger_alias();
                 $this->removeOld();
                 $name = $this->nameFile($file, 'image');
             break;
@@ -118,14 +128,10 @@ class UploadService extends Service
 
     private function removeOld()
     {
-        switch($this->authType()){
-            case 1:
-                $old_pic = $this->auth->info->picture;
-                $file_path = storage_path('app/public/user/profile/'.$old_pic);
-                if(file_exists($file_path)){
-                    File::delete($file_path);
-                }
-            break;
+        $old_pic = messenger_profile()->messenger->picture;
+        $file_path = storage_path('app/public/profile/'.messenger_alias().'/'.$old_pic);
+        if(file_exists($file_path)){
+            File::delete($file_path);
         }
     }
 }

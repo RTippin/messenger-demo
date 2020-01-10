@@ -20,8 +20,8 @@
                         <td>
                             <div class="mt-1 float-right">
                             <span class="switch switch-sm mt-1">
-                            <input onchange="ThreadManager.switchToggle()" class="switch switch_input" id="recipients[{{class_basename($network->party) === 'Company' ? 'C' : 'U'}}_{{$network->party->id}}]" name="recipients[]" value="{{class_basename($network->party) === 'Company' ? 'C' : 'U'}}_{{$network->party->id}}" type="checkbox" />
-                            <label for="recipients[{{class_basename($network->party) === 'Company' ? 'C' : 'U'}}_{{$network->party->id}}]" class=""></label>
+                            <input onchange="ThreadManager.switchToggle()" class="switch switch_input" id="recipients[{{get_messenger_alias($network->party)}}_{{$network->party->id}}]" name="recipients[]" value="{{get_messenger_alias($network->party)}}_{{$network->party->id}}" type="checkbox" />
+                            <label for="recipients[{{get_messenger_alias($network->party)}}_{{$network->party->id}}]" class=""></label>
                         </span>
                             </div>
                         </td>

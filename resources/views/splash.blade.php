@@ -13,21 +13,21 @@
                 <div class="card shadow-lg">
                     <h3 class="card-header bg-gradient-dark text-light"><i class="fas fa-comments"></i> Messenger Demo</h3>
                     <div class="card-body bg-gradient-light">
-                        <h3>
+                        <h5>
                             Welcome to Tippin's Laravel Messenger demo app! We will be adding documentation soon, and working towards
                             releasing this as an entire suite/package! The source code for this demo project can be found on
                             <a target="_blank" href="https://github.com/RTippin">Tippin's Github</a>. You may sign up anytime and test
                             out our features currently provided, such as real time messaging/video calling/screen sharing/group messaging,
                             etc. We also provide a list of pre-populated users to choose from on the login page.
-                            We will reset this database once each night
-                        </h3>
+                            We will reset this database and all uploaded files once each week
+                        </h5>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="mt-4 pt-5">
+<div class="mt-4 pt-5 mb-5">
     <div class="container">
         <noscript>
             <div class="alert alert-danger shadow h4"><span class="float-right"><i class="fab fa-js-square fa-2x"></i></span> It appears your browser has javascript disabled. To continue using our website, you must first
@@ -42,4 +42,27 @@
         </div>
     </div>
 </div>
+<div class="container mt-4">
+    <div class="col-12 col-lg-8 offset-lg-2 px-0">
+        <div class="card bg-gradient-light rounded shadow">
+            <div class="card-header bg-gradient-dark text-light py-1">
+                <span class="h4"><strong><i class="fas fa-users"></i> Available Accounts</strong></span>
+            </div>
+            <div id="available_acc_elm" class="card-body p-2">
+                <div class="col-12 my-2 text-center"><div class="spinner-border text-primary" role="status"></div></div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
+@push('special-js')
+    <script>
+        TippinManager.xhr().request({
+            route : '/auth/accounts',
+            success : function(data){
+                $("#available_acc_elm").html(data.html);
+            },
+            fail : null
+        });
+    </script>
+@endpush

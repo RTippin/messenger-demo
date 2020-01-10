@@ -26,13 +26,12 @@ class ThreadChannel
      */
     public function join(User $user, $thread)
     {
-        $model = ChannelRequest::currentProfile($user);
-        if($model && ThreadService::AuthThreadSocket($thread, $model)){
+        if(messenger_profile() && ThreadService::AuthThreadSocket($thread, messenger_profile())){
             return [
-                'slug' => $model->avatar,
-                'name' => $model->name,
-                'owner_id' => $model->id,
-                'online' => $model->isOnline()
+                'slug' => messenger_profile()->avatar,
+                'name' => messenger_profile()->name,
+                'owner_id' => messenger_profile()->id,
+                'online' => messenger_profile()->isOnline()
             ];
         }
         return null;

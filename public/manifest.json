@@ -1,0 +1,16 @@
+{
+  "name": "Tipz Messenger",
+  "short_name": "Tipz",
+  "description": "Laravel messenger demp app by Richard Tippin. Working to release this messenger as a suite to use with laravel",
+  "lang": "en-US",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#282c30",
+  "icons": [
+    {
+      "src": "/images/tipz.png",
+      "sizes": "200x200",
+      "type": "image/png"
+    }
+  ]
+}

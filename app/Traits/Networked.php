@@ -9,11 +9,6 @@ trait Networked
         return $this->morphMany('App\Models\Networks\Networks', 'owner');
     }
 
-    public function getNetworksUserAttribute()
-    {
-        return $this->networks()->where('party_type', 'App\User')->get();
-    }
-
     public function pendingSentNetworks()
     {
         return $this->morphMany('App\Models\Networks\PendingNetworks', 'sender');

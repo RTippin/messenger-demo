@@ -7,13 +7,24 @@ use App\Models\Messages\GroupInviteLink;
 use App\Models\Messages\Participant;
 use App\Models\Messages\Thread;
 use App\Models\Messages\Message;
+use Carbon\Carbon;
 use Exception;
 
 class MessengerRepo
 {
-    public static function MakeMessengerSettings($model)
+    public static function FormatDateTimezone(Carbon $date, $model = null)
     {
-        $settings = $model->messengerSettings;
+        try{
+            if($model) return $date->timezone($model->messenger->timezone ?? 'America/New_York');
+        }catch (Exception $e){
+            report($e);
+        }
+        return $date;
+    }
+
+    public static function MakeMessenger($model)
+    {
+        $settings = $model->messenger;
         return [
             'message_popups' => $settings->message_popups,
             'message_sound' => $settings->message_sound,
@@ -28,7 +39,7 @@ class MessengerRepo
     {
         $threads = collect([]);
         try{
-            $_threads = ThreadService::LocateThreads($model, 0, ['participants.owner.messengerSettings', 'participants.owner.info', 'activeCall', 'messages.owner', 'calls.participants.owner']);
+            $_threads = ThreadService::LocateThreads($model, 0, ['participants.owner.messenger', 'activeCall', 'messages.owner', 'calls.participants.owner']);
             if($_threads){
                 $_threads->each(function($thread) use($threads, $model){
                     $construct = self::MakeThread($thread, $model);
@@ -81,13 +92,13 @@ class MessengerRepo
         return $calls;
     }
 
-    public static function MakeThreadMessages(Thread $thread, $messages)
+    public static function MakeThreadMessages(Thread $thread, $messages, $model)
     {
         $collection = collect([]);
         try{
             if($messages && count($messages)){
-                $messages->each(function($message) use($collection, $thread){
-                    $construct = self::MakeMessage($thread, $message);
+                $messages->each(function($message) use($collection, $thread, $model){
+                    $construct = self::MakeMessage($thread, $message, $model);
                     if($construct) $collection->push($construct);
                 });
             }
@@ -104,11 +115,11 @@ class MessengerRepo
             'slug' => route('messenger_invite_join', $link->slug),
             'max_use' => $link->max_use,
             'uses' => $link->uses,
-            'expires' => $link->expires_at ? $link->expires_at->diffForHumans() : null
+            'expires' => $link->expires_at ? $link->expires_at->toDateTimeString() : null
         ];
     }
 
-    public static function MakeMessage(Thread $thread, Message $message)
+    public static function MakeMessage(Thread $thread, Message $message, $model)
     {
         try{
             return [
@@ -121,7 +132,8 @@ class MessengerRepo
                 'avatar' => $message->owner->avatar,
                 'slug' => $message->owner->slug(true),
                 'body' => MessageService::MessageContentsFormat($thread, $message),
-                'created_at' => $message->created_at->toDateTimeString()
+                'created_at' => self::FormatDateTimezone($message->created_at, $model)->toDateTimeString(),
+                'utc_created_at' => $message->created_at->toDateTimeString()
             ];
         }catch (Exception $e){
             report($e);
@@ -145,8 +157,10 @@ class MessengerRepo
                 'name' => ThreadService::IsGroup($thread) ? $thread->name : $party->owner->name,
                 'avatar' => ThreadService::IsGroup($thread) ? $thread->avatar : $party->owner->avatar,
                 'online' => ThreadService::IsGroup($thread) ? 0 : $party->owner->onlineStatusNumber,
-                'created_at' => $thread->created_at->toDateTimeString(),
-                'updated_at' => $thread->updated_at->toDateTimeString(),
+                'created_at' => self::FormatDateTimezone($thread->created_at, $model)->toDateTimeString(),
+                'utc_created_at' => $thread->created_at->toDateTimeString(),
+                'updated_at' => self::FormatDateTimezone($thread->updated_at, $model)->toDateTimeString(),
+                'utc_updated_at' => $thread->updated_at->toDateTimeString(),
                 'recent_message' => [
                     'message_type' => $messageLatest ? $messageLatest->mtype : 0,
                     'name' => $messageLatest ? $messageLatest->owner->name : 'No',
@@ -179,10 +193,11 @@ class MessengerRepo
         try{
             $thread->participants->reject(function ($value) use($model){
                 return $value->owner_id === $model->id;
-            })->each(function($participant) use($bobble_heads, $thread){
+            })->each(function($participant) use($bobble_heads, $thread, $model){
                 $last_message = ThreadService::LastSeenMessage($thread, $participant);
                 $bobble_heads->push([
-                    'last_active' => ($participant->owner->messengerSettings->online_status === 0 ? null : $participant->owner->messengerSettings->updated_at->toDateTimeString()),
+                    'last_active' => ($participant->owner->messenger->online_status === 0 ? null : self::FormatDateTimezone($participant->owner->messenger->updated_at, $model)->toDateTimeString()),
+                    'utc_last_active' => ($participant->owner->messenger->online_status === 0 ? null : $participant->owner->messenger->updated_at->toDateTimeString()),
                     'owner_id' => $participant->owner_id,
                     'owner_type' => $participant->owner_type,
                     'name' => $participant->owner->name,
@@ -208,10 +223,10 @@ class MessengerRepo
                 'owner_id' => $party->owner->id,
                 'slug' => $party->owner->slug(false),
                 'route' => $party->owner->slug(true),
-                'type' => strtolower(class_basename($party->owner)),
+                'type' => get_messenger_alias($party->owner),
                 'network' => $network,
                 'can_call' => ThreadService::CanStartCall($thread, $participant, $network),
-                'knoks' => $party->owner->messengerSettings->knoks
+                'knoks' => $party->owner->messenger->knoks
             ];
         }catch (Exception $e){
             report($e);
@@ -232,7 +247,7 @@ class MessengerRepo
                 'bobble_heads' => self::MakeBobbleHeads($thread, $model),
                 'party' => self::MakePrivateParty($thread, $participant, $model, $party),
                 'thread' => $thread_gen,
-                'recent_messages' => self::MakeThreadMessages($thread, MessageService::PullMessagesMethod($thread))
+                'recent_messages' => self::MakeThreadMessages($thread, MessageService::PullMessagesMethod($thread), $model)
             ];
         }
         return null;
@@ -244,7 +259,7 @@ class MessengerRepo
             return [
                 'bobble_heads' => self::MakeBobbleHeads($thread, $model),
                 'thread' => self::MakeThread($thread, $model),
-                'recent_messages' => self::MakeThreadMessages($thread, MessageService::PullMessagesMethod($thread))
+                'recent_messages' => self::MakeThreadMessages($thread, MessageService::PullMessagesMethod($thread), $model)
             ];
         }
         return null;

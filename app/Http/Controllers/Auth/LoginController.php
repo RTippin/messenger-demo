@@ -3,22 +3,22 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\User;
-use Hash;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Cache;
 use Validator;
+use Exception;
 
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
     protected $redirectTo = '/messenger';
     protected $decayMinutes = 5;
+    protected $request;
 
     public function __construct(Request $request)
     {
-        parent::__construct($request);
+        $this->request = $request;
         $this->middleware('guest', ['except' => 'logout']);
     }
 
@@ -58,8 +58,8 @@ class LoginController extends Controller
     protected function logout()
     {
         if(auth()->check()){
-            Cache::forget(strtolower(class_basename($this->modelType())).'_online_'.$this->modelType()->id);
-            Cache::forget(strtolower(class_basename($this->modelType())).'_away_'.$this->modelType()->id);
+            Cache::forget(messenger_alias().'_online_'.messenger_profile()->id);
+            Cache::forget(messenger_alias().'_away_'.messenger_profile()->id);
         }
         $this->guard()->logout();
         $this->request->session()->invalidate();
@@ -74,10 +74,16 @@ class LoginController extends Controller
         return response()->json(['error' => 'These credentials do not match our records', 'type' => 0], 401);
     }
 
-    protected function authenticated($request, $user)
+    public function authenticated($request, $user)
     {
         $intended = session()->get('url.intended');
-        $user->messengerSettings->touch();
+        try{
+            $user->messenger->timezone = geoip()->getLocation($this->request->ip())->getAttribute('timezone');
+            $user->messenger->ip = $this->request->ip();
+            $user->messenger->save();
+        }catch (Exception $e){
+            report($e);
+        }
         return response()->json(['auth' => auth()->check(),'intended' => ($intended ? $intended : 'reload')]);
     }
 

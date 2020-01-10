@@ -44,6 +44,7 @@ import dt from 'datatables.net-bs4';
 window.dt = require( 'datatables.net');
 window.toastr = require('toastr');
 window.autosize = require('autosize');
+window.moment = require('moment');
 import 'simplebar';
 
 

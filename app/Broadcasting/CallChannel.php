@@ -27,12 +27,11 @@ class CallChannel
      */
     public function join(User $user, $thread, $call)
     {
-        $model = ChannelRequest::currentProfile($user);
-        if($model && CallService::AuthCallSocket($thread, $call, $model)){
+        if(messenger_profile() && CallService::AuthCallSocket($thread, $call, messenger_profile())){
             return [
-                'avatar' => $model->avatar,
-                'name' => $model->name,
-                'owner_id' => $model->id
+                'avatar' => messenger_profile()->avatar,
+                'name' => messenger_profile()->name,
+                'owner_id' => messenger_profile()->id
             ];
         }
         return null;

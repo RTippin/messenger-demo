@@ -12,6 +12,8 @@ class Participant extends Eloquent
     use SoftDeletes, Uuids;
     public $incrementing = false;
 
+    public $keyType = 'string';
+
     /**
      * The database table used by the model.
      *

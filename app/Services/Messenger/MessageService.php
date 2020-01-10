@@ -221,7 +221,7 @@ class MessageService
             'mtype' => $contents['type']
         ]);
         if($message && $message instanceof Message){
-            (new BroadcastService($thread, $model))->broadcastChannels()->broadcastMessage($message->load('owner.info'));
+            (new BroadcastService($thread, $model))->broadcastChannels()->broadcastMessage($message->load('owner.messenger'));
             return [
                 'state' => true,
                 'data' => $message
@@ -244,7 +244,7 @@ class MessageService
                 'mtype' => $type
             ]);
             if($broadcast){
-                (new BroadcastService($thread, $model))->broadcastChannels(true)->broadcastMessage($message->load('owner.info'));
+                (new BroadcastService($thread, $model))->broadcastChannels(true)->broadcastMessage($message->load('owner.messenger'));
             }
         }catch (Exception $e){
             report($e);

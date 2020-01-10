@@ -26,11 +26,10 @@ mix.scripts(['resources/js/managers/ThreadManager.js'], 'public/js/managers/Thre
 mix.scripts(['resources/js/templates/ThreadTemplates.js'], 'public/js/templates/ThreadTemplates.js').version();
 mix.scripts(['resources/js/managers/NetworksManager.js'], 'public/js/managers/NetworksManager.js').version();
 mix.scripts(['resources/js/managers/GuestManager.js'], 'public/js/managers/GuestManager.js').version();
-mix.scripts(['resources/js/modules/timestamps.js'], 'public/js/modules/timestamps.js').version();
 mix.scripts(['resources/js/modules/Emoji.js'], 'public/js/modules/Emoji.js').version();
 mix.js('resources/js/app.js', 'public/js').sass('resources/sass/app.scss', 'public/css').version();
 mix.js('resources/js/emojione.js', 'public/js/modules').version();
 mix.js('resources/js/managers/NotifyManager.js', 'public/js/managers').version();
-mix.js(['resources/js/managers/WebRTCManager.js'], 'public/js/managers').version();
+mix.js('resources/js/managers/WebRTCManager.js', 'public/js/managers').version();
 mix.sass('resources/sass/messages.scss', 'public/css').version();
 mix.sass('resources/sass/calls.scss', 'public/css').version();

@@ -7,6 +7,7 @@ use App\Http\Middleware\CheckAccountActive;
 use App\Http\Middleware\CheckForMaintenanceMode;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\Registration;
+use App\Http\Middleware\SetMessengerModel;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -50,9 +51,9 @@ class Kernel extends HttpKernel
             AuthenticateSession::class,
             AuthViaRemember::class,
             VerifyCsrfToken::class,
-            SubstituteBindings::class
+            SubstituteBindings::class,
+            SetMessengerModel::class,
         ],
-
         'api' => [
             'throttle:60,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,

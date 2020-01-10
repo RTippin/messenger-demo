@@ -4,11 +4,12 @@ namespace App\Models\Messages;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MessengerSettings extends Model
+class Messenger extends Model
 {
     public $incrementing = false;
+    public $keyType = 'string';
     protected $primaryKey = 'owner_id';
-    protected $fillable = ['owner_id', 'owner_type', 'online_status', 'knoks'];
+    protected $guarded = [];
 
     public function owner()
     {

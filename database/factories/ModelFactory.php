@@ -26,15 +26,6 @@ $factory->define(App\User::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(App\Models\User\UserInfo::class, function (Faker $faker) {
-    return [
-        'picture' => null
-//        'picture' => $faker->image(storage_path('/'),640,480, 'people', false, true)
-    ];
-});
-
-
-
 $factory->define(App\Models\Messages\Thread::class, function (Faker $faker) {
     return [
         'ttype' => 2,

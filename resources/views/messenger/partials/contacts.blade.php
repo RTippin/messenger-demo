@@ -1,4 +1,4 @@
-<div class="{{$user_agent->isMobile() ? '' : 'px-4'}} mt-2">
+<div class="{{agent()->isMobile() ? '' : 'px-4'}} mt-2">
     @if($networks->count())
         <div class="table-responsive-sm">
             <table id="contact_list_table" class="table table-sm table-hover table-striped">
@@ -26,9 +26,9 @@
                         <td>
                             <div class="float-right nowrap">
                                 <button id="remove_network_{{$network->party->slug()}}" data-toggle="tooltip" title="Remove friend" data-placement="left" class="btn btn-danger pt-1 pb-0 px-2"
-                                        onclick="NetworksManager.action({action : 'remove', slug : '{{$network->party->slug()}}', type : '{{strtolower(class_basename($network->party))}}'})">
+                                        onclick="NetworksManager.action({action : 'remove', slug : '{{$network->party->slug()}}', type : '{{get_messenger_alias($network->party)}}'})">
                                     <i class="fas fa-user-times fa-2x"></i></button>
-                                <button data-toggle="tooltip" title="Message" data-placement="left" onclick="ThreadManager.load().createPrivate({slug : '{{$network->party->slug()}}', type : '{{strtolower(class_basename($network->party))}}'})" class="btn btn-primary pt-1 pb-0 px-2"><i class="fas fa-comments fa-2x"></i></button>
+                                <button data-toggle="tooltip" title="Message" data-placement="left" onclick="ThreadManager.load().createPrivate({slug : '{{$network->party->slug()}}', type : '{{get_messenger_alias($network->party)}}'})" class="btn btn-primary pt-1 pb-0 px-2"><i class="fas fa-comments fa-2x"></i></button>
                             </div>
                         </td>
                     </tr>

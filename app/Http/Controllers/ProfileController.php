@@ -1,26 +1,23 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Models\Messages\Messenger;
 
 class ProfileController extends Controller
 {
-
-    public function viewUserProfile($slug, $redirect = null)
+    public function viewProfile($alias, $slug, $message = null)
     {
-        if($redirect === 'message'){
-            return redirect()->route('messages.create', ['slug' => $slug, 'type' => 'user']);
+        if($message === 'message'){
+            return redirect()->route('messages.create', ['slug' => $slug, 'alias' => $alias]);
         }
-        $userViewing = User::query()->whereHas('info', function ($q) use($slug){
-            $q->where('slug', $slug);
-        })->with(['networks.party.info'])->first();
-        if(!$userViewing){
+        $profile = Messenger::query()->where('slug', $slug)->with(['owner.networks.party'])->first();
+        if(!$profile || ($profile && get_messenger_alias($profile->owner) !== $alias)){
             return response()->view('errors.custom', ['err' => 'noProfile'], 404);
         }
         $con = 0;
-        if($this->modelType()){
-            $con = $this->modelType()->networkStatus($userViewing);
+        if(messenger_profile()){
+            $con = messenger_profile()->networkStatus($profile->owner);
         }
-        return view('profiles.user.base')->with(compact('userViewing','con'));
+        return view('profiles.base')->with(compact('profile','con'));
     }
 }

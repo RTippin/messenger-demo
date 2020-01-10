@@ -39,14 +39,14 @@
 	<div class="col-12 px-0 text-center text-dark">
 		<h3><i class="fas fa-poll-h"></i> Search for people</h3>
 	</div>
-@elseif(!count($users))
+@elseif(!count($profiles))
 	<div class="col-12 px-0 text-center text-dark mt-5">
 		<h3><i class="fas fa-poll-h"></i> No results found for '{{ Request('query') }}'</h3>
 		<h4>Please try another query</h4>
 	</div>
 @else
 	<div class="col-12 col-lg-8 offset-lg-2 mt-3 px-0">
-	@if(count($users))
+	@if(count($profiles))
 		<div class="card bg-transparent">
 			<div class="card-header bg-gradient-secondary text-light py-1">
 				<span class="h4"><strong><i class="fas fa-users"></i> People</strong></span>
@@ -61,41 +61,41 @@
 						</tr>
 						</thead>
 						<tbody>
-						@foreach($users as $key => $item)
+						@foreach($profiles as $key => $item)
 							<tr>
 								<td>
 									<div class="table_links">
 										<div class="nowrap">
-											<a href="{{$item->slug(true)}}">
-												<img class="rounded group-image" src="{{asset($item->avatar())}}"/>
-												<span class="h5"><span class="badge badge-light">{{$item->name}}</span></span>
+											<a href="{{$item->owner->slug(true)}}">
+												<img class="rounded group-image" src="{{asset($item->owner->avatar())}}"/>
+												<span class="h5"><span class="badge badge-light">{{$item->owner->name}}</span></span>
 											</a>
 										</div>
 									</div>
 								</td>
 								@if(Auth::check())
 								<td>
-									@if($user->id !== $item->id)
-										@php $con = $current_model->networkStatus($item); @endphp
+									@if(messenger_profile()->id !== $item->owner->id)
+										@php $con = messenger_profile()->networkStatus($item->owner); @endphp
 										<div class="float-right">
-									<span id="network_for_{{$item->id}}">
+									<span id="network_for_{{$item->owner->id}}">
 									@switch($con)
 											@case(0)
-											<button id="add_network_{{$item->id}}" data-toggle="tooltip" title="Add friend" data-placement="top" class="btn btn-success pt-1 pb-0 px-2" onclick="NetworksManager.action({action : 'add', slug : '{{$item->slug()}}', type : 'user', owner_id : '{{$item->id}}'});"><i class="fas fa-user-plus fa-2x"></i></button>
+											<button id="add_network_{{$item->owner->id}}" data-toggle="tooltip" title="Add friend" data-placement="top" class="btn btn-success pt-1 pb-0 px-2" onclick="NetworksManager.action({action : 'add', slug : '{{$item->owner->slug()}}', type : 'user', owner_id : '{{$item->owner->id}}'});"><i class="fas fa-user-plus fa-2x"></i></button>
 											@break
 											@case(1)
-											<button id="remove_network_{{$item->id}}" data-toggle="tooltip" title="Remove friend" data-placement="top" class="btn btn-danger pt-1 pb-0 px-2" onclick="NetworksManager.action({action : 'remove', slug : '{{$item->slug()}}', type : 'user', owner_id : '{{$item->id}}'});"><i class="fas fa-user-times fa-2x"></i></button>
+											<button id="remove_network_{{$item->owner->id}}" data-toggle="tooltip" title="Remove friend" data-placement="top" class="btn btn-danger pt-1 pb-0 px-2" onclick="NetworksManager.action({action : 'remove', slug : '{{$item->owner->slug()}}', type : 'user', owner_id : '{{$item->owner->id}}'});"><i class="fas fa-user-times fa-2x"></i></button>
 											@break
 											@case(2)
-											<button id="cancel_network_{{$item->id}}" data-toggle="tooltip" title="Cancel friend request" data-placement="top" class="btn btn-danger pt-1 pb-0 px-2" onclick="NetworksManager.action({action : 'cancel', slug : '{{$item->slug()}}', type : 'user', owner_id : '{{$item->id}}'});"><i class="fas fa-ban fa-2x"></i></button>
+											<button id="cancel_network_{{$item->owner->id}}" data-toggle="tooltip" title="Cancel friend request" data-placement="top" class="btn btn-danger pt-1 pb-0 px-2" onclick="NetworksManager.action({action : 'cancel', slug : '{{$item->owner->slug()}}', type : 'user', owner_id : '{{$item->owner->id}}'});"><i class="fas fa-ban fa-2x"></i></button>
 											@break
 											@case(3)
-											<button id="accept_network_{{$item->id}}" data-toggle="tooltip" title="Accept friend request" data-placement="top" class="btn btn-success pt-1 pb-0 px-2" onclick="NetworksManager.action({action : 'accept', slug : '{{$item->slug()}}', type : 'user', owner_id : '{{$item->id}}'});"><i class="far fa-check-circle fa-2x"></i></button>
-											<button id="deny_network_{{$item->id}}" data-toggle="tooltip" title="Deny friend request" data-placement="top" class="btn btn-danger pt-1 pb-0 px-2" onclick="NetworksManager.action({action : 'deny', slug : '{{$item->slug()}}', type : 'user', owner_id : '{{$item->id}}'});"><i class="fas fa-ban fa-2x"></i></button>
+											<button id="accept_network_{{$item->owner->id}}" data-toggle="tooltip" title="Accept friend request" data-placement="top" class="btn btn-success pt-1 pb-0 px-2" onclick="NetworksManager.action({action : 'accept', slug : '{{$item->owner->slug()}}', type : 'user', owner_id : '{{$item->owner->id}}'});"><i class="far fa-check-circle fa-2x"></i></button>
+											<button id="deny_network_{{$item->owner->id}}" data-toggle="tooltip" title="Deny friend request" data-placement="top" class="btn btn-danger pt-1 pb-0 px-2" onclick="NetworksManager.action({action : 'deny', slug : '{{$item->owner->slug()}}', type : 'user', owner_id : '{{$item->owner->id}}'});"><i class="fas fa-ban fa-2x"></i></button>
 											@break
 										@endswitch
 									</span>
-											<a href="{{$item->slug(true)}}/message" data-toggle="tooltip" title="Message {{$item->name}}" data-placement="right" class="btn btn-primary pt-1 pb-0 px-2"><i class="fas fa-comments fa-2x"></i></a>
+											<a href="{{$item->owner->slug(true)}}/message" data-toggle="tooltip" title="Message {{$item->owner->name}}" data-placement="right" class="btn btn-primary pt-1 pb-0 px-2"><i class="fas fa-comments fa-2x"></i></a>
 										</div>
 									@endif
 								</td>

@@ -13,9 +13,10 @@ use Exception;
 
 class AuthStatusController extends Controller
 {
+    protected $request;
     public function __construct(Request $request)
     {
-        parent::__construct($request);
+        $this->request = $request;
         if(Auth::check()){
             $this->middleware('IsActive');
         }
@@ -23,14 +24,14 @@ class AuthStatusController extends Controller
 
     private function markOnline()
     {
-        Cache::forget(strtolower(class_basename($this->modelType())).'_away_'.$this->modelType()->id);
-        Cache::put(strtolower(class_basename($this->modelType())).'_online_'.$this->modelType()->id, true, now()->addMinutes(2));
+        Cache::forget(messenger_alias().'_away_'.messenger_profile()->id);
+        Cache::put(messenger_alias().'_online_'.messenger_profile()->id, true, now()->addMinutes(2));
     }
 
     private function markAway()
     {
-        Cache::forget(strtolower(class_basename($this->modelType())).'_online_'.$this->modelType()->id);
-        Cache::put(strtolower(class_basename($this->modelType())).'_away_'.$this->modelType()->id, true, now()->addMinutes(2));
+        Cache::forget(messenger_alias().'_online_'.messenger_profile()->id);
+        Cache::put(messenger_alias().'_away_'.messenger_profile()->id, true, now()->addMinutes(2));
     }
 
     public function authHeartBeat()
@@ -52,7 +53,7 @@ class AuthStatusController extends Controller
                     }
                 }
                 else{
-                    if(Cache::has(strtolower(class_basename($this->modelType())).'_away_'.$this->modelType()->id)){
+                    if(Cache::has(messenger_alias().'_away_'.messenger_profile()->id)){
                         $this->markAway();
                     }
                     else{
@@ -60,11 +61,18 @@ class AuthStatusController extends Controller
                     }
                 }
                 try{
-                    $this->modelType()->messengerSettings->touch();
-                    $notify = $this->modelType()->unreadNotifications->count();
-                    $threads = $this->modelType()->unreadThreadsCount();
-                    $active_calls = MessengerRepo::MakeActiveCalls($this->modelType());
-                    if($this->modelType()->pendingReceivedNetworks->count()) $network_request = NetworksService::MakeNetworkRequest($this->modelType());
+                    if($this->request->ip() !== messenger_profile()->messenger->ip){
+                        messenger_profile()->messenger->ip = $this->request->ip();
+                        messenger_profile()->messenger->timezone = geoip()->getLocation($this->request->ip())->getAttribute('timezone');
+                        messenger_profile()->messenger->save();
+                    }
+                    else{
+                        messenger_profile()->messenger->touch();
+                    }
+                    $notify = messenger_profile()->unreadNotifications->count();
+                    $threads = messenger_profile()->unreadThreadsCount();
+                    $active_calls = MessengerRepo::MakeActiveCalls(messenger_profile());
+                    if(messenger_profile()->pendingReceivedNetworks->count()) $network_request = NetworksService::MakeNetworkRequest(messenger_profile());
                 }catch (Exception $e){
                     report($e);
                 }
@@ -72,7 +80,7 @@ class AuthStatusController extends Controller
             return response()->json([
                 'auth' => auth()->check(),
                 'token' => csrf_token(),
-                'model' => (auth()->check() ? strtolower(class_basename($this->modelType())) : 'guest'),
+                'model' => (auth()->check() ? messenger_alias() : 'guest'),
                 'states' => (auth()->check() ? [
                     'unread_notify_count' => $notify,
                     'unread_threads_count' => $threads,

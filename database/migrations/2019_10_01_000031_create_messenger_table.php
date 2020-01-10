@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMessengerSettingsTable extends Migration
+class CreateMessengerTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,19 @@ class CreateMessengerSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('messenger_settings', function (Blueprint $table) {
+        Schema::create('messengers', function (Blueprint $table) {
             $table->uuid('owner_id');
             $table->string('owner_type');
+            $table->string('slug');
+            $table->string('picture')->nullable();
             $table->boolean('message_popups')->default(1);
             $table->boolean('message_sound')->default(1);
             $table->boolean('call_ringtone_sound')->default(1);
             $table->boolean('knoks')->default(1);
             $table->boolean('calls_outside_networks')->default(0);
             $table->integer('online_status')->default(1);
+            $table->string('ip')->nullable()->default(null);
+            $table->string('timezone')->nullable()->default(null);
             $table->timestamps();
         });
     }
@@ -33,6 +37,6 @@ class CreateMessengerSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('messenger_settings');
+        Schema::dropIfExists('messengers');
     }
 }

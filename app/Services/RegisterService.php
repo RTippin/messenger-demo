@@ -3,16 +3,21 @@
 namespace App\Services;
 
 use App\Http\Requests\Register;
-use App\Models\Messages\MessengerSettings;
+use App\Models\Messages\Messenger;
 use App\User;
 use Auth;
-use App\Models\User\UserInfo;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Exception;
 
-class RegisterService extends Service
+class RegisterService
 {
+    protected $request;
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
 
     public function registerPost($mobile = false)
     {
@@ -27,7 +32,7 @@ class RegisterService extends Service
     {
         $newUser = $this->makeUser(['active' => 1]);
         if($newUser){
-            if(self::makeUserInfo($newUser) && self::makeUserMessengerSettings($newUser)){
+            if(self::makeUserMessenger($newUser)){
                 if(!$mobile) Auth::guard()->login($newUser);
                 return [
                     'state' => true,
@@ -64,27 +69,14 @@ class RegisterService extends Service
         }
     }
 
-    private static function makeUserInfo($user)
+    private static function makeUserMessenger($user)
     {
         try{
-            $info = new UserInfo();
-            $info->user_id = $user->id;
-            $info->slug = Str::slug($user->lastName.' '.Str::random(4),'-').'_'.Carbon::now()->timestamp;
-            $info->save();
-            return true;
-        }catch (Exception $e){
-            report($e);
-            return false;
-        }
-    }
-
-    private static function makeUserMessengerSettings($user)
-    {
-        try{
-            $messageSettings = new MessengerSettings();
-            $messageSettings->owner_id = $user->id;
-            $messageSettings->owner_type = "App\User";
-            $messageSettings->save();
+            $messenger = new Messenger();
+            $messenger->owner_id = $user->id;
+            $messenger->owner_type = "App\User";
+            $messenger->slug = Str::slug($user->lastName.' '.Str::random(4),'-').'_'.Carbon::now()->timestamp;
+            $messenger->save();
             return true;
         }catch (Exception $e){
             report($e);

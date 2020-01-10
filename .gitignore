@@ -5,8 +5,6 @@
 /vendor
 .env
 .env.backup
-.editorconfig
-.styleci.yml
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -24,6 +22,7 @@ laravel-echo-server.json
 laravel-echo-server.lock
 _ide_helper.php
 /public/uploads/
+.editorconfig
 
 #\.env\.example
 

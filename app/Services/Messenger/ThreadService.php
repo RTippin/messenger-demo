@@ -154,7 +154,7 @@ class ThreadService
         }
         if(self::IsPrivate($thread)){
             $party = self::OtherParty($thread, $participant);
-            if(!$party->owner->messengerSettings->calls_outside_networks && (is_null($network) ? $participant->owner->networkStatus($party->owner) : $network) !== 1){
+            if(!$party->owner->messenger->calls_outside_networks && (is_null($network) ? $participant->owner->networkStatus($party->owner) : $network) !== 1){
                 return false;
             }
         }
@@ -212,25 +212,28 @@ class ThreadService
         return $participant->last_read ? $thread->messages->sortByDesc('created_at')->where('created_at', '<=', $participant->last_read)->first() : null;
     }
 
-    public static function LocateExistingPrivate($threads, $arr = ['check' => 'user'])
+    public static function LocateExistingPrivate($threads, $arr = ['check' => null])
     {
         try{
             $data = null;
+            $alias = null;
             switch($arr['check']){
-                case 'user':
-                    $data = User::WhereHas('info', function($q) use($arr){
-                        $q->where('slug', $arr['slug']);
-                    })->first();
+                case 'profile':
+                    $class = get_alias_class($arr['alias']);
+                    if($class){
+                        $alias = $arr['alias'];
+                        $data = $class::WhereHas('messenger', function($q) use($arr){
+                            $q->where('slug', $arr['slug']);
+                        })->first();
+                    }
                 break;
                 case 'new_private':
                     $arg = explode('_', $arr['recipient']);
-                    if(count($arr) > 1){
-                        $type = (in_array($arg[0], ['C','U'])) ? ($arg[0] === "C" ? 2 : 1) : null;
-                        $data = User::find($arg[1]);
+                    $class = get_alias_class($arg[0]);
+                    if($class){
+                        $alias = $arg[0];
+                        $data = $class::find($arg[1]);
                     }
-                break;
-                case 'internal':
-                    $data = $arr['profile'];
                 break;
             }
             if(!$data){
@@ -251,7 +254,7 @@ class ThreadService
             return [
                 'state' => false,
                 'model' => $data,
-                'type' => $arr['check']
+                'type' => $alias
             ];
         }catch (Exception $e){
             report($e);
@@ -520,7 +523,7 @@ class ThreadService
         }
         if(self::IsPrivate($thread)){
             $party = self::OtherParty($thread, $participant);
-            if(!$party->owner->messengerSettings->knoks){
+            if(!$party->owner->messenger->knoks){
                 return [
                     'state' => false,
                     'error' => $party->owner->name.' is not accepting knocks at this time'

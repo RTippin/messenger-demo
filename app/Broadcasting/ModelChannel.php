@@ -4,7 +4,7 @@ namespace App\Broadcasting;
 
 use App\User;
 
-class UserChannel
+class ModelChannel
 {
     /**
      * Create a new channel instance.
@@ -20,11 +20,12 @@ class UserChannel
      * Authenticate the user's access to the channel.
      *
      * @param \App\User $user
+     * @param $alias
      * @param $id
      * @return array|bool
      */
-    public function join(User $user, $id)
+    public function join(User $user, $alias, $id)
     {
-        return $user->id === $id;
+        return messenger_alias() === $alias && messenger_profile()->id === $id;
     }
 }

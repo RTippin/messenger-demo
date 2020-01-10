@@ -1,18 +1,18 @@
 @extends('layouts.app')
-@section('title'){{$current_model->name}} - Messenger @endsection
+@section('title'){{messenger_profile()->name}} - Messenger @endsection
 @push('css')<link href="{{ asset("css/emoji/emoji.css?").config('app.version') }}" rel="stylesheet">
     <link href="{{ mix("css/messages.css") }}" rel="stylesheet">
 @endpush
 @section('content')
 <div class="container-fluid mt-n3">
     <div id="messenger_container" class="row inbox d-flex">
-        <div id="message_sidebar_container" class="{{request()->is('messenger/*') && $user_agent->isMobile() ? 'NS' : ''}} {{$user_agent->isMobile() ? 'w-100' : 'w-25'}} px-0 h-100">
+        <div id="message_sidebar_container" class="{{request()->is('messenger/*') && agent()->isMobile() ? 'NS' : ''}} {{agent()->isMobile() ? 'w-100' : 'w-25'}} px-0 h-100">
             <div class="card bg-transparent h-100">
                 <div class="card-header bg-white px-1 d-flex justify-content-between">
                     <div id="my_avatar_status">
-                        <img data-toggle="tooltip" data-placement="right" title="You are {{$current_model->onlineStatus()}}" class="my-global-avatar ml-1 rounded-circle medium-image avatar-is-{{$current_model->onlineStatus()}}" src="{{$current_model->avatar}}" />
+                        <img data-toggle="tooltip" data-placement="right" title="You are {{messenger_profile()->onlineStatus()}}" class="my-global-avatar ml-1 rounded-circle medium-image avatar-is-{{messenger_profile()->onlineStatus()}}" src="{{messenger_profile()->avatar}}" />
                     </div>
-                    <span class="{{$user_agent->isMobile() ? '' : 'd-none d-md-inline'}} h4 font-weight-bold">Messenger</span>
+                    <span class="{{agent()->isMobile() ? '' : 'd-none d-md-inline'}} h4 font-weight-bold">Messenger</span>
                     <div class="dropdown">
                         <button data-tooltip="tooltip" title="Messenger Options" data-placement="right" class="btn btn-lg text-secondary btn-light pt-1 pb-0 px-2 dropdown-toggle" data-toggle="dropdown"><i class="fas fa-cogs fa-2x"></i></button>
                         <div class="dropdown-menu dropdown-menu-right">
@@ -44,7 +44,7 @@
                 </div>
             </div>
         </div>
-        <div id="message_content_container" class="{{$user_agent->isMobile() ? request()->is('messenger/*') ? '' : 'NS' : ''}} {{$user_agent->isMobile() ? 'w-100' : 'w-75'}} flex-fill h-100">
+        <div id="message_content_container" class="{{agent()->isMobile() ? request()->is('messenger/*') ? '' : 'NS' : ''}} {{agent()->isMobile() ? 'w-100' : 'w-75'}} flex-fill h-100">
             <div id="message_content_card" class="card h-100">
                 <div id="drag_drop_overlay" class="drag_drop_overlay rounded text-center NS">
                     <div class="h-100 d-flex justify-content-center">
@@ -53,7 +53,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="message_container" class="card-body {{$user_agent->isMobile() ? 'px-1' : 'px-0'}} pb-0 pt-3">
+                <div id="message_container" class="card-body {{agent()->isMobile() ? 'px-1' : 'px-0'}} pb-0 pt-3">
                     <div class="col-12 mt-5 text-center"><div class="spinner-border spinner-border-sm text-primary" role="status"></div></div>
                 </div>
             </div>

@@ -37,6 +37,7 @@
         "emojionearea": "^3.4.1",
         "hark": "^1.2.3",
         "laravel-echo": "^1.5.2",
+        "moment": "^2.24.0",
         "pusher-js": "^4.3.1",
         "simplebar": "^3.1.5",
         "socket.io-client": "^2.2.0",

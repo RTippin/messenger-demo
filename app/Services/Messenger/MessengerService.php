@@ -2,7 +2,6 @@
 
 namespace App\Services\Messenger;
 
-use App\Services\Service;
 use App\Models\Messages\Thread;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
@@ -10,10 +9,15 @@ use Validator;
 use Exception;
 use File;
 
-class MessengerService extends Service
+class MessengerService
 {
 
-    protected $thread, $participant, $message, $call;
+    protected $request, $thread, $participant, $message, $call;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
 
     public function authorize($thread = null, $load = null)
     {
@@ -27,7 +31,7 @@ class MessengerService extends Service
             $_thread = ThreadService::LocateThread($this->request->thread_id, $load);
         }
         if($_thread && $_thread instanceof Thread){
-            $participant = ParticipantService::LocateParticipant($_thread, $this->currentProfile());
+            $participant = ParticipantService::LocateParticipant($_thread, messenger_profile());
             if($participant){
                 $this->thread = $_thread;
                 $this->participant = $participant;
@@ -48,20 +52,20 @@ class MessengerService extends Service
         $data = null;
         $error = null;
         $type_loads = [
-            'load_thread' => ['participants.owner.info', 'activeCall', 'messages', 'calls'],
-            'load_private' => ['participants', 'messages.owner.info', 'activeCall', 'calls.participants.owner'],
-            'load_group' => ['participants.owner.info', 'participants.owner.messengerSettings', 'activeCall', 'messages.owner.info', 'calls.participants.owner'],
-            'bobble_heads' => ['participants.owner.info', 'participants.owner.messengerSettings'],
-            'recent_messages' => ['participants.owner', 'messages.owner.info', 'calls.participants.owner'],
-            'messages' => ['participants.owner', 'messages.owner.info', 'calls.participants.owner'],
-            'thread_logs' => ['messages.owner.info', 'calls.participants.owner'],
-            'participants' => ['participants.owner.info', 'participants.owner.messengerSettings'],
-            'add_participants' => ['participants.owner.info', 'participants.owner.messengerSettings'],
+            'load_thread' => ['participants.owner', 'activeCall', 'messages', 'calls'],
+            'load_private' => ['participants', 'messages.owner.messenger', 'activeCall', 'calls.participants.owner'],
+            'load_group' => ['participants.owner.messenger', 'activeCall', 'messages.owner.messenger', 'calls.participants.owner'],
+            'bobble_heads' => ['participants.owner.messenger'],
+            'recent_messages' => ['participants.owner', 'messages.owner.messenger', 'calls.participants.owner'],
+            'messages' => ['participants.owner', 'messages.owner.messenger', 'calls.participants.owner'],
+            'thread_logs' => ['messages.owner.messenger', 'calls.participants.owner'],
+            'participants' => ['participants.owner.messenger'],
+            'add_participants' => ['participants.owner.messenger'],
             'group_settings' => ['participants'],
             'mark_read' => ['participants'],
             'group_invite' => ['groupInviteLink.thread'],
-            'check_archive_thread' => ['participants.owner.info', 'messages'],
-            'view_call' => ['participants.owner.info', 'activeCall']
+            'check_archive_thread' => ['participants.owner.messenger', 'messages'],
+            'view_call' => ['participants.owner.messenger', 'activeCall']
         ];
         $authorize = $auth ? $this->authorize(null, (isset($type_loads[$type]) ? $type_loads[$type] : null)) : ['state' => true];
         if($authorize['state']) {
@@ -71,43 +75,43 @@ class MessengerService extends Service
                     if($thread){
                         if(ThreadService::IsPrivate($thread) && $this->authorize($thread, $type_loads['load_private'])['state']){
                             ParticipantService::MarkRead($this->participant);
-                            $data = MessengerRepo::MakePrivateThread($this->thread, $this->currentProfile());
+                            $data = MessengerRepo::MakePrivateThread($this->thread, messenger_profile());
                         }
                         if(ThreadService::IsGroup($thread) && $this->authorize($thread, $type_loads['load_group'])['state']){
                             ParticipantService::MarkRead($this->participant);
-                            $data = MessengerRepo::MakeGroupThread($this->thread, $this->currentProfile());
+                            $data = MessengerRepo::MakeGroupThread($this->thread, messenger_profile());
                         }
                     }
                     $error = 'Unable to locate that conversation';
                 break;
                 case 'load_thread':
-                    $data = MessengerRepo::MakeThread($this->thread, $this->currentProfile());
+                    $data = MessengerRepo::MakeThread($this->thread, messenger_profile());
                 break;
                 case 'load_private':
                     ParticipantService::MarkRead($this->participant);
-                    $data = MessengerRepo::MakePrivateThread($this->thread, $this->currentProfile());
+                    $data = MessengerRepo::MakePrivateThread($this->thread, messenger_profile());
                 break;
                 case 'is_unread':
                     $data = ThreadService::IsUnread($this->thread, $this->participant);
                 break;
                 case 'load_group':
                     ParticipantService::MarkRead($this->participant);
-                    $data = MessengerRepo::MakeGroupThread($this->thread, $this->currentProfile());
+                    $data = MessengerRepo::MakeGroupThread($this->thread, messenger_profile());
                 break;
                 case 'mark_read':
                     $data = ParticipantService::MarkRead($this->participant);
                 break;
                 case 'bobble_heads':
-                    $data = MessengerRepo::MakeBobbleHeads($this->thread, $this->currentProfile());
+                    $data = MessengerRepo::MakeBobbleHeads($this->thread, messenger_profile());
                 break;
                 case 'recent_messages':
-                    $data = MessengerRepo::MakeThreadMessages($this->thread, MessageService::PullMessagesMethod($this->thread));
+                    $data = MessengerRepo::MakeThreadMessages($this->thread, MessageService::PullMessagesMethod($this->thread), messenger_profile());
                 break;
                 case 'messages':
-                    $data = MessengerRepo::MakeThreadMessages($this->thread, MessageService::PullMessagesMethod($this->thread, 25, ['type' => 'history', 'message_id' => $this->request->message_id]));
+                    $data = MessengerRepo::MakeThreadMessages($this->thread, MessageService::PullMessagesMethod($this->thread, 25, ['type' => 'history', 'message_id' => $this->request->message_id]), messenger_profile());
                 break;
                 case 'thread_logs':
-                    $data = MessengerRepo::MakeThreadMessages($this->thread, MessageService::PullMessagesMethod($this->thread, null, ['type' => 'logs']));
+                    $data = MessengerRepo::MakeThreadMessages($this->thread, MessageService::PullMessagesMethod($this->thread, null, ['type' => 'logs']), messenger_profile());
                 break;
                 case 'participants':
                     $error = "Permission denied";
@@ -121,7 +125,7 @@ class MessengerService extends Service
                 case 'add_participants':
                     $error = "Permission denied";
                     if(ThreadService::CanAddParticipants($this->thread, $this->participant)){
-                        $data = ThreadService::ContactsFilterAdd($this->thread, $this->currentProfile()->load(['networks.party.info', 'networks.party.messengerSettings']));
+                        $data = ThreadService::ContactsFilterAdd($this->thread, messenger_profile()->load(['networks.party.messenger']));
                     }
                 break;
                 case 'group_settings':
@@ -148,21 +152,21 @@ class MessengerService extends Service
                     else $error = $check['error'];
                 break;
                 case 'invitation_join':
-                    $check = InvitationService::CanJoinWithInvite($this->request, $this->currentProfile());
+                    $check = InvitationService::CanJoinWithInvite($this->request, messenger_profile());
                     if($check['state']){
                         $data = $check['data'];
                     }
                     else $error = $check['error'];
                 break;
                 case 'view_call':
-                    $view = CallService::ViewCall($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    $view = CallService::ViewCall($this->request, $this->thread, $this->participant, messenger_profile());
                     if($view['state']){
                         $data = $view['data'];
                     }
                     else $error = $view['error'];
                 break;
                 case 'call_heartbeat':
-                    $heartbeat = CallService::CallHeartbeat($this->request, $this->thread, $this->currentProfile());
+                    $heartbeat = CallService::CallHeartbeat($this->request, $this->thread, messenger_profile());
                     if($heartbeat['state']){
                         $data = $heartbeat['data'];
                     }
@@ -194,7 +198,7 @@ class MessengerService extends Service
             'store_group_invitation' => ['participants', 'groupInviteLink'],
             'participant_admin_grant' => ['participants'],
             'reload_participant' => ['participants'],
-            'send_knock' => ['participants.owner.devices', 'participants.owner.messengerSettings'],
+            'send_knock' => ['participants.owner.devices', 'participants.owner.messenger'],
             'initiate_call' => ['participants.owner', 'activeCall'],
             'join_call' => ['participants.owner', 'activeCall.participants']
         ];
@@ -202,78 +206,78 @@ class MessengerService extends Service
         if($authorize['state']) {
             switch ($type) {
                 case 'send_knock':
-                    $knock = ThreadService::SendKnock($this->thread, $this->participant, $this->currentProfile());
+                    $knock = ThreadService::SendKnock($this->thread, $this->participant, messenger_profile());
                     if($knock['state']){
                         $data = $knock['data'];
                     }
                     else $error = $knock['error'];
                 break;
                 case 'store_messenger_settings':
-                    $settings = self::StoreMessengerSettings($this->request, $this->currentProfile());
+                    $settings = self::StoreMessenger($this->request, messenger_profile());
                     if($settings['state']){
-                        $data = MessengerRepo::MakeMessengerSettings($settings['model']);
+                        $data = MessengerRepo::MakeMessenger($settings['model']);
                     }
                     else $error = $settings['error'];
                 break;
                 case 'store_messenger_avatar':
-                    $avatar = self::StoreMessengerAvatar($this->request, $this->currentProfile());
+                    $avatar = self::StoreMessengerAvatar($this->request, messenger_profile());
                     if($avatar['state']){
                         $data = $avatar['data'];
                     }
                     else $error = $avatar['error'];
                 break;
                 case 'store_private':
-                    $thread = ThreadService::StorePrivateThread($this->request, $this->currentProfile());
+                    $thread = ThreadService::StorePrivateThread($this->request, messenger_profile());
                     if($thread['state']){
                         $data = $thread['thread_id'];
                     }
                     else $error = $thread['error'];
                 break;
                 case 'store_group':
-                    $thread = ThreadService::StoreGroupThread($this->request, $this->currentProfile());
+                    $thread = ThreadService::StoreGroupThread($this->request, messenger_profile());
                     if($thread['state']){
                         $data = $thread['thread_id'];
                     }
                     else $error = $thread['error'];
                 break;
                 case 'store_message':
-                    $message = MessageService::StoreNewMessage($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    $message = MessageService::StoreNewMessage($this->request, $this->thread, $this->participant, messenger_profile());
                     if($message['state']){
                         ParticipantService::MarkRead($this->participant);
-                        $data = MessengerRepo::MakeMessage($this->thread, $message['data']);
+                        $data = MessengerRepo::MakeMessage($this->thread, $message['data'], messenger_profile());
                     }
                     else $error = $message['error'];
                 break;
                 case 'add_group_participants':
-                    $adding = ParticipantService::AddParticipantsGroupCheck($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    $adding = ParticipantService::AddParticipantsGroupCheck($this->request, $this->thread, $this->participant, messenger_profile());
                     if($adding['state']){
                         $data = $adding['data'];
                     }
                     else $error = $adding['error'];
                 break;
                 case 'admin_group_settings':
-                    $settings = ThreadService::StoreGroupSettings($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    $settings = ThreadService::StoreGroupSettings($this->request, $this->thread, $this->participant, messenger_profile());
                     if($settings['state']){
                         $data = $settings['data'];
                     }
                     else $error = $settings['error'];
                 break;
                 case 'store_group_invitation':
-                    $invitation = InvitationService::GenerateGroupInvitation($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    $invitation = InvitationService::GenerateGroupInvitation($this->request, $this->thread, $this->participant, messenger_profile());
                     if($invitation['state']){
                         $data = $invitation['data'];
                     }
                     else $error = $invitation['error'];
                 break;
                 case 'participant_admin_grant':
-                    $action = ParticipantService::ModifyParticipantAdmin($this->request, $this->thread, $this->participant, $this->currentProfile(), true);
+                    $action = ParticipantService::ModifyParticipantAdmin($this->request, $this->thread, $this->participant, messenger_profile(), true);
                     if($action['state']){
                         $data = $action['data'];
                     }
                     else $error = $action['error'];
                 break;
                 case 'store_avatar':
-                    $avatar = ThreadService::UpdateGroupAvatar($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    $avatar = ThreadService::UpdateGroupAvatar($this->request, $this->thread, $this->participant, messenger_profile());
                     if($avatar['state']){
                         $data = $avatar['data'];
                     }
@@ -291,21 +295,22 @@ class MessengerService extends Service
                     else $error = 'Not found';
                 break;
                 case 'invitation_join':
-                    $join = InvitationService::JoinParticipantWithInvite($this->request, $this->currentProfile());
+                    $join = InvitationService::JoinParticipantWithInvite($this->request, messenger_profile());
                     if($join['state']){
                         $data = true;
                     }
                     else $error = $join['error'];
                 break;
                 case 'initiate_call':
-                    $call = CallService::StartNewCall($this->currentProfile(), $this->thread, $this->participant);
+                    $call = CallService::StartNewCall(messenger_profile(), $this->thread, $this->participant);
                     if($call['state']){
                         $data = $call['data'];
                     }
                     else $error = $call['error'];
                 break;
+
                 case 'join_call':
-                    $call = CallService::JoinCall($this->thread, $this->currentProfile());
+                    $call = CallService::JoinCall($this->thread, messenger_profile());
                     if($call['state']){
                         $data = $call['data'];
                     }
@@ -342,21 +347,21 @@ class MessengerService extends Service
         if($authorize['state']) {
             switch ($type) {
                 case 'remove_messenger_avatar':
-                    $avatar = self::RemoveMessengerAvatar($this->currentProfile());
+                    $avatar = self::RemoveMessengerAvatar(messenger_profile());
                     if($avatar['state']){
                         $data = $avatar['data'];
                     }
                     else $error = $avatar['error'];
                 break;
                 case 'leave_group':
-                    $leaving = ParticipantService::LeaveGroupCheck($this->thread, $this->participant, $this->currentProfile());
+                    $leaving = ParticipantService::LeaveGroupCheck($this->thread, $this->participant, messenger_profile());
                     if($leaving['state']){
                         $data = $leaving['data'];
                     }
                     else $error = $leaving['error'];
                 break;
                 case 'admin_remove_participant':
-                    $kicking = ParticipantService::KickParticipantGroup($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    $kicking = ParticipantService::KickParticipantGroup($this->request, $this->thread, $this->participant, messenger_profile());
                     if($kicking['state']){
                         $data = $kicking['data'];
                     }
@@ -370,28 +375,28 @@ class MessengerService extends Service
                     else $error = $removing['error'];
                 break;
                 case 'remove_message':
-                    $message = MessageService::DestroyMessageCheck($this->request, $this->thread, $this->participant, $this->currentProfile());
+                    $message = MessageService::DestroyMessageCheck($this->request, $this->thread, $this->participant, messenger_profile());
                     if($message['state']){
                         $data = true;
                     }
                     else $error = $message['error'];
                 break;
                 case 'participant_admin_revoke':
-                    $action = ParticipantService::ModifyParticipantAdmin($this->request, $this->thread, $this->participant, $this->currentProfile(), false);
+                    $action = ParticipantService::ModifyParticipantAdmin($this->request, $this->thread, $this->participant, messenger_profile(), false);
                     if($action['state']){
                         $data = $action['data'];
                     }
                     else $error = $action['error'];
                 break;
                 case 'archive_thread':
-                    $thread = ThreadService::ProcessArchiveThread($this->thread, $this->participant, $this->currentProfile());
+                    $thread = ThreadService::ProcessArchiveThread($this->thread, $this->participant, messenger_profile());
                     if($thread['state']){
                         $data = $thread['data'];
                     }
                     else $error = $thread['error'];
                 break;
                 case 'leave_call':
-                    $call = CallService::LeaveCall($this->thread, $this->currentProfile());
+                    $call = CallService::LeaveCall($this->thread, messenger_profile());
                     if($call['state']){
                         $data = $call['data'];
                     }
@@ -422,15 +427,15 @@ class MessengerService extends Service
     {
         try{
             $dispatch = new UploadService($request);
-            $dispatch = $dispatch->newUpload(strtolower(class_basename($model)).'_photo');
+            $dispatch = $dispatch->newUpload('messenger_avatar');
             if(!$dispatch['state']){
                 return [
                     'state' => false,
                     'error' => $dispatch['error']
                 ];
             }
-            $model->info->picture = $dispatch['text'];
-            $model->info->save();
+            $model->messenger->picture = $dispatch['text'];
+            $model->messenger->save();
             return [
                 'state' => true,
                 'data' => $model->avatar
@@ -448,13 +453,13 @@ class MessengerService extends Service
     private static function RemoveMessengerAvatar($model)
     {
         try{
-            $old = $model->info->picture;
-            $file_path = storage_path('app/public/'.strtolower(class_basename($model)).'/profile/'.$old);
+            $old = $model->messenger->picture;
+            $file_path = storage_path('app/public/profile/'.messenger_alias().'/'.$old);
             if(file_exists($file_path)){
                 File::delete($file_path);
             }
-            $model->info->picture = null;
-            $model->info->save();
+            $model->messenger->picture = null;
+            $model->messenger->save();
             return [
                 "state" => true,
                 "data" => $model->avatar
@@ -468,7 +473,7 @@ class MessengerService extends Service
         }
     }
 
-    private static function StoreMessengerSettings(Request $request, $model)
+    private static function StoreMessenger(Request $request, $model)
     {
         $validator = Validator::make($request->all(),
             [
@@ -487,13 +492,13 @@ class MessengerService extends Service
             ];
         }
         try{
-            $model->messengerSettings->message_popups = $request->input('message_popups');
-            $model->messengerSettings->message_sound = $request->input('message_sound');
-            $model->messengerSettings->call_ringtone_sound = $request->input('call_ringtone_sound');
-            $model->messengerSettings->knoks = $request->input('knoks');
-            $model->messengerSettings->calls_outside_networks = $request->input('calls_outside_networks');
-            $model->messengerSettings->online_status = $request->input('online_status');
-            $model->messengerSettings->save();
+            $model->messenger->message_popups = $request->input('message_popups');
+            $model->messenger->message_sound = $request->input('message_sound');
+            $model->messenger->call_ringtone_sound = $request->input('call_ringtone_sound');
+            $model->messenger->knoks = $request->input('knoks');
+            $model->messenger->calls_outside_networks = $request->input('calls_outside_networks');
+            $model->messenger->online_status = $request->input('online_status');
+            $model->messenger->save();
             return [
                 'state' => true,
                 'model' => $model

@@ -26,7 +26,7 @@
                             <div class="dropdown float-right">
                                 <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fas fa-cog"></i></button>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" onclick="ThreadManager.load().createPrivate({slug : '{{$participant->owner->slug()}}', type : '{{strtolower(class_basename($participant->owner))}}'}); return false;" target="_blank"
+                                    <a class="dropdown-item" onclick="ThreadManager.load().createPrivate({slug : '{{$participant->owner->slug()}}', type : '{{get_messenger_alias($participant->owner)}}'}); return false;" target="_blank"
                                        href="{{$participant->owner->slug(true)}}/message" title="Message"><i class="far fa-comment-alt"></i> Message
                                     </a>
                                     @if($owner)
@@ -42,23 +42,23 @@
                                         @endif
                                     @endif
                                     <span id="network_for_{{$participant->owner->id}}">
-                                        @switch($current_model->networkStatus($participant->owner))
+                                        @switch(messenger_profile()->networkStatus($participant->owner))
                                             @case(0)
-                                            <a class="network_option dropdown-item" onclick="NetworksManager.action({dropdown : true, owner_id : '{{$participant->owner->id}}', action : 'add', slug : '{{$participant->owner->slug()}}', type : '{{strtolower(class_basename($participant->owner))}}'}); return false;" href="#">
+                                            <a class="network_option dropdown-item" onclick="NetworksManager.action({dropdown : true, owner_id : '{{$participant->owner->id}}', action : 'add', slug : '{{$participant->owner->slug()}}', type : '{{get_messenger_alias($participant->owner)}}'}); return false;" href="#">
                                                 <i class="fas fa-user-plus"></i> Add friend</a>
                                             @break
                                             @case(1)
-                                            <a class="network_option dropdown-item" onclick="NetworksManager.action({dropdown : true, owner_id : '{{$participant->owner->id}}', action : 'remove', slug : '{{$participant->owner->slug()}}', type : '{{strtolower(class_basename($participant->owner))}}'}); return false;" href="#">
+                                            <a class="network_option dropdown-item" onclick="NetworksManager.action({dropdown : true, owner_id : '{{$participant->owner->id}}', action : 'remove', slug : '{{$participant->owner->slug()}}', type : '{{get_messenger_alias($participant->owner)}}'}); return false;" href="#">
                                                 <i class="fas fa-user-times"></i> Remove friend</a>
                                             @break
                                             @case(2)
-                                            <a class="network_option dropdown-item" onclick="NetworksManager.action({dropdown : true, owner_id : '{{$participant->owner->id}}', action : 'cancel', slug : '{{$participant->owner->slug()}}', type : '{{strtolower(class_basename($participant->owner))}}'}); return false;" href="#">
+                                            <a class="network_option dropdown-item" onclick="NetworksManager.action({dropdown : true, owner_id : '{{$participant->owner->id}}', action : 'cancel', slug : '{{$participant->owner->slug()}}', type : '{{get_messenger_alias($participant->owner)}}'}); return false;" href="#">
                                                 <i class="fas fa-ban"></i> Cancel friend request</a>
                                             @break
                                             @case(3)
-                                            <a class="network_option dropdown-item" onclick="NetworksManager.action({dropdown : true, owner_id : '{{$participant->owner->id}}', action : 'accept', slug : '{{$participant->owner->slug()}}', type : '{{strtolower(class_basename($participant->owner))}}'}); return false;" href="#">
+                                            <a class="network_option dropdown-item" onclick="NetworksManager.action({dropdown : true, owner_id : '{{$participant->owner->id}}', action : 'accept', slug : '{{$participant->owner->slug()}}', type : '{{get_messenger_alias($participant->owner)}}'}); return false;" href="#">
                                                 <i class="fas fa-check"></i> Accept friend request</a>
-                                            <a class="network_option dropdown-item" onclick="NetworksManager.action({dropdown : true, owner_id : '{{$participant->owner->id}}', action : 'deny', slug : '{{$participant->owner->slug()}}', type : '{{strtolower(class_basename($participant->owner))}}'}); return false;" href="#">
+                                            <a class="network_option dropdown-item" onclick="NetworksManager.action({dropdown : true, owner_id : '{{$participant->owner->id}}', action : 'deny', slug : '{{$participant->owner->slug()}}', type : '{{get_messenger_alias($participant->owner)}}'}); return false;" href="#">
                                                 <i class="fas fa-ban"></i> Deny friend request</a>
                                             @break
                                         @endswitch

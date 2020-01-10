@@ -38,23 +38,23 @@ class BroadcastService
         if (!empty($recipients)) {
             foreach ($recipients as $recipient) {
                 if($added){
-                    if(config('app.mobile_notify') && $recipient['owner_type'] === "App\User" && $recipient['model']->devices){
+                    if(config('messenger.mobile_notify') && $recipient['owner_type'] === "App\User" && $recipient['model']->devices){
                         foreach ($recipient['model']->devices as $device){
                             $this->devices->push($device);
                         }
                     }
-                    array_push($this->channels, 'private-'.strtolower(class_basename($recipient['model'])).'_notify_'.$recipient['owner_id']);
+                    array_push($this->channels, 'private-'.get_messenger_alias($recipient['model']).'_notify_'.$recipient['owner_id']);
                 }
                 else{
-                    if($knok && !$recipient->owner->messengerSettings->knoks){
+                    if($knok && !$recipient->owner->messenger->knoks){
                         continue;
                     }
-                    if(config('app.mobile_notify') && $recipient->owner_type === "App\User" && $recipient->owner->devices){
+                    if(config('messenger.mobile_notify') && $recipient->owner_type === "App\User" && $recipient->owner->devices){
                         foreach ($recipient->owner->devices as $device){
                             $this->devices->push($device);
                         }
                     }
-                    array_push($this->channels, 'private-'.strtolower(class_basename($recipient->owner)).'_notify_'.$recipient->owner->id);
+                    array_push($this->channels, 'private-'.get_messenger_alias($recipient->owner).'_notify_'.$recipient->owner->id);
                 }
             }
         }
@@ -65,7 +65,7 @@ class BroadcastService
     public function broadcastMessage(Message $message)
     {
         try {
-            $data = MessengerRepo::MakeMessage($this->thread, $message);
+            $data = MessengerRepo::MakeMessage($this->thread, $message, null);
             $data['thread_type'] = $this->thread->ttype;
             $data['thread_subject'] = $this->thread->name;
             $notify = [
@@ -132,7 +132,7 @@ class BroadcastService
     public function broadcastKicked(Participant $participant)
     {
         try {
-            broadcast(new KickedFromGroup(['thread_id' => $this->thread->id], ['private-'.strtolower(class_basename($participant->owner)).'_notify_'.$participant->owner->id]));
+            broadcast(new KickedFromGroup(['thread_id' => $this->thread->id], ['private-'.get_messenger_alias($participant->owner).'_notify_'.$participant->owner->id]));
         } catch (Exception $e) {
             if(class_basename($e) === 'BroadcastException'){
                 unset($e);
@@ -168,7 +168,7 @@ class BroadcastService
                 'name' => $this->model->name,
                 'avatar' => $this->model->avatar
             ],
-                ['private-'.strtolower(class_basename($participant->owner)).'_notify_'.$participant->owner->id]
+                ['private-'.get_messenger_alias($participant->owner).'_notify_'.$participant->owner->id]
             ));
         } catch (Exception $e) {
             if(class_basename($e) === 'BroadcastException'){

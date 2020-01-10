@@ -14,14 +14,31 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\User::class, 10)->create()->each(function ($user){
-            factory(App\Models\User\UserInfo::class)->create([
-                'user_id' => $user->id,
-                'slug' => $user->lastName.'-'.Str::random(4).'-'.Carbon::now()->timestamp
+        $password = 'Messenger1!';
+        $admins = [
+            ['admin@test.com', 'Richard', 'Tippin'],
+            ['admin2@test.com', 'Test', 'McTest'],
+            ['admin3@test.com', 'John', 'Admin']
+        ];
+        foreach ($admins as $admin){
+            $user = User::create([
+                'email' => $admin[0],
+                'firstName' => $admin[1],
+                'lastName' => $admin[2],
+                'active' => 1,
+                'password' => Hash::make($password)
             ]);
-            $user->messengerSettings()->create([
+            $user->messenger()->create([
                 'owner_id' => $user->id,
-                'owner_type' => 'App\User'
+                'owner_type' => 'App\User',
+                'slug' => $user->lastName.'-'.Str::random(4).'-'.Carbon::now()->timestamp,
+            ]);
+        }
+        factory(App\User::class, 10)->create()->each(function ($user){
+            $user->messenger()->create([
+                'owner_id' => $user->id,
+                'owner_type' => 'App\User',
+                'slug' => $user->lastName.'-'.Str::random(4).'-'.Carbon::now()->timestamp
             ]);
         });
     }

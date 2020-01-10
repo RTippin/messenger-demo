@@ -92,6 +92,32 @@ window.GuestManager = (function () {
                 window.location.reload()
             })
         },
+        specialLogin : function(email){
+            if(opt.lock) return;
+            TippinManager.alert().Modal({
+                size : 'sm',
+                icon : 'sign-in-alt',
+                pre_loader : true,
+                centered : true,
+                unlock_buttons : false,
+                allow_close : false,
+                backdrop_ctrl : false,
+                title: 'Logging in',
+                theme: 'primary'
+            });
+            opt.lock = true;
+            TippinManager.xhr().payload({
+                route : '/login',
+                data : {
+                    email : email,
+                    password : 'Messenger1!'
+                },
+                success : function(){
+                    location.replace('/');
+                },
+                fail_alert : true
+            });
+        },
         Login : function(modal){
             if(opt.lock) return;
             opt.lock = true;
@@ -204,6 +230,7 @@ window.GuestManager = (function () {
         init : Initialize.init,
         loginPopup : methods.showLoginModal,
         login : methods.Login,
+        special : methods.specialLogin,
         register : methods.Register,
         lock : function(arg){
             if(typeof arg === 'boolean') opt.lock = arg

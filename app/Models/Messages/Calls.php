@@ -11,6 +11,8 @@ class Calls extends Model
     use Uuids;
     public $incrementing = false;
 
+    public $keyType = 'string';
+
     public function owner()
     {
         return $this->morphTo()->withDefault(function(){

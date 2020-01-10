@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserDevices extends Model
 {
     public $incrementing = false;
+    public $keyType = 'string';
     protected $primaryKey = 'device_id';
 
     public function user()
