@@ -56,8 +56,8 @@ class NetworksService
                     'slug' => $friend->sender->slug(),
                     'avatar' => $friend->sender->avatar,
                     'type' => get_messenger_alias($friend->sender),
-                    'created_at' => MessengerRepo::FormatDateTimezone($friend->created_at, $model)->toDateTimeString(),
-                    'utc_created_at' => $friend->created_at->toDateTimeString()
+                    'created_at' => $friend->created_at->toDateTimeString(),
+                    'locale_created_at' => MessengerRepo::FormatDateTimezone($friend->created_at)->toDateTimeString()
                 ]);
             });
         }catch (Exception $e){

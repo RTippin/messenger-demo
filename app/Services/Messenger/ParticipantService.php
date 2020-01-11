@@ -4,9 +4,9 @@ namespace App\Services\Messenger;
 
 use App\Models\Messages\Participant;
 use App\Models\Messages\Thread;
-use App\User;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class ParticipantService
@@ -16,9 +16,9 @@ class ParticipantService
      * @param $model
      * @return Participant|null
      */
-    public static function LocateParticipant(Thread $thread, $model)
+    public static function LocateParticipant(Thread $thread, Model $model = null)
     {
-        return $thread->participants->where('owner_id', $model->id)->where('owner_type', get_class($model))->first();
+        return $thread->participants->where('owner_id', ($model ? $model->id : messenger_profile()->id))->where('owner_type', get_class($model ? $model : messenger_profile()))->first();
     }
 
     public static function LocateParticipantWithID(Thread $thread, $id)
@@ -38,13 +38,13 @@ class ParticipantService
         }
     }
 
-    public static function StoreParticipant(Thread $thread, $model, $admin = false)
+    public static function StoreParticipant(Thread $thread, Model $model = null, $admin = false)
     {
         try{
             $participant = new Participant();
             $participant->thread_id = $thread->id;
-            $participant->owner_id = $model->id;
-            $participant->owner_type = get_class($model);
+            $participant->owner_id = $model ? $model->id : messenger_profile()->id;
+            $participant->owner_type = get_class($model ? $model : messenger_profile());
             $participant->admin = $admin;
             $participant->save();
             return $participant;
@@ -54,13 +54,13 @@ class ParticipantService
         }
     }
 
-    public static function StoreOrRestoreParticipant(Thread $thread, $model)
+    public static function StoreOrRestoreParticipant(Thread $thread, Model $model = null)
     {
         try{
             return Participant::withTrashed()->firstOrCreate([
                 'thread_id' => $thread->id,
-                'owner_id' => $model->id,
-                'owner_type' => get_class($model)
+                'owner_id' => $model ? $model->id : messenger_profile()->id,
+                'owner_type' => get_class($model ? $model : messenger_profile())
             ])->restore();
         }catch (Exception $e){
             report($e);
@@ -68,7 +68,7 @@ class ParticipantService
         }
     }
 
-    public static function AddParticipants(Thread $thread, Request $request, $model, $broadcast_log = true)
+    public static function AddParticipants(Thread $thread, Request $request, $broadcast_log = true)
     {
         if(empty($request->input('recipients'))){
             return [
@@ -96,9 +96,9 @@ class ParticipantService
                 ];
             }
             $call = CallService::LocateActiveCall($thread);
-            if($call) (new BroadcastService($thread, $model))->broadcastChannels(false, false, true, $ids)->broadcastCall($call);
-            (new BroadcastService($thread->fresh('participants.owner.devices'), $model))->broadcastChannels()->broadcastAddedToThread();
-            MessageService::StoreSystemMessage($thread, $model, $ids, 99, $broadcast_log);
+            if($call) (new BroadcastService($thread))->broadcastChannels(false, false, true, $ids)->broadcastCall($call);
+            (new BroadcastService($thread->fresh('participants.owner.devices')))->broadcastChannels()->broadcastAddedToThread();
+            MessageService::StoreSystemMessage($thread, messenger_profile(), $ids, 99, $broadcast_log);
             return [
                 'state' => true,
                 'subject' => $thread->name,
@@ -113,11 +113,15 @@ class ParticipantService
         }
     }
 
-    private static function RemoveParticipant(Thread $thread, $model, Participant $participant, $kicked = false)
+    private static function RemoveParticipant(Thread $thread, Participant $participant, $kicked = false)
     {
         try {
-            if($kicked) (new BroadcastService($thread, $model))->broadcastKicked($participant);
-            MessageService::StoreSystemMessage($thread, $model, $kicked ? collect(["owner_id" => $participant->owner_id, "owner_type" => $participant->owner_type]) : 'left the group', $kicked ? 98 : 97);
+            if($kicked) (new BroadcastService($thread))->broadcastKicked($participant);
+            MessageService::StoreSystemMessage(
+                $thread,
+                messenger_profile(),
+                $kicked ? collect(["owner_id" => $participant->owner_id, "owner_type" => $participant->owner_type]) : 'left the group', $kicked ? 98 : 97
+            );
             $participant->delete();
             return true;
         } catch (Exception $e) {
@@ -126,12 +130,12 @@ class ParticipantService
         }
     }
 
-    private static function ChangeParticipantAdmin(Thread $thread, $model, Participant $participant, $admin = false)
+    private static function ChangeParticipantAdmin(Thread $thread, Participant $participant, $admin = false)
     {
         try{
             $participant->admin = $admin ? 1 : 0;
             $participant->save();
-            MessageService::StoreSystemMessage($thread, $model, collect(["owner_id" => $participant->owner_id, "owner_type" => $participant->owner_type]), $admin ? 96 : 95);
+            MessageService::StoreSystemMessage($thread, messenger_profile(), collect(["owner_id" => $participant->owner_id, "owner_type" => $participant->owner_type]), $admin ? 96 : 95);
             return $participant;
         }catch (Exception $e){
             report($e);
@@ -139,7 +143,7 @@ class ParticipantService
         }
     }
 
-    public static function KickParticipantGroup(Request $request, Thread $thread, Participant $participant, $model)
+    public static function KickParticipantGroup(Request $request, Thread $thread, Participant $participant)
     {
         if(ThreadService::IsLocked($thread, $participant) || !ThreadService::IsThreadAdmin($thread, $participant)){
             return [
@@ -148,7 +152,7 @@ class ParticipantService
             ];
         }
         $remove = $thread->participants->firstWhere('id', $request->input('p_id'));
-        if($remove && self::RemoveParticipant($thread, $model, $remove, true)){
+        if($remove && self::RemoveParticipant($thread, $remove, true)){
             return [
                 'state' => true,
                 'data' => 'You removed '.$remove->owner->name.' from the group'
@@ -160,7 +164,7 @@ class ParticipantService
         ];
     }
 
-    public static function ModifyParticipantAdmin(Request $request, Thread $thread, Participant $participant, $model, $admin)
+    public static function ModifyParticipantAdmin(Request $request, Thread $thread, Participant $participant, $admin)
     {
         if(ThreadService::IsLocked($thread, $participant) || !ThreadService::IsThreadAdmin($thread, $participant)){
             return [
@@ -169,7 +173,7 @@ class ParticipantService
             ];
         }
         $target = self::LocateParticipantWithID($thread, $request->input('p_id'));
-        $update = self::ChangeParticipantAdmin($thread, $model, $target, $admin);
+        $update = self::ChangeParticipantAdmin($thread, $target, $admin);
         if($target && $update){
             return [
                 'state' => true,
@@ -186,7 +190,7 @@ class ParticipantService
         ];
     }
 
-    public static function AddParticipantsGroupCheck(Request $request, Thread $thread, Participant $participant, $model)
+    public static function AddParticipantsGroupCheck(Request $request, Thread $thread, Participant $participant)
     {
         if(!ThreadService::CanAddParticipants($thread, $participant)){
             return [
@@ -194,7 +198,7 @@ class ParticipantService
                 'error' => 'Access Denied'
             ];
         }
-        $adding = self::AddParticipants($thread, $request, $model);
+        $adding = self::AddParticipants($thread, $request);
         if($adding['state']){
             return [
                 'state' => true,
@@ -207,7 +211,7 @@ class ParticipantService
         ];
     }
 
-    public static function LeaveGroupCheck(Thread $thread, Participant $participant, $model)
+    public static function LeaveGroupCheck(Thread $thread, Participant $participant)
     {
         if(!ThreadService::IsGroup($thread)){
             return [
@@ -220,22 +224,22 @@ class ParticipantService
             if($thread->participants->where('admin', 1)->count() === 1){
                 switch($thread->participants->count()){
                     case 1:
-                        self::RemoveParticipant($thread, $model, $participant);
-                        ThreadService::RemoveThread($thread, $model);
+                        self::RemoveParticipant($thread, $participant);
+                        ThreadService::RemoveThread($thread);
                     break;
                     case 2:
-                        $promote = self::ChangeParticipantAdmin($thread, $model, $thread->participants->firstWhere('admin', 0), true);
+                        $promote = self::ChangeParticipantAdmin($thread, $thread->participants->firstWhere('admin', 0), true);
                         if(!$promote){
                             return [
                                 'state' => false,
                                 'error' => 'Unable to promote other to admin'
                             ];
                         }
-                        self::RemoveParticipant($thread, $model, $participant);
+                        self::RemoveParticipant($thread, $participant);
                     break;
                     default:
                         if(ThreadService::IsLocked($thread, $participant)){
-                            self::RemoveParticipant($thread, $model, $participant);
+                            self::RemoveParticipant($thread, $participant);
                         }
                         else{
                             return [
@@ -246,11 +250,11 @@ class ParticipantService
                 }
             }
             else{
-                self::RemoveParticipant($thread, $model, $participant);
+                self::RemoveParticipant($thread, $participant);
             }
         }
         else{
-            self::RemoveParticipant($thread, $model, $participant);
+            self::RemoveParticipant($thread, $participant);
         }
         return [
             'state' => true,

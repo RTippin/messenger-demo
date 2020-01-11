@@ -26,7 +26,7 @@ class ThreadChannel
      */
     public function join(User $user, $thread)
     {
-        if(messenger_profile() && ThreadService::AuthThreadSocket($thread, messenger_profile())){
+        if(messenger_profile() && ThreadService::AuthThreadSocket($thread)){
             return [
                 'slug' => messenger_profile()->avatar,
                 'name' => messenger_profile()->name,

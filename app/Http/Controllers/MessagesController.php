@@ -27,11 +27,11 @@ class MessagesController extends Controller
     {
         switch($this->request->type){
             case 'settings':
-                return response()->json(MessengerRepo::MakeMessenger(messenger_profile()));
+                return response()->json(MessengerRepo::MakeMessenger());
             break;
             case 'threads':
                 return response()->json([
-                    'threads' => MessengerRepo::MakeProfileThreads(messenger_profile())
+                    'threads' => MessengerRepo::MakeProfileThreads()
                 ]);
             break;
             case 'contacts':
@@ -342,7 +342,7 @@ class MessagesController extends Controller
         if(!$this->request->expectsJson()){
             return view('messenger.portal')->with('slug', $this->request->slug)->with('type', $this->request->alias)->with('mode', 3);
         }
-        $threads = ThreadService::LocateThreads(messenger_profile(), 1, ['participants']);
+        $threads = ThreadService::LocateThreads(1, ['participants']);
         $check = ThreadService::LocateExistingPrivate($threads, ['check' => 'profile', 'alias' => $this->request->alias, 'slug' => $this->request->slug]);
         if($check['state']){
             return response()->json([

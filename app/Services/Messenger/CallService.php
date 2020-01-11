@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Redis;
 
 class CallService
 {
-    public static function AuthCallSocket($thread_id, $call_id, $model)
+    public static function AuthCallSocket($thread_id, $call_id)
     {
         $thread = ThreadService::LocateThread($thread_id, ['participants']);
         if($thread && $thread instanceof Thread){
-            $participant = ParticipantService::LocateParticipant($thread, $model);
+            $participant = ParticipantService::LocateParticipant($thread);
             $call = self::LocateActiveCall($thread);
             if($participant && $call && $call->id === $call_id) return true;
         }
@@ -40,9 +40,9 @@ class CallService
         return $call->type === 1;
     }
 
-    public static function IsCallAdmin(Thread $thread, Calls $call, Participant $participant, $model)
+    public static function IsCallAdmin(Thread $thread, Calls $call, Participant $participant)
     {
-        return (ThreadService::IsThreadAdmin($thread, $participant) || $call->owner->id === $model->id) ? true : false;
+        return (ThreadService::IsThreadAdmin($thread, $participant) || $call->owner->id === messenger_profile()->id) ? true : false;
     }
 
     public static function LocateActiveCall(Thread $thread)
@@ -50,9 +50,9 @@ class CallService
         return $thread->activeCall;
     }
 
-    private static function LocateCallParticipant(Calls $call, $model)
+    private static function LocateCallParticipant(Calls $call)
     {
-        return $call->participants->firstWhere('owner_id', $model->id);
+        return $call->participants->firstWhere('owner_id', messenger_profile()->id);
     }
 
     private static function LocateActiveParticipants(Calls $call)
@@ -66,27 +66,27 @@ class CallService
         return $results ? $results->count() : 0;
     }
 
-    public static function IsInCall(Calls $call, $model)
+    public static function IsInCall(Calls $call)
     {
-        $locate = $call->participants->where('owner_id', $model->id)->where('left_call', null)->first();
+        $locate = $call->participants->where('owner_id', messenger_profile()->id)->where('left_call', null)->first();
         if($locate) return true;
         return false;
     }
 
-    public static function HasLeftCall(Calls $call, $model)
+    public static function HasLeftCall(Calls $call)
     {
-        $locate = $call->participants->where('owner_id', $model->id)->where('left_call', '!=', null)->first();
+        $locate = $call->participants->where('owner_id', messenger_profile()->id)->where('left_call', '!=', null)->first();
         if($locate) return true;
         return false;
     }
 
-    private static function StoreCall(Thread $thread, $model, $attr = ['type' => 1, 'mode' => 1])
+    private static function StoreCall(Thread $thread, $attr = ['type' => 1, 'mode' => 1])
     {
         try{
             $call = new Calls();
             $call->thread_id = $thread->id;
-            $call->owner_id = $model->id;
-            $call->owner_type = get_class($model);
+            $call->owner_id = messenger_profile()->id;
+            $call->owner_type = get_class(messenger_profile());
             $call->type = $attr['type'];
             $call->mode = $attr['mode'];
             $call->save();
@@ -106,10 +106,10 @@ class CallService
         }
     }
 
-    private static function StoreOrRestoreParticipant(Calls $call, $model)
+    private static function StoreOrRestoreParticipant(Calls $call)
     {
         try{
-            $participant_exist = self::LocateCallParticipant($call, $model);
+            $participant_exist = self::LocateCallParticipant($call);
             if($participant_exist){
                 if(!is_null($participant_exist->left_call)){
                     $participant_exist->left_call = null;
@@ -119,11 +119,11 @@ class CallService
             else{
                 $participant = new CallParticipants();
                 $participant->call_id = $call->id;
-                $participant->owner_id = $model->id;
-                $participant->owner_type = get_class($model);
+                $participant->owner_id = messenger_profile()->id;
+                $participant->owner_type = get_class(messenger_profile());
                 $participant->save();
             }
-            Redis::setex('call:'.$call->id.":".$model->id, 31, $model->id);
+            Redis::setex('call:'.$call->id.":".messenger_profile()->id, 31, messenger_profile()->id);
             return true;
         }catch (Exception $e){
             report($e);
@@ -131,14 +131,14 @@ class CallService
         }
     }
 
-    private static function PerformCallStartup(Thread $thread, Calls $call, $model, $mode)
+    private static function PerformCallStartup(Thread $thread, Calls $call, $mode)
     {
         try{
-            $add = self::StoreOrRestoreParticipant($call, $model);
+            $add = self::StoreOrRestoreParticipant($call);
             if($add){
                 switch ($mode){
                     case 'call':
-                        (new BroadcastService($thread, $model))->broadcastChannels()->broadcastCall($call);
+                        (new BroadcastService($thread))->broadcastChannels()->broadcastCall($call);
                     break;
                 }
                 return true;
@@ -180,15 +180,15 @@ class CallService
                  self::ParticipantLeftCall($participant);
              }
              MessageService::StoreSystemMessage($thread, $call->owner, collect(["call_id" => $call->id]), 90);
-             (new BroadcastService($thread, $call->owner))->broadcastChannels(true)->broadcastCallEnded($call);
+             (new BroadcastService($thread))->broadcastChannels(true)->broadcastCallEnded($call);
          }
     }
 
-    public static function CallHeartbeat(Request $request, Thread $thread, $model)
+    public static function CallHeartbeat(Request $request, Thread $thread)
     {
         $current_call = self::LocateActiveCall($thread);
         if($current_call && $request->call_id === $current_call->id){
-            self::StoreOrRestoreParticipant($current_call, $model);
+            self::StoreOrRestoreParticipant($current_call);
             return [
                 'state' => true,
                 'data' => true
@@ -200,7 +200,7 @@ class CallService
         ];
     }
 
-    public static function StartNewCall($model, Thread $thread = null, Participant $participant = null, $mode = 'call')
+    public static function StartNewCall(Thread $thread = null, Participant $participant = null, $mode = 'call')
     {
         if(!config('messenger.calls')){
             return [
@@ -216,7 +216,7 @@ class CallService
         }
         $current_call = self::LocateActiveCall($thread);
         if($current_call){
-            if(self::CallActiveCount($current_call) && self::StoreOrRestoreParticipant($current_call, $model)){
+            if(self::CallActiveCount($current_call) && self::StoreOrRestoreParticipant($current_call)){
                 return [
                     'state' => true,
                     'data' => MessengerRepo::MakeCall($thread, $current_call)
@@ -227,11 +227,11 @@ class CallService
         $new_call = null;
         switch ($mode){
             case 'call':
-                $new_call = self::StoreCall($thread, $model);
+                $new_call = self::StoreCall($thread);
             break;
         }
         if($new_call){
-            if(self::PerformCallStartup($thread, $new_call, $model, $mode)){
+            if(self::PerformCallStartup($thread, $new_call, $mode)){
                 return [
                     'state' => true,
                     'data' => MessengerRepo::MakeCall($thread, $new_call)
@@ -245,7 +245,7 @@ class CallService
         ];
     }
 
-    public static function JoinCall(Thread $thread, $model)
+    public static function JoinCall(Thread $thread)
     {
         if(!config('messenger.calls')){
             return [
@@ -254,7 +254,7 @@ class CallService
             ];
         }
         $current_call = self::LocateActiveCall($thread);
-        if($current_call && self::StoreOrRestoreParticipant($current_call, $model)){
+        if($current_call && self::StoreOrRestoreParticipant($current_call)){
             return [
                 'state' => true,
                 'data' => MessengerRepo::MakeCall($thread, $current_call)
@@ -266,13 +266,13 @@ class CallService
         ];
     }
 
-    public static function LeaveCall(Thread $thread, $model)
+    public static function LeaveCall(Thread $thread)
     {
         $current_call = self::LocateActiveCall($thread);
         $count = 0;
         if($current_call){
             $count = self::CallActiveCount($current_call);
-            $participant = self::LocateCallParticipant($current_call, $model);
+            $participant = self::LocateCallParticipant($current_call);
             if($participant && !$participant->left_call){
                 self::ParticipantLeftCall($participant);
                 $count = $count-1;
@@ -303,7 +303,7 @@ class CallService
         ];
     }
 
-    public static function ViewCall(Request $request, Thread $thread, Participant $participant, $model)
+    public static function ViewCall(Request $request, Thread $thread, Participant $participant)
     {
         $current_call = self::LocateActiveCall($thread);
         if($current_call && $current_call->id === $request->call_id){
@@ -312,7 +312,7 @@ class CallService
                 'data' => [
                     'call' => $current_call,
                     'thread' => $thread,
-                    'call_admin' => self::IsCallAdmin($thread, $current_call, $participant, $model),
+                    'call_admin' => self::IsCallAdmin($thread, $current_call, $participant),
                     'thread_admin' => ThreadService::IsThreadAdmin($thread, $participant)
                 ]
             ];

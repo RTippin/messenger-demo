@@ -7,7 +7,6 @@ use App\Models\Messages\Message;
 use App\Models\Messages\Participant;
 use App\Services\UploadService;
 use App\Models\Messages\Thread;
-use App\User;
 use Illuminate\Http\Request;
 use LaravelEmojiOne;
 use Exception;
@@ -55,7 +54,7 @@ class MessageService
                     });
                     if($participants->count()){
                         foreach($participants as $participant){
-                            $names .= $participant->owner ? $participant->owner->name.', ' : 'Ghost User';
+                            $names .= $participant->owner->name.', ';
                         }
                         return 'was in a video call with '.rtrim($names,', ');
                     }
@@ -71,22 +70,18 @@ class MessageService
                 return $message->body;
             break;
             case 95: //removed admin from participant
-                $model = self::LocateContentModel($data, $thread);
-                return 'revoked administrator from '.($model ? $model->name : 'Ghost User');
+                return 'revoked administrator from '.self::LocateContentModel($data, $thread)->name;
             break;
             case 96: //made participant admin
-                $model = self::LocateContentModel($data, $thread);
-                return 'promoted '.($model ? $model->name : 'user').' to administrator';
+                return 'promoted '.self::LocateContentModel($data, $thread)->name.' to administrator';
             break;
             case 98: //removed participant from group
-                $model = self::LocateContentModel($data, $thread);
-                return 'removed '.($model ? $model->name : 'Ghost User').' from the group';
+                return 'removed '.self::LocateContentModel($data, $thread)->name.' from the group';
             break;
             case 99: //added participant to group
                 $names = 'added ';
                 foreach($data as $profile){
-                    $model = self::LocateContentModel($profile, $thread);
-                    if($model) $names .= $model->name.', ';
+                    $names .= self::LocateContentModel($profile, $thread)->name.', ';
                 }
                 return rtrim($names,', ').' to the group';
             break;
@@ -105,7 +100,8 @@ class MessageService
             $participant = $thread->participants->firstWhere('owner_id', $data['owner_id']);
             if($participant && $participant->owner) return $participant->owner;
         }
-        return User::find($data['owner_id']);
+        $model = class_exists($data['owner_type']) ? $data['owner_type']::find($data['owner_id']) : new GhostUser();
+        return $model ? $model : new GhostUser();
     }
 
     private static function FormatMessageType(Request $request)
@@ -180,7 +176,7 @@ class MessageService
         }
     }
 
-    public static function StoreNewMessage(Request $request, Thread $thread, Participant $participant, $model)
+    public static function StoreNewMessage(Request $request, Thread $thread, Participant $participant)
     {
         if(!ThreadService::CanSendMessage($thread, $participant)){
             return [
@@ -216,12 +212,12 @@ class MessageService
         $message = self::StoreMessage([
             'thread_id' => $thread->id,
             'body' => $body['text'],
-            'owner_id' => $model->id,
-            'owner_type' => get_class($model),
+            'owner_id' => messenger_profile()->id,
+            'owner_type' => get_class(messenger_profile()),
             'mtype' => $contents['type']
         ]);
         if($message && $message instanceof Message){
-            (new BroadcastService($thread, $model))->broadcastChannels()->broadcastMessage($message->load('owner.messenger'));
+            (new BroadcastService($thread))->broadcastChannels()->broadcastMessage($message->load('owner.messenger'));
             return [
                 'state' => true,
                 'data' => $message
@@ -240,32 +236,32 @@ class MessageService
                 'thread_id' => $thread->id,
                 'body' => $body,
                 'owner_id' => $model->id,
-                'owner_type' => ($model instanceof GhostUser ? 'App\User' : get_class($model)),
+                'owner_type' => get_class($model),
                 'mtype' => $type
             ]);
             if($broadcast){
-                (new BroadcastService($thread, $model))->broadcastChannels(true)->broadcastMessage($message->load('owner.messenger'));
+                (new BroadcastService($thread))->broadcastChannels(true)->broadcastMessage($message->load('owner.messenger'));
             }
         }catch (Exception $e){
             report($e);
         }
     }
 
-    public static function DestroyMessageCheck(Request $request, Thread $thread, Participant $participant, $model)
+    public static function DestroyMessageCheck(Request $request, Thread $thread, Participant $participant)
     {
         $message = self::GetMessageFromThread($thread, $request->input('message_id'));
         if(!$message
             || ThreadService::IsLocked($thread, $participant)
             || self::isSystemMessage($message)
-            || (ThreadService::IsPrivate($thread) && !$model->is($message->owner))
-            || (ThreadService::IsGroup($thread) && !$model->is($message->owner) && !ThreadService::IsThreadAdmin($thread, $participant))
+            || (ThreadService::IsPrivate($thread) && !messenger_profile()->is($message->owner))
+            || (ThreadService::IsGroup($thread) && !messenger_profile()->is($message->owner) && !ThreadService::IsThreadAdmin($thread, $participant))
         ){
             return [
                 'state' => false,
                 'error' => 'Access denied'
             ];
         }
-        (new BroadcastService($thread, $model))->broadcastChannels()->broadcastMessagePurged($message);
+        (new BroadcastService($thread))->broadcastChannels()->broadcastMessagePurged($message);
         if(self::RemoveMessage($message)){
             return [
                 'state' => true

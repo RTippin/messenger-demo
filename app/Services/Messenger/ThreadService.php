@@ -7,7 +7,6 @@ use App\Models\Messages\Calls;
 use App\Models\Messages\Participant;
 use App\Services\UploadService;
 use App\Models\Messages\Thread;
-use App\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,18 +16,18 @@ use Cache;
 
 class ThreadService
 {
-    public static function LocateThreads($profile, $type = 0, $with = null)
+    public static function LocateThreads($type = 0, $with = null)
     {
         try{
             switch($type){
                 case 0:
-                    return $profile->threads()->with($with);
+                    return messenger_profile()->threads()->with($with);
                 break;
                 case 1:
-                    return $profile->threads()->where('ttype', 1)->with($with)->get();
+                    return messenger_profile()->threads()->where('ttype', 1)->with($with)->get();
                 break;
                 case 2:
-                    return $profile->threads()->where('ttype', 2)->with($with)->get();
+                    return messenger_profile()->threads()->where('ttype', 2)->with($with)->get();
                 break;
             }
         }catch (Exception $e){
@@ -46,13 +45,13 @@ class ThreadService
         return null;
     }
 
-    public static function RemoveThread(Thread $thread, $model, $broadcast = false)
+    public static function RemoveThread(Thread $thread, $broadcast = false)
     {
         try{
             if(self::IsGroup($thread)){
                 $name = $thread->name;
-                MessageService::StoreSystemMessage($thread, $model, 'archived the group', 92, $broadcast);
-                if($broadcast) (new BroadcastService($thread, $model))->broadcastChannels()->broadcastThreadPurged();
+                MessageService::StoreSystemMessage($thread, messenger_profile(),'archived the group', 92, $broadcast);
+                if($broadcast) (new BroadcastService($thread))->broadcastChannels()->broadcastThreadPurged();
                 $thread->delete();
                 return [
                     'state' => true,
@@ -60,13 +59,13 @@ class ThreadService
                 ];
             }
             if(self::IsPrivate($thread)){
-                $party = self::OtherParty($thread, ParticipantService::LocateParticipant($thread, $model));
+                $party = self::OtherParty($thread, ParticipantService::LocateParticipant($thread));
                 $name = 'Profile';
                 if($party){
                     $name = $party->owner->name;
-                    (new BroadcastService($thread, $model))->broadcastChannels()->broadcastKicked($party);
+                    (new BroadcastService($thread))->broadcastChannels()->broadcastKicked($party);
                 }
-                MessageService::StoreSystemMessage($thread, $model, 'archived the conversation', 92, false);
+                MessageService::StoreSystemMessage($thread, messenger_profile(),'archived the conversation', 92, false);
                 $thread->delete();
                 return [
                     'state' => true,
@@ -81,11 +80,11 @@ class ThreadService
         ];
     }
 
-    public static function AuthThreadSocket($id, $model)
+    public static function AuthThreadSocket($id)
     {
         $thread = self::LocateThread($id, ['participants']);
         if($thread && $thread instanceof Thread){
-            $participant = ParticipantService::LocateParticipant($thread, $model);
+            $participant = ParticipantService::LocateParticipant($thread);
             if($participant) return true;
         }
         return false;
@@ -169,10 +168,11 @@ class ThreadService
         return false;
     }
 
-    public static function ContactsFilterAdd(Thread $thread, $model)
+    public static function ContactsFilterAdd(Thread $thread)
     {
         $participants = $thread->participants;
-        return $model->networks->reject(function($net) use ($participants) {
+        messenger_profile()->load(['networks.party.messenger']);
+        return messenger_profile()->networks->reject(function($net) use ($participants) {
             return $participants->firstWhere('owner_id', $net->party_id);
         });
     }
@@ -280,10 +280,10 @@ class ThreadService
         }
     }
 
-    public static function StorePrivateThread(Request $request, $model)
+    public static function StorePrivateThread(Request $request)
     {
         $check = self::LocateExistingPrivate(
-            self::LocateThreads($model, 1, ['participants']),
+            self::LocateThreads(1, ['participants']),
             ['check' => 'new_private', 'recipient' => $request->input('recipient')]
         );
         if($check['state'] || isset($check['error'])){
@@ -294,9 +294,9 @@ class ThreadService
         }
         $thread = self::StoreThread(1);
         if($thread){
-            $myself = ParticipantService::StoreParticipant($thread, $model);
+            $myself = ParticipantService::StoreParticipant($thread);
             $other = ParticipantService::StoreParticipant($thread, $check['model']);
-            $message = MessageService::StoreNewMessage($request, $thread, $myself, $model);
+            $message = MessageService::StoreNewMessage($request, $thread, $myself);
             if($myself && $other && $message['state']){
                 return [
                     'state' => true,
@@ -311,7 +311,7 @@ class ThreadService
         ];
     }
 
-    public static function StoreGroupThread(Request $request, $model)
+    public static function StoreGroupThread(Request $request)
     {
         $validator = Validator::make($request->all(), ['subject' => 'required|max:50']);
         if($validator->fails()){
@@ -325,9 +325,9 @@ class ThreadService
             'image' => rand(1,5).'.png'
         ]);
         if($thread){
-            $myself = ParticipantService::StoreParticipant($thread, $model, true);
-            MessageService::StoreSystemMessage($thread, $model, 'created '.$thread->name, 93, false);
-            ParticipantService::AddParticipants($thread, $request, $model);
+            $myself = ParticipantService::StoreParticipant($thread, null, true);
+            MessageService::StoreSystemMessage($thread, messenger_profile(),'created '.$thread->name, 93, false);
+            ParticipantService::AddParticipants($thread, $request);
             if($myself){
                 return [
                     'state' => true,
@@ -342,7 +342,7 @@ class ThreadService
         ];
     }
 
-    public static function StoreGroupSettings(Request $request, Thread $thread, Participant $participant, $model)
+    public static function StoreGroupSettings(Request $request, Thread $thread, Participant $participant)
     {
         if(self::IsLocked($thread, $participant) || !self::IsThreadAdmin($thread, $participant)){
             return [
@@ -371,7 +371,7 @@ class ThreadService
         $thread->admin_call = $request->input('admin_call');
         $thread->send_message = $request->input('send_message');
         $thread->save();
-        if($original_name !== $thread->name) MessageService::StoreSystemMessage($thread, $model, 'renamed the group to '.$thread->name, 94);
+        if($original_name !== $thread->name) MessageService::StoreSystemMessage($thread, messenger_profile(),'renamed the group to '.$thread->name, 94);
         return [
             'state' => true,
             'data' => $thread->name
@@ -409,7 +409,7 @@ class ThreadService
         ];
     }
 
-    public static function ProcessArchiveThread(Thread $thread, Participant $participant, $model)
+    public static function ProcessArchiveThread(Thread $thread, Participant $participant)
     {
         $check = self::CheckArchiveThread($thread, $participant);
         if(!$check['state']){
@@ -418,7 +418,7 @@ class ThreadService
                 'error' => 'Access Denied'
             ];
         }
-        $remove = self::RemoveThread($thread, $model, true);
+        $remove = self::RemoveThread($thread, true);
         if($remove['state']){
             return [
                 'state' => true,
@@ -431,7 +431,7 @@ class ThreadService
         ];
     }
 
-    public static function UpdateGroupAvatar(Request $request, Thread $thread, Participant $participant, $model)
+    public static function UpdateGroupAvatar(Request $request, Thread $thread, Participant $participant)
     {
         if(self::IsLocked($thread, $participant) || !self::IsThreadAdmin($thread, $participant)){
             return [
@@ -454,7 +454,7 @@ class ThreadService
                     }
                     $thread->image = $request->input('avatar').'.png';
                     $thread->save();
-                    MessageService::StoreSystemMessage($thread, $model, 'updated the groups avatar', 91, true);
+                    MessageService::StoreSystemMessage($thread, messenger_profile(),'updated the groups avatar', 91, true);
                     return [
                         'state' => true,
                         'data' => [
@@ -475,7 +475,7 @@ class ThreadService
                         }
                         $thread->image = $upload["text"];
                         $thread->save();
-                        MessageService::StoreSystemMessage($thread, $model, 'updated the groups avatar', 91, true);
+                        MessageService::StoreSystemMessage($thread, messenger_profile(),'updated the groups avatar', 91, true);
                         return [
                             'state' => true,
                             'data' => [
@@ -499,7 +499,7 @@ class ThreadService
         ];
     }
 
-    public static function SendKnock(Thread $thread, Participant $participant, $model)
+    public static function SendKnock(Thread $thread, Participant $participant)
     {
         if(self::IsLocked($thread, $participant)){
             return [
@@ -515,7 +515,7 @@ class ThreadService
                 ];
             }
             Cache::put('sent_knok_'.$thread->id, true, Carbon::now()->addMinutes(5));
-            (new BroadcastService($thread, $model))->broadcastChannels(false, true)->broadcastGroupKnok();
+            (new BroadcastService($thread))->broadcastChannels(false, true)->broadcastGroupKnok();
             return [
                 'state' => true,
                 'data' => $thread->name
@@ -536,7 +536,7 @@ class ThreadService
                 ];
             }
             Cache::put('sent_knok_'.$thread->id.'_'.$party->owner_id, true, Carbon::now()->addMinutes(5));
-            (new BroadcastService($thread, $model))->broadcastKnok($party);
+            (new BroadcastService($thread))->broadcastKnok($party);
             return [
                 'state' => true,
                 'data' => $party->owner->name

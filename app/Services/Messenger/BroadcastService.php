@@ -18,11 +18,10 @@ use Exception;
 
 class BroadcastService
 {
-    protected $thread, $model, $channels = [], $devices, $PushNotification;
-    public function __construct(Thread $thread, $model)
+    protected $thread, $channels = [], $devices, $PushNotification;
+    public function __construct(Thread $thread)
     {
         $this->thread = $thread;
-        $this->model = $model;
         $this->PushNotification = new PushNotificationService();
     }
 
@@ -32,7 +31,7 @@ class BroadcastService
             $recipients = $collection;
         }
         else{
-            $recipients = $all ? $this->thread->participants->fresh('owner.devices') : $this->thread->participants->where('owner_id', '!=', $this->model->id);
+            $recipients = $all ? $this->thread->participants->fresh('owner.devices') : $this->thread->participants->where('owner_id', '!=', messenger_profile());
         }
         $this->devices = collect([]);
         if (!empty($recipients)) {
@@ -65,7 +64,7 @@ class BroadcastService
     public function broadcastMessage(Message $message)
     {
         try {
-            $data = MessengerRepo::MakeMessage($this->thread, $message, null);
+            $data = MessengerRepo::MakeMessage($this->thread, $message);
             $data['thread_type'] = $this->thread->ttype;
             $data['thread_subject'] = $this->thread->name;
             $notify = [
@@ -113,7 +112,7 @@ class BroadcastService
         $data = [
             'thread_id' => $this->thread->id,
             'subject' => $this->thread->name,
-            'name' => $this->model->name
+            'name' => messenger_profile()->name
         ];
         try {
             foreach($this->channels as $channel){
@@ -165,8 +164,8 @@ class BroadcastService
             broadcast(new SendKnok([
                 'thread_id' => $this->thread->id,
                 'thread_type' => $this->thread->ttype,
-                'name' => $this->model->name,
-                'avatar' => $this->model->avatar
+                'name' => messenger_profile()->name,
+                'avatar' => messenger_profile()->avatar
             ],
                 ['private-'.get_messenger_alias($participant->owner).'_notify_'.$participant->owner->id]
             ));
@@ -209,12 +208,12 @@ class BroadcastService
             'thread_name' => $this->thread->name,
             'call_id' => $call->id,
             'call_type' => $call->type,
-            'sender_name' => $this->model->name,
-            'avatar' => ThreadService::IsGroup($this->thread) ? $this->thread->avatar : $this->model->avatar,
+            'sender_name' => messenger_profile()->name,
+            'avatar' => ThreadService::IsGroup($this->thread) ? $this->thread->avatar : messenger_profile()->avatar,
         ];
         try {
             $this->PushNotification->sendPushNotify($this->devices, [
-                'title' => (ThreadService::IsGroup($this->thread) ? $this->thread->name : $this->model->name),
+                'title' => (ThreadService::IsGroup($this->thread) ? $this->thread->name : messenger_profile()->name),
                 'body' => 'Incoming Call',
                 'sound' => 'default',
                 'data' => $data

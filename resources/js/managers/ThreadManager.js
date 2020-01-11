@@ -1054,7 +1054,7 @@ window.ThreadManager = (function () {
                     if(key !== 0
                         && opt.storage.messages[key-1].owner_id === value.owner_id
                         && [0,1,2].includes(opt.storage.messages[key-1].message_type)
-                        && TippinManager.format().timeDiffInMinutes(value.utc_created_at, opt.storage.messages[key-1].utc_created_at) < 30
+                        && TippinManager.format().timeDiffInMinutes(value.created_at, opt.storage.messages[key-1].created_at) < 30
                     ){
                         opt.elements.msg_stack.append(ThreadTemplates.render().my_message_grouped(value));
                         return;
@@ -1065,7 +1065,7 @@ window.ThreadManager = (function () {
                 if(key !== 0
                     && opt.storage.messages[key-1].owner_id === value.owner_id
                     && [0,1,2].includes(opt.storage.messages[key-1].message_type)
-                    && TippinManager.format().timeDiffInMinutes(value.utc_created_at, opt.storage.messages[key-1].utc_created_at) < 30
+                    && TippinManager.format().timeDiffInMinutes(value.created_at, opt.storage.messages[key-1].created_at) < 30
                 ){
                     opt.elements.msg_stack.append(ThreadTemplates.render().message_grouped(value));
                     return;
@@ -1095,7 +1095,7 @@ window.ThreadManager = (function () {
                     if(key !== 0
                         && opt.storage.messages[key-1].owner_id === value.owner_id
                         && [0,1,2].includes(opt.storage.messages[key-1].message_type)
-                        && TippinManager.format().timeDiffInMinutes(opt.storage.messages[key-1].utc_created_at, value.utc_created_at) < 30
+                        && TippinManager.format().timeDiffInMinutes(opt.storage.messages[key-1].created_at, value.created_at) < 30
                     ){
                         opt.elements.msg_stack.find("#message_"+opt.storage.messages[key-1].message_id).replaceWith(ThreadTemplates.render().my_message_grouped(opt.storage.messages[key-1]))
                     }
@@ -1105,7 +1105,7 @@ window.ThreadManager = (function () {
                 if(key !== 0
                     && opt.storage.messages[key-1].owner_id === value.owner_id
                     && [0,1,2].includes(opt.storage.messages[key-1].message_type)
-                    && TippinManager.format().timeDiffInMinutes(opt.storage.messages[key-1].utc_created_at, value.utc_created_at) < 30
+                    && TippinManager.format().timeDiffInMinutes(opt.storage.messages[key-1].created_at, value.created_at) < 30
                 ){
                     opt.elements.msg_stack.find("#message_"+opt.storage.messages[key-1].message_id).replaceWith(ThreadTemplates.render().message_grouped(opt.storage.messages[key-1]))
                 }
@@ -1441,7 +1441,7 @@ window.ThreadManager = (function () {
             else if(opt.storage.messages.length > 1
                 && opt.storage.messages[(opt.storage.messages.length-2)].owner_id === msg.owner_id
                 && [0,1,2].includes(opt.storage.messages[(opt.storage.messages.length-2)].message_type)
-                && TippinManager.format().timeDiffInMinutes(msg.utc_created_at, opt.storage.messages[(opt.storage.messages.length-2)].utc_created_at) < 30
+                && TippinManager.format().timeDiffInMinutes(msg.created_at, opt.storage.messages[(opt.storage.messages.length-2)].created_at) < 30
             ){
                 msg.owner_id === TippinManager.common().id ? opt.elements.msg_stack.append(ThreadTemplates.render().my_message_grouped(msg)) : opt.elements.msg_stack.append(ThreadTemplates.render().message_grouped(msg));
             }
@@ -1552,7 +1552,6 @@ window.ThreadManager = (function () {
             temp.recent_message.message_type = data.message_type;
             temp.recent_message.name = data.name;
             temp.updated_at = data.created_at;
-            temp.utc_updated_at = data.utc_created_at;
             if(temp.thread_type === 1 && data.thread_id !== opt.thread.id) temp.online = 1;
             if(temp.thread_type === 1 && data.thread_id === opt.thread.id && data.owner_id !== TippinManager.common().id){
                 let bobble = methods.locateStorageItem({type : 'bobble', id : data.owner_id}), i = bobble.index;

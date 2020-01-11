@@ -27,7 +27,7 @@ class CallChannel
      */
     public function join(User $user, $thread, $call)
     {
-        if(messenger_profile() && CallService::AuthCallSocket($thread, $call, messenger_profile())){
+        if(messenger_profile() && CallService::AuthCallSocket($thread, $call)){
             return [
                 'avatar' => messenger_profile()->avatar,
                 'name' => messenger_profile()->name,

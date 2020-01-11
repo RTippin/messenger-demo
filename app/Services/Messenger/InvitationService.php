@@ -39,13 +39,13 @@ class InvitationService
         }
     }
 
-    private static function StoreGroupInvite(Thread $thread, $model, $attr = [])
+    private static function StoreGroupInvite(Thread $thread, $attr = [])
     {
         try{
             $invite = new GroupInviteLink();
             $invite->thread_id = $thread->id;
-            $invite->owner_id = $model->id;
-            $invite->owner_type = get_class($model);
+            $invite->owner_id = messenger_profile()->id;
+            $invite->owner_type = get_class(messenger_profile());
             $invite->max_use = $attr['max'];
             $invite->uses = 0;
             $invite->expires_at = $attr['expires'];
@@ -57,7 +57,7 @@ class InvitationService
         }
     }
 
-    public static function GenerateGroupInvitation(Request $request, Thread $thread, Participant $participant, $model)
+    public static function GenerateGroupInvitation(Request $request, Thread $thread, Participant $participant)
     {
         if(ThreadService::IsLocked($thread, $participant) || !ThreadService::IsThreadAdmin($thread, $participant)){
             return [
@@ -118,7 +118,7 @@ class InvitationService
             break;
         }
         if($thread->groupInviteLink) self::RemoveGroupInvite($thread->groupInviteLink);
-        $invite = self::StoreGroupInvite($thread, $model, [
+        $invite = self::StoreGroupInvite($thread, [
             'max' => $max,
             'expires' => $expires
         ]);
@@ -160,7 +160,7 @@ class InvitationService
         ];
     }
 
-    public static function CanJoinWithInvite(Request $request, $model = null)
+    public static function CanJoinWithInvite(Request $request)
     {
         $invite = GroupInviteLink::where(DB::raw('BINARY `slug`'), $request->slug)->with('thread.participants.owner')->first();
         if(!$invite || !self::ValidateInviteLink($invite)){
@@ -169,8 +169,8 @@ class InvitationService
                 'error' => 'Invalid invite link'
             ];
         }
-        if($model){
-            if(ParticipantService::LocateParticipant($invite->thread, $model)){
+        if(messenger_profile()){
+            if(ParticipantService::LocateParticipant($invite->thread)){
                 return [
                     'state' => true,
                     'data' => [
@@ -207,9 +207,9 @@ class InvitationService
         }
     }
 
-    public static function JoinParticipantWithInvite(Request $request, $model)
+    public static function JoinParticipantWithInvite(Request $request)
     {
-        $check = self::CanJoinWithInvite($request, $model);
+        $check = self::CanJoinWithInvite($request);
         if(!$check['state']){
             return [
                 'state' => false,
@@ -223,8 +223,8 @@ class InvitationService
             ];
         }
         $thread = $check['data']['invite']->thread;
-        if(ParticipantService::StoreOrRestoreParticipant($thread, $model)){
-            MessageService::StoreSystemMessage($thread, $model, 'joined the group', 88);
+        if(ParticipantService::StoreOrRestoreParticipant($thread)){
+            MessageService::StoreSystemMessage($thread, messenger_profile(), 'joined the group', 88);
             self::UpdateInvitationUse($check['data']['invite']);
             return [
                 'state' => true
