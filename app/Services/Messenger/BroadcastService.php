@@ -31,7 +31,7 @@ class BroadcastService
             $recipients = $collection;
         }
         else{
-            $recipients = $all ? $this->thread->participants->fresh('owner.devices') : $this->thread->participants->where('owner_id', '!=', messenger_profile());
+            $recipients = $all ? $this->thread->participants->fresh('owner.devices') : $this->thread->participants->where('owner_id', '!=', messenger_profile()->id);
         }
         $this->devices = collect([]);
         if (!empty($recipients)) {

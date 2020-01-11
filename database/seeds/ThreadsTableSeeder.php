@@ -30,7 +30,6 @@ class ThreadsTableSeeder extends Seeder
                     'owner_id' => $owners->random(),
                     'owner_type' => 'App\User'
                 ]);
-                usleep(100000);
             }
         }
     }
@@ -73,7 +72,6 @@ class ThreadsTableSeeder extends Seeder
                 'owner_id' => $all->whereIn('email', $this->admins)->random()->id,
                 'owner_type' => 'App\User'
             ]);
-            usleep(100000);
         }
     }
 }
