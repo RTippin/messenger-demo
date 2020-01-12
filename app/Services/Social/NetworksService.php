@@ -44,11 +44,11 @@ class NetworksService
         return array("state" => false, "error" => "Invalid action");
     }
 
-    public static function MakeNetworkRequest($model)
+    public static function MakeNetworkRequest()
     {
         $friends = collect([]);
         try{
-            $model->pendingReceivedNetworks->reverse()->each(function ($friend) use($friends, $model){
+            messenger_profile()->pendingReceivedNetworks->reverse()->each(function ($friend) use($friends){
                 $friends->push([
                     'id' => $friend->id,
                     'owner_id' => $friend->sender->id,

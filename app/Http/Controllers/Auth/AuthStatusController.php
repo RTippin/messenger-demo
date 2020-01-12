@@ -71,8 +71,8 @@ class AuthStatusController extends Controller
                     }
                     $notify = messenger_profile()->unreadNotifications->count();
                     $threads = messenger_profile()->unreadThreadsCount();
-                    $active_calls = MessengerRepo::MakeActiveCalls(messenger_profile());
-                    if(messenger_profile()->pendingReceivedNetworks->count()) $network_request = NetworksService::MakeNetworkRequest(messenger_profile());
+                    $active_calls = MessengerRepo::MakeActiveCalls();
+                    if(messenger_profile()->pendingReceivedNetworks->count()) $network_request = NetworksService::MakeNetworkRequest();
                 }catch (Exception $e){
                     report($e);
                 }
