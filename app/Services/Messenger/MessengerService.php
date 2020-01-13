@@ -31,7 +31,7 @@ class MessengerService
             $_thread = ThreadService::LocateThread($this->request->thread_id, $load);
         }
         if($_thread && $_thread instanceof Thread){
-            $participant = ParticipantService::LocateParticipant($_thread, messenger_profile());
+            $participant = ParticipantService::LocateParticipant($_thread);
             if($participant){
                 $this->thread = $_thread;
                 $this->participant = $participant;
@@ -52,7 +52,7 @@ class MessengerService
         $data = null;
         $error = null;
         $type_loads = [
-            'load_thread' => ['participants.owner', 'activeCall', 'messages', 'calls'],
+            'load_thread' => ['participants.owner.messenger', 'activeCall', 'messages', 'calls'],
             'load_private' => ['participants', 'messages.owner.messenger', 'activeCall', 'calls.participants.owner'],
             'load_group' => ['participants.owner.messenger', 'activeCall', 'messages.owner.messenger', 'calls.participants.owner'],
             'bobble_heads' => ['participants.owner.messenger'],
@@ -447,7 +447,6 @@ class MessengerService
                 'error' => 'Unable to update your avatar'
             ];
         }
-
     }
 
     private static function RemoveMessengerAvatar()

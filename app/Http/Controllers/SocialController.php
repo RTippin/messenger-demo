@@ -3,20 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Services\Social\NetworksService;
-use Illuminate\Http\Request;
 
 class SocialController extends Controller
 {
-    protected $request;
-    public function __construct(Request $request)
+    protected $networksService;
+    public function __construct(NetworksService $networksService)
     {
-        $this->request = $request;
+        $this->networksService = $networksService;
     }
 
     public function handleNetworks()
     {
-        $dispatch = new NetworksService($this->request);
-        $dispatch = $dispatch->handleActions();
+        $dispatch = $this->networksService->handleActions();
         if(!$dispatch['state']){
             return response()->json(['errors' => ['forms' => $dispatch['error']]], 400);
         }

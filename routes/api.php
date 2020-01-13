@@ -13,6 +13,19 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::group(['prefix' => 'v0'], function () {
+//    Route::group([
+//        'middleware' => ['auth:api', 'SetProfile']
+//    ], function() {
+//        Route::post('device/join', 'ApiController@joinDeviceToken');
+//        Route::post('update/{thread_id}', 'MessagesController@update');
+//        Route::get('fetch/{type}', 'MessagesController@fetch');
+//        Route::get('fetch/{thread_id}/{type}/{message_id?}', 'MessagesController@fetch');
+//        Route::get('call/{thread_id}/{call_id}/{type}', 'MessagesController@callFetch');
+//        Route::get('images/messenger/groups/{thread_id}/{thumb?}', 'ImageController@MessengerGroupAvatarView')->name('group_avatar_api');
+//    });
+//});
+//
+//Route::group(['prefix' => 'v1'], function () {
+//
+//});

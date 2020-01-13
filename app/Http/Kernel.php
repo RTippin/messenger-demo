@@ -34,8 +34,6 @@ class Kernel extends HttpKernel
         ValidatePostSize::class,
         TrimStrings::class,
         ConvertEmptyStringsToNull::class,
-        StartSession::class,
-        ShareErrorsFromSession::class,
         TrustProxies::class,
     ];
 
@@ -48,7 +46,9 @@ class Kernel extends HttpKernel
         'web' => [
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
+            StartSession::class,
             AuthenticateSession::class,
+            ShareErrorsFromSession::class,
             AuthViaRemember::class,
             VerifyCsrfToken::class,
             SubstituteBindings::class,
