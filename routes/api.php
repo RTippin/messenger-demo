@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 //Route::group(['prefix' => 'v0'], function () {
 //    Route::group([
-//        'middleware' => ['auth:api', 'SetProfile']
+//        'middleware' => ['auth:api', 'SetMessengerModel']
 //    ], function() {
 //        Route::post('device/join', 'ApiController@joinDeviceToken');
 //        Route::post('update/{thread_id}', 'MessagesController@update');
