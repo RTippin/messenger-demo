@@ -152,15 +152,21 @@ If you choose to use this outside of demo purposes, I recommend you setup your o
 ### You should now be up and running!
 *Please note the entire javascript managers/modules in the assets directory are a mini framework of my own making. I am hoping to switch this over to React as we are working towards a mobile app based on React Native* 
 
-###Inside a group conversation
+- - - -
+
+### Inside a group conversation
 ![Screenshot](public/images/example/screen1.png?raw=true "Screenshot")
 
-###Contacts list/Mobile view
+- - - -
+
+### Contacts list/Mobile view
 ![Screenshot](public/images/example/screen2.png?raw=true "Screenshot")
 
-###In group call, other user is screen sharing
+- - - -
+### In group call, other user is screen sharing
 ![Screenshot](public/images/example/screen3.png?raw=true "Screenshot")
 
+- - - -
 <p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
 <p align="center">
 <a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
