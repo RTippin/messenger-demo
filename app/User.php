@@ -15,7 +15,7 @@ class User extends Authenticatable
 
     public $incrementing = false;
     public $keyType = 'string';
-    protected $fillable = ['firstName', 'lastName' , 'email' , 'password', 'active'];
+    protected $fillable = ['first', 'last' , 'email' , 'password', 'active'];
     protected $hidden = ['password', 'remember_token', 'created_at', 'updated_at', 'email', 'active'];
 
     public function receivesBroadcastNotificationsOn()
@@ -30,12 +30,12 @@ class User extends Authenticatable
 
     public function getNameAttribute()
     {
-        return strip_tags(ucwords($this->firstName." ".$this->lastName));
+        return strip_tags(ucwords($this->first." ".$this->last));
     }
 
     public function getJSNameAttribute()
     {
-        return htmlspecialchars(ucwords($this->firstName." ".$this->lastName), ENT_QUOTES);
+        return htmlspecialchars(ucwords($this->first." ".$this->last), ENT_QUOTES);
     }
 
 }

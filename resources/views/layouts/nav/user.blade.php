@@ -35,7 +35,7 @@
             </div>
             <div class="col-12 text-center mt-2 pb-4 pb-lg-3">
                 <hr class="mb-1 mt-0">
-                <span class="float-right"><a href="{{route('search')}}"><i class="fas fa-search"></i> Find Friends</a></span>
+                <span class="float-right"><a onclick="ThreadManager.load().search(); return false;" href="#"><i class="fas fa-search"></i> Find Friends</a></span>
             </div>
         </div>
     </li>

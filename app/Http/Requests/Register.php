@@ -24,8 +24,8 @@ class Register
     private function rules($mobile)
     {
         return [
-            'firstName' => 'required|min:2|max:255',
-            'lastName' => 'required|min:2|max:255',
+            'first' => 'required|min:2|max:255',
+            'last' => 'required|min:2|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => [
                 'required',

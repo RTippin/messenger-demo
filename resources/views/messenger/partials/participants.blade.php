@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-12 show_datatable NS">
+    <div class="col-12">
         <div class="table-responsive-sm">
             <table id="view_group_participants" class="table table-sm table-hover">
                 <thead>
@@ -11,13 +11,11 @@
                 <tbody>
                 @foreach($participants as $participant)
                     <tr id="row_{{$participant->id}}">
-                        <td>
+                        <td class="pointer_area" onclick="ThreadManager.load().createPrivate({slug : '{{$participant->owner->slug()}}', type : '{{get_messenger_alias($participant->owner)}}'})">
                             <div class="participant_link table_links">
                                 <div class="nowrap">
-                                    <a target="_blank" href="{{$participant->owner->slug(true)}}">
-                                        <img class="rounded-circle group-image avatar-is-{{$participant->owner->onlineStatus()}}" src="{{asset($participant->owner->avatar())}}"/>
-                                        <span class="h5"><span class="badge badge-light">{{$participant->owner->name}}</span></span>
-                                    </a>
+                                    <img class="rounded-circle group-image avatar-is-{{$participant->owner->onlineStatus()}}" src="{{asset($participant->owner->avatar())}}"/>
+                                    <span class="h5"><span class="badge badge-light">{{$participant->owner->name}}</span></span>
                                     <span class="participant_admin_{{$participant->id}}">{!! $participant->admin ? '<span class="badge badge-warning">Admin</span>' : '' !!}</span>
                                 </div>
                             </div>
@@ -26,9 +24,6 @@
                             <div class="dropdown float-right">
                                 <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fas fa-cog"></i></button>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" onclick="ThreadManager.load().createPrivate({slug : '{{$participant->owner->slug()}}', type : '{{get_messenger_alias($participant->owner)}}'}); return false;" target="_blank"
-                                       href="{{$participant->owner->slug(true)}}/message" title="Message"><i class="far fa-comment-alt"></i> Message
-                                    </a>
                                     @if($owner)
                                         <a class="dropdown-item" onclick="ThreadManager.group().removeParticipant('{{$participant->id}}'); return false;" href="#" title="Remove"><i class="fas fa-trash-alt"></i> Remove</a>
                                         @if($participant->admin)

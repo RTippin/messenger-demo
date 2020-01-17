@@ -37,14 +37,6 @@
             <span class="badge badge-pill badge-danger mr-n2" id="nav_mobile_total_count"></span>
         </button>
         <div id="navbarNavDropdown" class="navbar-collapse collapse">
-            <form id="nav_search_form" action="/search" class="form-inline my-2 my-lg-0 mr-md-3">
-                <div class="input-group">
-                    <input name="query" class="form-control" type="search" placeholder="Find people">
-                    <div class="input-group-append">
-                        <button type="submit" id="nav_search_btn" class="btn btn-outline-primary"><i class="fas fa-search"></i></button>
-                    </div>
-                </div>
-            </form>
             @auth
                 @include('layouts.nav.user')
             @else

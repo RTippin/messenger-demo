@@ -195,8 +195,8 @@ window.GuestManager = (function () {
             opt.lock = true;
             TippinManager.button().addLoader({id : '#regBtn'});
             let form = new FormData();
-            form.append('firstName', $("#firstName").val());
-            form.append('lastName', $("#lastName").val());
+            form.append('first', $("#firstName").val());
+            form.append('last', $("#lastName").val());
             form.append('email', $("#emailR").val());
             form.append('password', $("#new_password").val());
             form.append('password_confirmation', $("#password-confirm").val());

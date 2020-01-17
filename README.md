@@ -1,6 +1,8 @@
 # Tippin's Messenger Demo
 Laravel 6 messenger demo app by Richard Tippin. Working to release this messenger as a package for use with laravel. This is a fully featured stand alone app you can use as a demo or extract my source to fit your needs.
 
+****Please note that until I ready to extract this further into a package, I will be constantly moving items around, and will soon be redoing the entire database structure to utilize more pivots to avoid duplicated data***
+
 ### Checkout the [LIVE DEMO](https://tippindev.com)
 *The database and all uploaded files are wiped and reset weekly*
 

@@ -13,19 +13,20 @@ use Illuminate\Http\Request;
 |
 */
 
-//Route::group(['prefix' => 'v0'], function () {
-//    Route::group([
-//        'middleware' => ['auth:api', 'SetMessengerModel']
-//    ], function() {
-//        Route::post('device/join', 'ApiController@joinDeviceToken');
-//        Route::post('update/{thread_id}', 'MessagesController@update');
-//        Route::get('fetch/{type}', 'MessagesController@fetch');
-//        Route::get('fetch/{thread_id}/{type}/{message_id?}', 'MessagesController@fetch');
-//        Route::get('call/{thread_id}/{call_id}/{type}', 'MessagesController@callFetch');
-//        Route::get('images/messenger/groups/{thread_id}/{thumb?}', 'ImageController@MessengerGroupAvatarView')->name('group_avatar_api');
+//Route::group([
+//    'prefix' => 'v0',
+//    'middleware' => [
+//        'auth:api',
+//        'SetProfile'
+//    ]
+//], function () {
+//    Route::group(['prefix' => 'messenger'], function() {
+//        Route::get('search', 'SearchController@search')->middleware('throttle:45,1');
+//        Route::post('join/{slug}', 'MessagesController@joinInviteLink');
+//        Route::get('create/{slug}/{alias}', 'MessagesController@checkCreatePrivate');
+//        Route::get('{thread_id}/call/{call_id}/{type}', 'MessagesController@callFetch');
+//        Route::get('get/{type}', 'MessagesController@fetch');
+//        Route::get('get/{thread_id}/{type}/{message_id?}', 'MessagesController@fetch');
+//        Route::post('save/{thread_id}', 'MessagesController@update')->middleware('throttle:60,1');
 //    });
-//});
-//
-//Route::group(['prefix' => 'v1'], function () {
-//
 //});

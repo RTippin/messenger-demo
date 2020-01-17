@@ -170,6 +170,15 @@ class MessagesController extends Controller
                 }
                 return response()->json(['errors' => ['forms' => $dispatch["error"]]], 400);
             break;
+            case 'store_message':
+                $dispatch = $this->messenger->routeCreate('store_message');
+                if($dispatch['state']){
+                    return response()->json([
+                        'message' => $dispatch['data']
+                    ]);
+                }
+                return response()->json(['errors' => ['forms' => $dispatch['error']]], 400);
+            break;
             case 'store_messenger_avatar':
                 $dispatch = $this->messenger->routeCreate('store_messenger_avatar', false);
                 if($dispatch["state"]){
@@ -247,24 +256,17 @@ class MessagesController extends Controller
                 }
                 return response()->json(['errors' => ['forms' => $dispatch["error"]]], 400);
             break;
-            case 'reload_participant':
-                $dispatch = $this->messenger->routeCreate('reload_participant');
-                if($dispatch["state"]){
-                    return response()->json(['html' => View::make('messenger.partials.participant')->with('participant', $dispatch['data']['participant'])->with('owner', $dispatch['data']['admin'])->render()]);
-                }
-                return response()->json(['errors' => ['forms' => $dispatch["error"]]], 400);
-            break;
             case 'participant_admin_revoke':
                 $dispatch = $this->messenger->routeDestroy('participant_admin_revoke');
                 if($dispatch["state"]){
-                    return response()->json(['admin' => $dispatch['data']['admin'], 'msg' => $dispatch['data']['message'], 'html' => View::make('messenger.partials.participant')->with('participant', $dispatch['data']['participant'])->with('owner', true)->render()]);
+                    return response()->json(['msg' => $dispatch['data'], 'admin' => false]);
                 }
                 return response()->json(['errors' => ['forms' => $dispatch["error"]]], 400);
             break;
             case 'participant_admin_grant':
                 $dispatch = $this->messenger->routeCreate('participant_admin_grant');
                 if($dispatch["state"]){
-                    return response()->json(['admin' => $dispatch['data']['admin'], 'msg' => $dispatch['data']['message'], 'html' => View::make('messenger.partials.participant')->with('participant', $dispatch['data']['participant'])->with('owner', true)->render()]);
+                    return response()->json(['msg' => $dispatch['data'], 'admin' => true]);
                 }
                 return response()->json(['errors' => ['forms' => $dispatch["error"]]], 400);
             break;
@@ -321,23 +323,12 @@ class MessagesController extends Controller
         return response()->json(['errors' => ['forms' => 'Error gathering the data you requested']], 400);
     }
 
-    public function storeMessage()
-    {
-        $message = $this->messenger->routeCreate('store_message');
-        if(!$message['state']){
-            return response()->json(['errors' => ['forms' => $message['error']]], 400);
-        }
-        return response()->json([
-            'message' => $message['data']
-        ]);
-    }
-
     public function showThread()
     {
         return view('messenger.portal')->with(['mode' => 0, 'thread_id' => $this->request->thread_id]);
     }
 
-    public function CreateOrRedirect()
+    public function checkCreatePrivate()
     {
         if(!$this->request->expectsJson()){
             return view('messenger.portal')->with('slug', $this->request->slug)->with('type', $this->request->alias)->with('mode', 3);
@@ -356,12 +347,14 @@ class MessagesController extends Controller
         return response()->json([
             'exist' => false,
             'party' => [
-                'thread_id' => 1234,
                 'owner_id' => $check['model']->id,
                 'avatar' => $check['model']->avatar,
                 'name' => $check['model']->name,
                 'type' => $check['type'],
-                'online' => $check['model']->isOnline()
+                'online' => $check['model']->isOnline(),
+                'slug' => $check['model']->slug(false),
+                'route' => $check['model']->slug(true),
+                'network' => messenger_profile()->networkStatus($check['model']),
             ]
         ]);
     }

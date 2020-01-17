@@ -232,6 +232,12 @@
     background-color: #ccc;
 }
 
+.chat-body.chat-special {
+    height: calc(100vh - 134px);
+    margin-bottom: 0;
+    padding: 0;
+}
+
 .message {
     position: relative;
     width: 100%;
@@ -545,9 +551,9 @@
 }
 
 @media(max-width : 500px){
-    .chat-body {
-        height: calc(100vh - 215px);
-    }
+    //.chat-body {
+    //    height: calc(100vh - 215px);
+    //}
 }
 
 

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title'){{messenger_profile()->name}} - Messenger @endsection
 @push('css')<link href="{{ asset("css/emoji/emoji.css?").config('app.version') }}" rel="stylesheet">
-    <link href="{{ mix("css/messages.css") }}" rel="stylesheet">
+<link href="{{ mix("css/messages.css") }}" rel="stylesheet">
 @endpush
 @section('content')
 <div class="container-fluid mt-n3">
@@ -16,6 +16,7 @@
                     <div class="dropdown">
                         <button data-tooltip="tooltip" title="Messenger Options" data-placement="right" class="btn btn-lg text-secondary btn-light pt-1 pb-0 px-2 dropdown-toggle" data-toggle="dropdown"><i class="fas fa-cogs fa-2x"></i></button>
                         <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" onclick="ThreadManager.load().search(); return false;" href="#"><i class="fas fa-search"></i> Search Profiles</a>
                             <a class="dropdown-item" onclick="ThreadManager.load().createGroup(); return false;" href="#"><i class="fas fa-edit"></i> Create Group</a>
                             <a class="dropdown-item" onclick="ThreadManager.load().contacts(); return false;" href="#"><i class="far fa-address-book"></i> Contacts</a>
                             <a class="dropdown-item" onclick="ThreadManager.load().settings(); return false;" href="#"><i class="fas fa-cog"></i> Settings</a>
@@ -31,7 +32,7 @@
                                     <div class="input-group-prepend">
                                         <div class="input-group-text"><i class="fas fa-search"></i></div>
                                     </div>
-                                    <input type="search" class="form-control shadow-sm" id="thread_search_input" placeholder="Search conversations by name">
+                                    <input autocomplete="off" type="search" class="form-control shadow-sm" id="thread_search_input" placeholder="Search conversations by name"/>
                                 </div>
                             </div>
                         </div>

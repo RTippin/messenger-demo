@@ -22,7 +22,9 @@ window.ThreadManager = (function () {
             state_lockout_retries : 0,
             special_mode : false,
             thread_filtered : false,
-            thread_filter_search : null
+            thread_filter_search : null,
+            messenger_search_term : null,
+            messenger_search_delay : 0
         },
         socket : {
             online_status_setting : 1,
@@ -58,6 +60,8 @@ window.ThreadManager = (function () {
             thread_search_bar : $("#threads_search_bar"),
             drag_drop_zone : $('#drag_drop_overlay'),
             messenger_avatar_upload : document.getElementById('messenger_avatar_upload'),
+            messenger_search_input : null,
+            messenger_search_results : null,
             msg_panel : null,
             doc_file : null,
             img_file : null,
@@ -156,6 +160,12 @@ window.ThreadManager = (function () {
             }
             if(arg.type === 4) mounted.startWatchdog();
             if(arg.type === 5 && !TippinManager.common().mobile) opt.elements.message_container.html(ThreadTemplates.render().empty_base());
+            if(arg.type === 7){
+                opt.elements.msg_panel = $(".chat-body");
+                opt.elements.messenger_search_results = $("#messenger_search_content");
+                opt.elements.messenger_search_input = $("#messenger_search_profiles");
+                mounted.startWatchdog()
+            }
             if('thread_id' in arg){
                 opt.thread.id = arg.thread_id;
                 opt.thread.name = arg.t_name;
@@ -196,6 +206,9 @@ window.ThreadManager = (function () {
                             case 6:
                                 LoadIn.contacts(true);
                             break;
+                            case 7:
+                                LoadIn.search(true);
+                            break;
                         }
                     }
                     else{
@@ -209,8 +222,7 @@ window.ThreadManager = (function () {
                     elm.addEventListener(eventName, methods.fileDragDrop, false)
                 });
             }
-            setInterval(mounted.timeAgo, 45000);
-            mounted.timeAgo();
+            setInterval(mounted.timeAgo, 30000);
         },
         toggleApp : function(onComplete){
             if(!opt.states.special_mode) return false;
@@ -264,7 +276,9 @@ window.ThreadManager = (function () {
                     state_lockout_retries : 0,
                     special_mode : opt.states.special_mode,
                     thread_filtered : opt.states.thread_filtered,
-                    thread_filter_search : opt.states.thread_filter_search
+                    thread_filter_search : opt.states.thread_filter_search,
+                    messenger_search_term : null,
+                    messenger_search_delay : 0
                 },
                 socket : {
                     online_status_setting : opt.socket.online_status_setting,
@@ -300,6 +314,8 @@ window.ThreadManager = (function () {
                     thread_search_bar : opt.elements.thread_search_bar,
                     drag_drop_zone : opt.elements.drag_drop_zone,
                     messenger_avatar_upload : opt.elements.messenger_avatar_upload,
+                    messenger_search_input : null,
+                    messenger_search_results : null,
                     msg_panel : null,
                     doc_file : null,
                     img_file : null,
@@ -378,6 +394,11 @@ window.ThreadManager = (function () {
                     if(!TippinManager.common().mobile) subject.focus();
                     PageListeners.listen().validateForms();
                 break;
+                case 7:
+                    opt.elements.messenger_search_input.on("keyup mouseup", mounted.runMessengerSearch);
+                    opt.elements.msg_panel.click(mounted.msgPanelClick);
+                    opt.elements.messenger_search_input.focus();
+                break;
             }
         },
         stopWatchdog : function(){
@@ -419,10 +440,53 @@ window.ThreadManager = (function () {
                         console.log(e);
                     }
                 break;
+                case 7:
+                    try{
+                        opt.elements.msg_panel.off('click', mounted.msgPanelClick);
+                        opt.elements.messenger_search_input.off("keyup mouseup", mounted.runMessengerSearch);
+                    }catch (e) {
+                        console.log(e);
+                    }
+                break;
             }
         },
         stopDefault : function(e){
             e.preventDefault()
+        },
+        runMessengerSearch : function(e){
+            if(opt.thread.type !== 7) return;
+            let current_term = opt.states.messenger_search_term, time = new Date();
+            if(e && e.type === 'mouseup'){
+                setTimeout(mounted.runMessengerSearch, 0);
+                return;
+            }
+            if(opt.elements.messenger_search_input.val().trim().length){
+                if(opt.elements.messenger_search_input.val().trim().length >= 3){
+                    if(current_term !== opt.elements.messenger_search_input.val().trim()){
+                        if(((time.getTime() - opt.states.messenger_search_delay) / 1000) > 1){
+                            opt.states.messenger_search_term = opt.elements.messenger_search_input.val().trim();
+                            opt.states.messenger_search_delay = time.getTime();
+                            opt.elements.messenger_search_results.html(ThreadTemplates.render().loader());
+                            TippinManager.xhr().request({
+                                route : '/messenger/search?query='+opt.states.messenger_search_term,
+                                success : methods.manageMessengerSearch,
+                                fail_alert : true
+                            })
+                        }
+                        else{
+                            setTimeout(mounted.runMessengerSearch, 200)
+                        }
+                    }
+                }
+                else{
+                    opt.states.messenger_search_term = opt.elements.messenger_search_input.val().trim();
+                    opt.elements.messenger_search_results.html(ThreadTemplates.render().thread_empty_search(true));
+                }
+            }
+            else{
+                opt.states.messenger_search_term = null;
+                opt.elements.messenger_search_results.html(ThreadTemplates.render().thread_empty_search());
+            }
         },
         inputClickScroll : function(){
             setTimeout(function () {
@@ -450,6 +514,11 @@ window.ThreadManager = (function () {
             if(opt.thread.click_to_read) methods.markRead()
         },
         msgPanelClick : function(e){
+            if(opt.thread.type === 7){
+                let focus_input = document.getElementById('messenger_search_profiles');
+                TippinManager.format().focusEnd(focus_input, false);
+                return;
+            }
             let focus_input = (opt.elements.emoji ? document.getElementById('emoji_input_area') : document.getElementById('emojionearea'));
             switch (opt.thread.type) {
                 case 1:
@@ -504,12 +573,6 @@ window.ThreadManager = (function () {
                     new_forms.newPrivate(2);
                 break;
             }
-        },
-        dropdownListener : function(){
-            $('.dropdown-submenu a.sub_A').unbind('click').on("click", function(){
-                $(this).next(".dropdown-menu").toggleClass('show');
-                return false;
-            });
         },
         avatarListener : function(){
             $('.grp-img-check').click(function() {
@@ -761,6 +824,17 @@ window.ThreadManager = (function () {
             });
             methods.updateThread(data.thread, true, false, false, ('new' in arg))
         },
+        manageMessengerSearch : function(search){
+            if(opt.thread.type !== 7) return;
+            if(!search.results.length){
+                opt.elements.messenger_search_results.html(ThreadTemplates.render().thread_empty_search(true, true));
+                return;
+            }
+            opt.elements.messenger_search_results.html('');
+            search.results.forEach((profile) => {
+                opt.elements.messenger_search_results.append(ThreadTemplates.render().messenger_search(profile))
+            })
+        },
         fileDragDrop : function(e){
             let isFile = function () {
                 for (let i = 0; i < e.dataTransfer.items.length; i++){
@@ -844,8 +918,26 @@ window.ThreadManager = (function () {
                 fail : null
             })
         },
-        loadDataTable : function(elm){
+        loadDataTable : function(elm, special){
             if(opt.elements.data_table) opt.elements.data_table.destroy();
+            if(special){
+                opt.elements.data_table = elm.DataTable({
+                    "language": {
+                        "info": "Showing _START_ to _END_ of _TOTAL_ friends",
+                        "lengthMenu": "Show _MENU_ friends",
+                        "infoEmpty": "Showing 0 to 0 of 0 friends",
+                        "infoFiltered": "(filtered from _MAX_ total friends)",
+                        "emptyTable": "No friends found",
+                        "zeroRecords": "No matching friends found"
+                    },
+                    "drawCallback": function(settings){
+                        let api = new $.fn.DataTable.Api(settings), pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
+                        pagination.toggle(api.page.info().pages > 1);
+                    },
+                    "pageLength": 100
+                });
+                return;
+            }
             opt.elements.data_table = elm.DataTable({
                 "language": {
                     "info": "Showing _START_ to _END_ of _TOTAL_ participants",
@@ -858,12 +950,7 @@ window.ThreadManager = (function () {
                 "drawCallback": function(settings){
                     let api = new $.fn.DataTable.Api(settings), pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
                     pagination.toggle(api.page.info().pages > 1);
-                    $(this).find('tr').last().find(".dropdown").addClass('dropup');
-                    mounted.dropdownListener();
                 },
-                "initComplete": function() {
-                    $(this).closest(".show_datatable").show();
-                }
             });
         },
         addTypers : function(){
@@ -1276,8 +1363,11 @@ window.ThreadManager = (function () {
                 let pending = methods.makePendingMessage(0, message_contents);
                 methods.managePendingMessage('add', pending);
                 TippinManager.xhr().payload({
-                    route : '/messenger/update/'+opt.thread.id+'/message',
-                    data : {message : message_contents},
+                    route : '/messenger/update/'+opt.thread.id,
+                    data : {
+                        type : 'store_message',
+                        message : message_contents
+                    },
                     success : function(x){
                         methods.managePendingMessage('completed', pending, x.message);
                     },
@@ -1291,7 +1381,7 @@ window.ThreadManager = (function () {
             }
         },
         sendUploadFiles : function(file){
-            let type = false,
+            let type = 0,
             images = [
                 'image/jpeg',
                 'image/png',
@@ -1328,6 +1418,7 @@ window.ThreadManager = (function () {
             methods.managePendingMessage('add', pending);
             let form = new FormData();
             form.append(type === 1 ? 'image_file' : 'doc_file', file);
+            form.append('type', 'store_message');
             TippinManager.xhr().payload({
                 route : '/messenger/update/'+opt.thread.id+'/message',
                 data : form,
@@ -1842,9 +1933,18 @@ window.ThreadManager = (function () {
         }
     },
     groups = {
-        viewParticipants : function(){
-            if(opt.states.lock) return;
-            opt.states.lock = true;
+        viewParticipants : function(reload){
+            let gather = () => {
+                TippinManager.xhr().request({
+                    route : '/messenger/fetch/'+opt.thread.id+'/participants',
+                    success : function(data){
+                        TippinManager.alert().fillModal({body : data.html, title : opt.thread.name+' Participants'});
+                        methods.loadDataTable($("#view_group_participants"))
+                    },
+                    fail_alert : true
+                })
+            };
+            if(reload) return gather();
             TippinManager.alert().Modal({
                 icon : 'users',
                 theme : 'dark',
@@ -1854,16 +1954,7 @@ window.ThreadManager = (function () {
                 unlock_buttons : false,
                 h4 : false,
                 size : 'lg',
-                onReady : function(){
-                    TippinManager.xhr().request({
-                        route : '/messenger/fetch/'+opt.thread.id+'/participants',
-                        success : function(data){
-                            TippinManager.alert().fillModal({body : data.html, title : opt.thread.name+' Participants'});
-                            methods.loadDataTable($("#view_group_participants"))
-                        },
-                        fail_alert : true
-                    })
-                }
+                onReady : gather
             });
         },
         viewInviteGenerator : function(){
@@ -1985,7 +2076,6 @@ window.ThreadManager = (function () {
                         success : function(data){
                             TippinManager.alert().fillModal({body : data.html, title : 'Add contacts to '+name});
                             methods.loadDataTable($("#add_group_participants"));
-                            mounted.dropdownListener()
                         },
                         fail_alert : true
                     })
@@ -2149,6 +2239,7 @@ window.ThreadManager = (function () {
         adminParticipant : function(arg){
             if(opt.states.lock) return;
             opt.states.lock = true;
+            TippinManager.alert().fillModal({loader : true});
             TippinManager.xhr().payload({
                 route : '/messenger/update/'+opt.thread.id,
                 data : {
@@ -2161,12 +2252,7 @@ window.ThreadManager = (function () {
                         toast : true,
                         theme : (data.admin ? 'success' : 'warning')
                     });
-                    opt.elements.data_table.row($('#row_'+arg.id)).remove();
-                    opt.elements.data_table.row.add([
-                        $(data.html).filter("#col1").html(),
-                        $(data.html).filter("#col2").html()
-                    ]).node().id = 'row_'+arg.id;
-                    opt.elements.data_table.draw(false)
+                    groups.viewParticipants(true);
                 },
                 fail_alert : true
             });
@@ -2450,6 +2536,16 @@ window.ThreadManager = (function () {
                 }
             })
         },
+        search : function(noHistory){
+            if(!opt.INIT) return;
+            if(TippinManager.common().mobile) ThreadTemplates.mobile(true);
+            opt.elements.message_container.html(ThreadTemplates.render().search_base());
+            mounted.reset(false);
+            mounted.Initialize({
+                type : 7,
+            });
+            if(!noHistory) window.history.pushState({type : 7}, null, '/messenger?search');
+        },
         contacts : function(noHistory){
             if(!opt.INIT) return;
             if(TippinManager.common().mobile) ThreadTemplates.mobile(true);
@@ -2462,7 +2558,7 @@ window.ThreadManager = (function () {
                     $("#messenger_contacts_ctnr").html(data.html);
                     PageListeners.listen().tooltips();
                     if(!noHistory) window.history.pushState({type : 6}, null, '/messenger?contacts');
-                    $("#contact_list_table").DataTable()
+                    methods.loadDataTable( $("#contact_list_table"), true)
                 },
                 fail : LoadIn.closeOpened,
                 fail_alert : true,
@@ -2489,7 +2585,7 @@ window.ThreadManager = (function () {
                     if(!noHistory) window.history.pushState({type : 3, create_slug : arg.slug, create_type : arg.type}, null, '/messenger/create/'+arg.slug+'/'+arg.type);
                     mounted.Initialize({
                         type : 3,
-                        thread_id : data.party.thread_id,
+                        thread_id : 'new',
                         t_name : data.party.name,
                         temp_data : data.party
                     })
@@ -2502,7 +2598,7 @@ window.ThreadManager = (function () {
         createGroup : function(noHistory){
             if(opt.states.lock) return;
             mounted.reset(false);
-            opt.elements.message_container.html(ThreadTemplates.render().render_new_group());
+            opt.elements.message_container.html(ThreadTemplates.render().new_group_base());
             if(!noHistory) window.history.pushState({type : 4}, null, '/messenger?newGroup');
             if(TippinManager.common().mobile) ThreadTemplates.mobile(true);
             mounted.Initialize({
@@ -2513,7 +2609,7 @@ window.ThreadManager = (function () {
                 success : function(data){
                     if(opt.thread.type === 4){
                         $("#messages_container_new_group").html(data.html);
-                        methods.loadDataTable($("#add_group_participants"))
+                        methods.loadDataTable($("#add_group_participants"), true)
                     }
                 },
                 fail_alert : true

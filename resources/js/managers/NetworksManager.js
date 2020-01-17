@@ -80,7 +80,6 @@ window.NetworksManager = (function () {
                 toast : true,
                 theme : (data.action === 'remove' || data.action === 'deny' ? 'error' : data.action === 'cancel' ? 'warning' : 'success')
             });
-            if(TippinManager.common().modules.includes('ThreadManager') && ThreadManager.state().type === 6) ThreadManager.load().contacts(true);
             PageListeners.listen().tooltips();
             NotifyManager.heartbeat()
         }

@@ -56,8 +56,8 @@ class RegisterService
         try{
             $email = isset($data['email']) ? $data['email'] : $this->request->input('email');
             $newUser = new User();
-            $newUser->firstName = $this->request->input('firstName');
-            $newUser->lastName = $this->request->input('lastName');
+            $newUser->first = $this->request->input('first');
+            $newUser->last = $this->request->input('last');
             $newUser->email = $email;
             $newUser->password = bcrypt($this->request->input('password'));
             $newUser->active = $data['active'];
@@ -75,7 +75,7 @@ class RegisterService
             $messenger = new Messenger();
             $messenger->owner_id = $user->id;
             $messenger->owner_type = "App\User";
-            $messenger->slug = Str::slug($user->lastName.' '.Str::random(4),'-').'_'.Carbon::now()->timestamp;
+            $messenger->slug = Str::slug($user->last.' '.Str::random(4),'-').'_'.Carbon::now()->timestamp;
             $messenger->save();
             return true;
         }catch (Exception $e){

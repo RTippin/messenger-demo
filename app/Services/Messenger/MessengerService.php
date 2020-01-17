@@ -197,7 +197,6 @@ class MessengerService
             'admin_group_settings' => ['participants'],
             'store_group_invitation' => ['participants', 'groupInviteLink'],
             'participant_admin_grant' => ['participants'],
-            'reload_participant' => ['participants'],
             'send_knock' => ['participants.owner.devices', 'participants.owner.messenger'],
             'initiate_call' => ['participants.owner', 'activeCall'],
             'join_call' => ['participants.owner', 'activeCall.participants']
@@ -282,17 +281,6 @@ class MessengerService
                         $data = $avatar['data'];
                     }
                     else $error = $avatar['error'];
-                break;
-                case 'reload_participant':
-                    $party = ParticipantService::LocateParticipantWithID($this->thread, $this->request->input('p_id'));
-                    $admin = ThreadService::IsThreadAdmin($this->thread, $this->participant);
-                    if($party){
-                        $data = [
-                            'participant' => $party,
-                            'admin' => $admin
-                        ];
-                    }
-                    else $error = 'Not found';
                 break;
                 case 'invitation_join':
                     $join = InvitationService::JoinParticipantWithInvite($this->request);

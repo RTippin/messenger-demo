@@ -9,8 +9,8 @@ class GhostUser extends Eloquent
     public $keyType = 'string';
     protected $attributes = [
         'id' => '12345678-aaaa-4321-9df7-c8296b601234',
-        'firstName' => 'Ghost',
-        'lastName' => 'User',
+        'first' => 'Ghost',
+        'last' => 'User',
         'email' => 'ghost@tippindev.com'
     ];
 

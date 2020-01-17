@@ -23,22 +23,22 @@ class UsersTableSeeder extends Seeder
         foreach ($admins as $admin){
             $user = User::create([
                 'email' => $admin[0],
-                'firstName' => $admin[1],
-                'lastName' => $admin[2],
+                'first' => $admin[1],
+                'last' => $admin[2],
                 'active' => 1,
                 'password' => Hash::make($password)
             ]);
             $user->messenger()->create([
                 'owner_id' => $user->id,
                 'owner_type' => 'App\User',
-                'slug' => $user->lastName.'-'.Str::random(4).'-'.Carbon::now()->timestamp,
+                'slug' => $user->last.'-'.Str::random(4).'-'.Carbon::now()->timestamp,
             ]);
         }
-        factory(App\User::class, 10)->create()->each(function ($user){
+        factory(App\User::class, 15)->create()->each(function ($user){
             $user->messenger()->create([
                 'owner_id' => $user->id,
                 'owner_type' => 'App\User',
-                'slug' => $user->lastName.'-'.Str::random(4).'-'.Carbon::now()->timestamp
+                'slug' => $user->last.'-'.Str::random(4).'-'.Carbon::now()->timestamp
             ]);
         });
     }

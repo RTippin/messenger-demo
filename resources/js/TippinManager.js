@@ -352,6 +352,26 @@ window.TippinManager = (function () {
                     }, options.timer);
                 }
             });
+        },
+        showAvatar : function (name, avatar) {
+            alerts.Modal({
+                icon : 'image',
+                theme : 'dark',
+                title : name+'\'s Photo',
+                pre_loader : true
+            });
+            let img = new Image();
+            img.onload = function() {
+                alerts.fillModal({
+                    body : '<div class="text-center"><img src="'+this.src+'" class="img-fluid rounded" /></div>'
+                });
+            };
+            img.onerror = function() {
+                alerts.fillModal({
+                    body : '<div class="text-center"><img src="/images/image404.png" class="img-fluid rounded" /></div>'
+                });
+            };
+            img.src = avatar;
         }
     },
     XHR = {
@@ -596,28 +616,6 @@ window.TippinManager = (function () {
                     location.reload()
                 }
             })
-        },
-        ContactUs : function(){
-            buttons.addLoader({id : '#sendBTN'});
-            let form = new FormData();
-            form.append('your_name', $("#your_name").val());
-            form.append('your_email', $("#your_email").val());
-            form.append('your_message', $("#your_message").val());
-            form.append('g-recaptcha-response', $("#g-recaptcha-response").val());
-            XHR.payload({
-                route : '/Contact/send',
-                data : form,
-                success : function(data){
-                    $("#contact_sec").hide('fast');
-                    $("#sent_sec").show('fast');
-                    PageListeners.listen().animateLogo({elm : "#RTlog"});
-                    $("#sent_response").html(data.msg);
-                },
-                fail : function(){
-                    grecaptcha.reset()
-                },
-                bypass : true
-            });
         }
     };
     return {

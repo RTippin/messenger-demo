@@ -177,11 +177,7 @@ class ParticipantService
         if($target && $update){
             return [
                 'state' => true,
-                'data' => [
-                    'participant' => $update,
-                    'message' => ($admin ? "You promoted ".$target->owner->name." to admin" : "You revoked admin from ".$target->owner->name),
-                    'admin' => $admin
-                ]
+                'data' => ($admin ? "You promoted ".$target->owner->name." to admin" : "You revoked admin from ".$target->owner->name)
             ];
         }
         return [

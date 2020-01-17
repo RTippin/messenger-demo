@@ -14,13 +14,16 @@
                     <h3 class="card-header bg-gradient-dark text-light"><i class="fas fa-comments"></i> Messenger Demo</h3>
                     <div class="card-body bg-gradient-light">
                         <h5>
-                            Welcome to Tippin's Laravel Messenger demo app! We will be adding documentation soon, and working towards
-                            releasing this as an entire suite/package! The source code for this demo project can be found on
-                            <a target="_blank" href="https://github.com/RTippin">Tippin's Github</a>. You may sign up anytime and test
-                            out our features currently provided, such as real time messaging/video calling/screen sharing/group messaging,
-                            etc. We also provide a list of pre-populated users to choose from on the login page.
-                            We will reset this database and all uploaded files once each week
+                            Welcome to Tippin's Laravel Messenger demo app! I am working towards releasing this as an entire suite/package!
+                            You may sign up anytime and test out our features currently provided, such as real time messaging/video
+                            calling/screen sharing/group messaging, etc. We also provide a list of pre-populated users to choose
+                            from on the login page. We will reset this database and all uploaded files once each week.
                         </h5>
+                        <hr>
+                        <div class="col-12 mt-2 text-center h5">
+                            <div class="h5 font-weight-bold mb-4">The source code for this demo project and it's installation docs can be found on my github @RTippin</div>
+                            <a class="btn btn-lg btn-primary" target="_blank" href="https://github.com/RTippin"><i class="fab fa-github"></i> Tippin's Github</a>
+                        </div>
                     </div>
                 </div>
             </div>

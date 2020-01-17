@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-12 show_datatable NS">
+    <div class="col-12">
         <div class="table-responsive-sm">
             <table id="add_group_participants" class="table table-sm table-hover">
                 <thead>
