@@ -1420,7 +1420,7 @@ window.ThreadManager = (function () {
             form.append(type === 1 ? 'image_file' : 'doc_file', file);
             form.append('type', 'store_message');
             TippinManager.xhr().payload({
-                route : '/messenger/update/'+opt.thread.id+'/message',
+                route : '/messenger/update/'+opt.thread.id,
                 data : form,
                 success : function(x){
                     methods.managePendingMessage('completed', pending, x.message)
