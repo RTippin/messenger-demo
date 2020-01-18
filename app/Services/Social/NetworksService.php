@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Services\Social;
+use App\Events\FriendAccept;
+use App\Events\FriendAdd;
+use App\Events\FriendDenied;
 use App\Models\Messages\Messenger;
 use App\Models\Networks\Networks;
 use App\Models\Networks\PendingNetworks;
-use App\Notifications\NetworksAccept;
-use App\Notifications\NetworksAdd;
 use App\Services\Messenger\MessengerRepo;
 use Illuminate\Http\Request;
 use Exception;
@@ -82,14 +83,14 @@ class NetworksService
         if($this->exist() !== 0){
             return array("state" => false, "error" => "Unable to proceed");
         }
-        $data = PendingNetworks::firstOrCreate([
+        PendingNetworks::firstOrCreate([
             'sender_id' => messenger_profile()->id,
             'sender_type' => get_class(messenger_profile()),
             'recipient_id' => $this->party->id,
             'recipient_type' => get_class($this->party)
         ]);
-        $this->broadcastNetworkActivity(["data" => $data, "action" => true, "type" => false]);
-        return array("state" => true, "msg" => "You sent a friend request to ".$this->party->name.". They must approve it before you become connected.", "case" => 2);
+        $this->broadcastFriendAdd();
+        return array("state" => true, "msg" => "You sent a friend request to ".$this->party->name, "case" => 2);
     }
 
     private function cancelNetworkRequest()
@@ -98,7 +99,6 @@ class NetworksService
             return array("state" => false, "error" => "Unable to proceed");
         }
         messenger_profile()->pendingSentNetworks()->where('recipient_id', $this->party->id)->where('recipient_type', get_class($this->party))->delete();
-        $this->party->notifications()->where('type', 'App\Notifications\NetworksAdd')->where('data', 'LIKE', '%'.messenger_profile()->id.'%')->delete();
         return array("state" => true, "msg" => "Removed friend request to ".$this->party->name, "case" => 0);
     }
 
@@ -108,17 +108,7 @@ class NetworksService
             return array("state" => false, "error" => "Unable to proceed");
         }
         $this->party->pendingSentNetworks()->where('recipient_id', messenger_profile()->id)->where('recipient_type', get_class(messenger_profile()))->delete();
-        $notification = messenger_profile()->notifications()->where('type', 'App\Notifications\NetworksAdd')->where('data', 'LIKE', '%'.$this->party->id.'%')->latest()->first();
-        if($notification){
-            $new_data = collect([
-                "action" => false,
-                "owner_id" => $notification->data['owner_id'],
-                "owner_type" => $notification->data['owner_type']
-            ]);
-            $notification->data = $new_data;
-            $notification->save();
-        }
-        return $this->joinNetworks(true);
+        return $this->joinNetworks();
     }
 
     private function denyNetworkRequest()
@@ -127,7 +117,7 @@ class NetworksService
             return array("state" => false, "error" => "Unable to proceed");
         }
         $this->party->pendingSentNetworks()->where('recipient_id', messenger_profile()->id)->where('recipient_type', get_class(messenger_profile()))->delete();
-        messenger_profile()->notifications()->where('type', 'App\Notifications\NetworksAdd')->where('data', 'LIKE', '%'.$this->party->id.'%')->delete();
+        $this->broadcastFriendDenied();
         return array("state" => true, "msg" => "You denied the friend request from ".$this->party->name, "case" => 0);
     }
 
@@ -141,7 +131,7 @@ class NetworksService
         return array("state" => true, "msg" => "You have removed ".$this->party->name." from your friends", "case" => 0);
     }
 
-    private function joinNetworks($type)
+    private function joinNetworks()
     {
         Networks::firstOrCreate([
             'owner_id' => messenger_profile()->id,
@@ -149,22 +139,67 @@ class NetworksService
             'party_id' => $this->party->id,
             'party_type' => get_class($this->party)
         ]);
-        $data = Networks::firstOrCreate([
+        Networks::firstOrCreate([
             'owner_id' => $this->party->id,
             'owner_type' => get_class($this->party),
             'party_id' => messenger_profile()->id,
             'party_type' => get_class(messenger_profile())
         ]);
-        $this->broadcastNetworkActivity(["data" => $data, "action" => false, "type" => $type]);
+        $this->broadcastFriendAccept();
         return array("state" => true, "msg" => $this->party->name." is now in your friends list", "case" => 1);
     }
 
-    private function broadcastNetworkActivity(array $data)
+    private function broadcastFriendAdd()
     {
-        if($data['type']){
-            $this->party->notify(new NetworksAccept($data['data']));
-            return;
+        try {
+            broadcast(new FriendAdd([
+                'msg' => messenger_profile()->name.' is requesting to be your friend. Please accept or deny their request',
+            ],
+                ['private-'.get_messenger_alias($this->party).'_notify_'.$this->party->id]
+            ));
+        } catch (Exception $e) {
+            if(class_basename($e) === 'BroadcastException'){
+                unset($e);
+            }
+            else{
+                report($e);
+            }
         }
-        $this->party->notify(new NetworksAdd($data['data'], $data['action']));
+    }
+
+    private function broadcastFriendAccept()
+    {
+        try {
+            broadcast(new FriendAccept([
+                'msg' => messenger_profile()->name.' accepted your friend request',
+            ],
+                ['private-'.get_messenger_alias($this->party).'_notify_'.$this->party->id]
+            ));
+        } catch (Exception $e) {
+            if(class_basename($e) === 'BroadcastException'){
+                unset($e);
+            }
+            else{
+                report($e);
+            }
+        }
+    }
+
+    private function broadcastFriendDenied()
+    {
+        try {
+            broadcast(new FriendDenied([
+                'msg' => messenger_profile()->name.' declined your friend request',
+            ],
+                ['private-'.get_messenger_alias($this->party).'_notify_'.$this->party->id]
+            ));
+        } catch (Exception $e) {
+            if(class_basename($e) === 'BroadcastException'){
+                unset($e);
+            }
+            else{
+                report($e);
+            }
+        }
     }
 }

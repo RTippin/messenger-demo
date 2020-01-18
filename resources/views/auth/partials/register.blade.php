@@ -7,7 +7,7 @@
             </noscript>
             <div class="card shadow-lg">
                 <div class="card-body bg-gradient-light text-dark">
-                    <form id="regForm" class="needs-validation" role="form" method="POST" action="javascript:GuestManager.register({{isset($special_flow)}})" novalidate>
+                    <form id="regForm" class="needs-validation" role="form" method="POST" action="javascript:GuestManager.register()" novalidate>
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="firstName">First Name</label>

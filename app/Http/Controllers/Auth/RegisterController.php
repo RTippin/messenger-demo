@@ -23,6 +23,6 @@ class RegisterController extends Controller
         if(!$dispatch['state']){
             return response()->json(['errors' => ['forms' => $dispatch['error']] , 'registered' => false], 400);
         }
-        return response()->json(['registered' => true, 'location' => $dispatch['location']]);
+        return response()->json(['registered' => true]);
     }
 }

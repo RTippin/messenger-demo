@@ -5,23 +5,20 @@ use App\Traits\HasMessenger;
 use App\Traits\Networked;
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
 class User extends Authenticatable
 {
-    use Notifiable, HasMessenger, Uuids, Networked, SoftDeletes;
+    use HasMessenger, Uuids, Networked, SoftDeletes;
 
     public $incrementing = false;
-    public $keyType = 'string';
-    protected $fillable = ['first', 'last' , 'email' , 'password', 'active'];
-    protected $hidden = ['password', 'remember_token', 'created_at', 'updated_at', 'email', 'active'];
 
-    public function receivesBroadcastNotificationsOn()
-    {
-        return 'user_notify_'.$this->id;
-    }
+    public $keyType = 'string';
+
+    protected $guarded = [];
+
+    protected $hidden = ['password', 'remember_token', 'created_at', 'updated_at', 'email', 'active'];
 
     public function devices()
     {

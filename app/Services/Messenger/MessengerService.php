@@ -199,7 +199,7 @@ class MessengerService
             'participant_admin_grant' => ['participants'],
             'send_knock' => ['participants.owner.devices', 'participants.owner.messenger'],
             'initiate_call' => ['participants.owner', 'activeCall'],
-            'join_call' => ['participants.owner', 'activeCall.participants']
+            'join_call' => ['participants.owner', 'activeCall']
         ];
         $authorize = $auth ? $this->authorize(null, (isset($type_loads[$type]) ? $type_loads[$type] : null)) : ['state' => true];
         if($authorize['state']) {
@@ -328,8 +328,8 @@ class MessengerService
             'remove_group_invitation' => ['participants', 'groupInviteLink'],
             'remove_message' => ['participants', 'messages'],
             'participant_admin_revoke' => ['participants'],
-            'leave_call' => ['activeCall.participants'],
-            'end_call' => ['participants.owner', 'activeCall.participants']
+            'leave_call' => ['activeCall'],
+            'end_call' => ['participants.owner', 'activeCall']
         ];
         $authorize = $auth ? $this->authorize(null, (isset($type_loads[$type]) ? $type_loads[$type] : null)) : ['state' => true];
         if($authorize['state']) {

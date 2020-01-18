@@ -25,7 +25,7 @@ class HomeController extends Controller
             return Cache::has(get_messenger_alias($user).'_online_'.$user->id) || Cache::has(get_messenger_alias($user).'_away_'.$user->id);
         });
         return response()->json([
-            'html' => View::make('auth.partials.accounts')->with('users', $users)->render()
+            'html' => View::make('auth.partials.accounts')->with('users', $users->take(5))->render()
         ]);
     }
 }

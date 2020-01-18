@@ -29,15 +29,11 @@ class UsersTableSeeder extends Seeder
                 'password' => Hash::make($password)
             ]);
             $user->messenger()->create([
-                'owner_id' => $user->id,
-                'owner_type' => 'App\User',
                 'slug' => $user->last.'-'.Str::random(4).'-'.Carbon::now()->timestamp,
             ]);
         }
         factory(App\User::class, 15)->create()->each(function ($user){
             $user->messenger()->create([
-                'owner_id' => $user->id,
-                'owner_type' => 'App\User',
                 'slug' => $user->last.'-'.Str::random(4).'-'.Carbon::now()->timestamp
             ]);
         });

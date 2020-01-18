@@ -9,10 +9,14 @@ use Illuminate\Database\Eloquent\Model;
 class PendingNetworks extends Model
 {
     use Uuids;
+
     public $incrementing = false;
+
     public $keyType = 'string';
+
     protected $table = 'networks_pending';
-    protected $fillable = ['sender_id', 'sender_type','recipient_id', 'recipient_type'];
+
+    protected $guarded = [];
 
     public function sender()
     {

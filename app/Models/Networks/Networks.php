@@ -9,9 +9,12 @@ class Networks extends Model
 {
     use Uuids;
     public $incrementing = false;
+
     public $keyType = 'string';
+
     protected $table = 'networks';
-    protected $fillable = ['owner_id', 'owner_type','party_id', 'party_type','status'];
+
+    protected $guarded = [];
 
     public function owner()
     {

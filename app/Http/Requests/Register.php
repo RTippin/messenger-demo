@@ -15,13 +15,12 @@ class Register
         $this->request = $request;
     }
 
-    public function validate($mobile)
+    public function validate()
     {
-        $validator = Validator::make($this->request->all(), $this->rules($mobile), $this->messages());
-        return $validator;
+        return Validator::make($this->request->all(), $this->rules(), $this->messages());
     }
 
-    private function rules($mobile)
+    private function rules()
     {
         return [
             'first' => 'required|min:2|max:255',
@@ -32,7 +31,7 @@ class Register
                 'confirmed',
                 'regex:/^(?=\S*?[A-Z])(?=\S*?[a-z])((?=\S*?[0-9])|(?=\S*?[^\w\*]))\S{8,}$/'
             ],
-            'g-recaptcha-response' => ($mobile ? [] : ['required', new ReCaptcha()])
+            'g-recaptcha-response' => ['required', new ReCaptcha()]
         ];
     }
 

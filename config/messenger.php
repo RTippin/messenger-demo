@@ -3,22 +3,6 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | We set your active model and alias at runtime from our service provider
-    |--------------------------------------------------------------------------
-    |
-    | Start with a null model and alias for profile, and auto set using the
-    | provided middleware SetMessengerModel, which sets alias as well
-    | You may also call set_messenger_profile($model) at any point in
-    | pipeline to set/change active model/profile
-    |
-    */
-    'profile' => [
-        'model' => null,
-        'alias' => null
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | Messenger Model Configuration
     |--------------------------------------------------------------------------
     |
@@ -30,21 +14,10 @@ return [
     | *PLEASE NOTE: Once you choose an alias, you should not change it
     | unless you plan to move the uploads/directory names around yourself
     |
-    | To ensure your model receives the notification for friends, add
-    | the following method to each of the models class files that you
-    | list below, matching the alias you give it
-    |
-    |    App\SomeCharacter::class
-    |
-    |    public function receivesBroadcastNotificationsOn()
-    |    {
-    |        return 'character_notify_'.$this->id;
-    |    }
-    |
     */
     'models' => [
         'user' => App\User::class,
-//        'character' => App\SomeCharacter::class,
+//        'character' => App\Character::class,
     ],
 
     /*
@@ -69,5 +42,21 @@ return [
     |
     */
     'mobile_notify' => env('MOBILE_NOTIFY', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | We set your active model and alias at runtime from our middleware
+    |--------------------------------------------------------------------------
+    |
+    | Start with a null model and alias for profile, and auto set using the
+    | provided middleware SetMessengerModel, which sets alias as well
+    | You may also call set_messenger_profile($model) at any point in
+    | pipeline to set/change active model/profile
+    |
+    */
+    'profile' => [
+        'model' => null,
+        'alias' => null
+    ],
 
 ];

@@ -13,6 +13,8 @@ class Calls extends Model
 
     public $keyType = 'string';
 
+    protected $guarded = [];
+
     public function owner()
     {
         return $this->morphTo()->withDefault(function(){

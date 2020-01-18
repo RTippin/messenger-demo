@@ -69,7 +69,6 @@ class AuthStatusController extends Controller
                     else{
                         messenger_profile()->messenger->touch();
                     }
-                    $notify = messenger_profile()->unreadNotifications->count();
                     $threads = messenger_profile()->unreadThreadsCount();
                     $active_calls = MessengerRepo::MakeActiveCalls();
                     if(messenger_profile()->pendingReceivedNetworks->count()) $network_request = NetworksService::MakeNetworkRequest();
@@ -82,7 +81,6 @@ class AuthStatusController extends Controller
                 'token' => csrf_token(),
                 'model' => (auth()->check() ? messenger_alias() : 'guest'),
                 'states' => (auth()->check() ? [
-                    'unread_notify_count' => $notify,
                     'unread_threads_count' => $threads,
                     'active_calls' => $active_calls,
                     'pending_friends' => $network_request

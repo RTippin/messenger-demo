@@ -3,12 +3,12 @@
 namespace App\Services;
 
 use App\Http\Requests\Register;
-use App\Models\Messages\Messenger;
 use App\User;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Hash;
+use Str;
 use Exception;
 
 class RegisterService
@@ -19,31 +19,23 @@ class RegisterService
         $this->request = $request;
     }
 
-    public function registerPost($mobile = false)
+    public function registerPost()
     {
-        $validate = $this->validate($mobile);
+        $validate = $this->validate();
         if(!$validate['state']){
             return $validate;
         }
-        return $this->registerActions($mobile);
+        return $this->registerActions();
     }
 
-    private function registerActions($mobile)
+    private function registerActions()
     {
-        $newUser = $this->makeUser(['active' => 1]);
-        if($newUser){
-            if(self::makeUserMessenger($newUser)){
-                if(!$mobile) Auth::guard()->login($newUser);
-                return [
-                    'state' => true,
-                    'location' => false
-                ];
-            }
-            try{
-                $newUser->delete();
-            }catch (Exception $e){
-                report($e);
-            }
+        $newUser = $this->makeUser();
+        if($newUser && self::makeUserMessenger($newUser)){
+            Auth::guard()->login($newUser);
+            return [
+                'state' => true
+            ];
         }
         return [
             'state' => false,
@@ -51,32 +43,27 @@ class RegisterService
         ];
     }
 
-    private function makeUser(array $data)
+    private function makeUser()
     {
         try{
-            $email = isset($data['email']) ? $data['email'] : $this->request->input('email');
-            $newUser = new User();
-            $newUser->first = $this->request->input('first');
-            $newUser->last = $this->request->input('last');
-            $newUser->email = $email;
-            $newUser->password = bcrypt($this->request->input('password'));
-            $newUser->active = $data['active'];
-            $newUser->save();
-            return $newUser;
+            return User::create([
+                'first' => $this->request->input('first'),
+                'last' => $this->request->input('last'),
+                'email' => $this->request->input('email'),
+                'password' => Hash::make($this->request->input('password'))
+            ]);
         }catch (Exception $e){
             report($e);
             return null;
         }
     }
 
-    private static function makeUserMessenger($user)
+    private static function makeUserMessenger(User $user)
     {
         try{
-            $messenger = new Messenger();
-            $messenger->owner_id = $user->id;
-            $messenger->owner_type = "App\User";
-            $messenger->slug = Str::slug($user->last.' '.Str::random(4),'-').'_'.Carbon::now()->timestamp;
-            $messenger->save();
+            $user->messenger()->create([
+                'slug' => Str::slug($user->last.' '.Str::random(4),'-').'_'.Carbon::now()->timestamp
+            ]);
             return true;
         }catch (Exception $e){
             report($e);
@@ -84,10 +71,9 @@ class RegisterService
         }
     }
 
-    private function validate($mobile)
+    private function validate()
     {
-        $validate = new Register($this->request);
-        $validate = $validate->validate($mobile);
+        $validate = (new Register($this->request))->validate();
         if($validate->fails()){
             return array("state" => false, "error" => $validate->errors());
         }

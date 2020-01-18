@@ -159,17 +159,14 @@ class MessageService
         }
     }
 
-    private static function StoreMessage($arr = [])
+    private static function StoreMessage($model, $arr = [])
     {
         try{
-            $message = new Message();
-            $message->thread_id = $arr['thread_id'];
-            $message->body = $arr['body'];
-            $message->owner_id = $arr['owner_id'];
-            $message->owner_type = $arr['owner_type'];
-            $message->mtype = $arr['mtype'];
-            $message->save();
-            return $message;
+            return $model->messages()->create([
+                'thread_id' => $arr['thread_id'],
+                'body' => $arr['body'],
+                'mtype' => $arr['mtype']
+            ]);
         }catch (Exception $e){
             report($e);
             return null;
@@ -209,11 +206,9 @@ class MessageService
                 'error' => $body['error']
             ];
         }
-        $message = self::StoreMessage([
+        $message = self::StoreMessage(messenger_profile(), [
             'thread_id' => $thread->id,
             'body' => $body['text'],
-            'owner_id' => messenger_profile()->id,
-            'owner_type' => get_class(messenger_profile()),
             'mtype' => $contents['type']
         ]);
         if($message && $message instanceof Message){
@@ -232,11 +227,9 @@ class MessageService
     public static function StoreSystemMessage(Thread $thread, $model, $body, $type, $broadcast = true)
     {
         try{
-            $message = self::StoreMessage([
+            $message = self::StoreMessage($model, [
                 'thread_id' => $thread->id,
                 'body' => $body,
-                'owner_id' => $model->id,
-                'owner_type' => get_class($model),
                 'mtype' => $type
             ]);
             if($broadcast){

@@ -39,25 +39,6 @@
             </div>
         </div>
     </li>
-    <li class="nav-item dropdown mx-1 mb-2 mb-lg-0">
-        <a onclick="NotifyManager.pullNotify()" id="click_notify_bell" href="#" class="dropdown-toggle nav-link pt-1 pb-0" data-toggle="dropdown" role="button" aria-expanded="false">
-            <i class="fas fa-bell fa-2x"></i>
-            <span id="nav_notify_count" class="badge badge-pill badge-danger badge-notify"></span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right notify-drop" aria-labelledby="click_notify_bell">
-            <div class="col-12 text-center">
-                <h6 class="font-weight-bold">Notifications</h6>
-                <hr class="mt-n1 mb-2">
-            </div>
-            <div id="notification_container" class="drop-content list-group">
-                <div class="col-12 text-center"><div class="spinner-border spinner-border-sm text-primary" role="status"></div></div>
-            </div>
-            <div class="col-12 text-center mt-2 pb-4 pb-lg-3">
-                <hr class="mb-1 mt-0">
-                <span class="float-right"><a onclick="NotifyManager.deleteNotify(); return false;" id="del_all_notify_link" class="text-danger" href="#"><i class="fas fa-trash"></i> Delete All</a></span>
-            </div>
-        </div>
-    </li>
     <li class="nav-item dropdown">
         <a id="user_nav_dp" href="#" class="dropdown-toggle nav-link pb-lg-0" data-toggle="dropdown" role="button" aria-expanded="false">
             <img class="rounded align-top my-n2 my-global-avatar" id="navProf_pic" height="38" width="38" src="{{messenger_profile()->avatar()}}">

@@ -9,9 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 class CallParticipants extends Model
 {
     use Uuids;
+
     public $incrementing = false;
+
     public $keyType = 'string';
-    protected $fillable = ['call_id','owner_type','owner_id'];
+
+    protected $guarded = [];
 
     public function owner()
     {

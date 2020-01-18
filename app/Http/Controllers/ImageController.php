@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Services\Messenger\MessageService;
 use App\Services\Messenger\MessengerService;
 use App\Services\Messenger\ThreadService;
-use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Image;
 use File;
@@ -15,11 +14,10 @@ use Exception;
 class ImageController extends Controller
 {
 
-    protected $uploadService, $messenger, $request;
-    public function __construct(Request $request, UploadService $uploadService, MessengerService $messenger)
+    protected $messenger, $request;
+    public function __construct(Request $request, MessengerService $messenger)
     {
         $this->request = $request;
-        $this->uploadService = $uploadService;
         $this->messenger = $messenger;
     }
 

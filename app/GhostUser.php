@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 class GhostUser extends Eloquent
 {
     protected $guarded = [];
+
     public $keyType = 'string';
+
     protected $attributes = [
         'id' => '12345678-aaaa-4321-9df7-c8296b601234',
         'first' => 'Ghost',
@@ -50,11 +52,6 @@ class GhostUser extends Eloquent
     public function onlineStatus()
     {
         return 'offline';
-    }
-
-    public function receivesBroadcastNotificationsOn()
-    {
-        return 'user_notify_'.$this->id;
     }
 
     public function devices()

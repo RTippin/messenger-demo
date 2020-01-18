@@ -13,15 +13,11 @@ class ThreadsTableSeeder extends Seeder
         foreach($users as $user){
             $thread = Thread::create();
             $owners = collect([$owner->id, $user->id]);
-            Participant::create([
-                'thread_id' => $thread->id,
-                'owner_id' => $owner->id,
-                'owner_type' => 'App\User'
+            $owner->participants()->create([
+                'thread_id' => $thread->id
             ]);
-            Participant::create([
-                'thread_id' => $thread->id,
-                'owner_id' => $user->id,
-                'owner_type' => 'App\User'
+            $user->participants()->create([
+                'thread_id' => $thread->id
             ]);
             $num = rand(5,20);
             for($x = 0; $x <= $num; $x++){
@@ -37,10 +33,8 @@ class ThreadsTableSeeder extends Seeder
     public function makeAdminGroupParticipant($admins, $thread)
     {
         foreach($admins as $admin){
-            Participant::create([
+            $admin->participants()->create([
                 'thread_id' => $thread->id,
-                'owner_id' => $admin->id,
-                'owner_type' => 'App\User',
                 'admin' => 1
             ]);
         }
@@ -60,10 +54,8 @@ class ThreadsTableSeeder extends Seeder
         ]);
         $this->makeAdminGroupParticipant($all->whereIn('email', $this->admins), $thread);
         $all->whereNotIn('email', $this->admins)->each(function ($user) use($thread){
-            Participant::create([
-                'thread_id' => $thread->id,
-                'owner_id' => $user->id,
-                'owner_type' => 'App\User'
+            $user->participants()->create([
+                'thread_id' => $thread->id
             ]);
         });
         for($x = 0; $x <= 40; $x++){

@@ -9,17 +9,17 @@
                 <div class="card-body bg-light">
                     <div class="row mt-1">
                         <div class="col-12">
-                            <form id="login_form" class="needs-validation" action="javascript:GuestManager.login({{isset($special_flow)}})" novalidate>
+                            <form id="login_form" class="needs-validation" action="javascript:GuestManager.login()" novalidate>
                                 <div class="form-row">
                                     <div class="form-group input-group-lg col-md-8 mx-auto">
-                                        <label for="email{{isset($special_flow) ? '_modal' : ''}}">Email:</label>
-                                        <input type="email" class="form-control" id="email{{isset($special_flow) ? '_modal' : ''}}" autocomplete="email" placeholder="Email" name="email" autofocus required">
+                                        <label for="email">Email:</label>
+                                        <input type="email" class="form-control" id="email" autocomplete="email" placeholder="Email" name="email" autofocus required">
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group input-group-lg col-md-8 mx-auto">
-                                        <label for="password{{isset($special_flow) ? '_modal' : ''}}">Password:</label>
-                                        <input id="password{{isset($special_flow) ? '_modal' : ''}}" type="password" autocomplete="current-password" class="form-control" name="password" required>
+                                        <label for="password">Password:</label>
+                                        <input id="password" type="password" autocomplete="current-password" class="form-control" name="password" required>
                                     </div>
                                 </div>
                                 <div class="form-row">

@@ -76,7 +76,6 @@ class LoginController extends Controller
 
     public function authenticated($request, $user)
     {
-        $intended = session()->get('url.intended');
         try{
             $user->messenger->timezone = geoip()->getLocation($this->request->ip())->getAttribute('timezone');
             $user->messenger->ip = $this->request->ip();
@@ -84,7 +83,9 @@ class LoginController extends Controller
         }catch (Exception $e){
             report($e);
         }
-        return response()->json(['auth' => auth()->check(),'intended' => ($intended ? $intended : 'reload')]);
+        return response()->json([
+            'auth' => auth()->check()
+        ]);
     }
 
 }

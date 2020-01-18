@@ -396,7 +396,7 @@ class MessagesController extends Controller
         }
         $dispatch = $this->messenger->routeRequest('invitation_join', false);
         if($dispatch['state']){
-            return view('messenger.invitation')->with('invite', $dispatch['data']['invite'])->with('special_flow', true)->with('can_join', $dispatch['data']['can_join']);
+            return view('messenger.invitation')->with('invite', $dispatch['data']['invite'])->with('can_join', $dispatch['data']['can_join']);
         }
         return response()->view('errors.custom', ['err' => 'badJoinLink'], 404);
     }

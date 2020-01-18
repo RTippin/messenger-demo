@@ -9,37 +9,6 @@ window.GuestManager = (function () {
             setInterval(methods.heartbeat, 120000)
         }
     },
-    templates = {
-        loginModal : function () {
-            return '<div class="row mt-1">\n' +
-                '\t<div class="col-12">\n' +
-                '\t\t<form id="login_form">\n' +
-                '\t\t\t<div class="form-row">\n' +
-                '\t\t\t\t<div class="form-group input-group-lg col-10 mx-auto">\n' +
-                '\t\t\t\t\t<label for="email_modal">Email:</label>\n' +
-                '\t\t\t\t\t<input type="email" class="form-control" id="email_modal" autocomplete="email" placeholder="Email" name="email_modal" required>\n' +
-                '\t\t\t\t</div>\n' +
-                '\t\t\t</div>\n' +
-                '\t\t\t<div class="form-row">\n' +
-                '\t\t\t\t<div class="form-group input-group-lg col-10 mx-auto">\n' +
-                '\t\t\t\t\t<label for="password_modal">Password:</label>\n' +
-                '\t\t\t\t\t<input id="password_modal" type="password" autocomplete="current-password" class="form-control" name="password_modal" required>\n' +
-                '\t\t\t\t</div>\n' +
-                '\t\t\t</div>\n' +
-                '\t\t\t<div class="form-row">\n' +
-                '\t\t\t\t<div class="form-group form-check input-group-lg col-10 mx-auto">\n' +
-                '\t\t\t\t\t<div class="custom-control custom-checkbox mb-1">\n' +
-                '\t\t\t\t\t\t<input type="checkbox" class="custom-control-input" name="remember" id="remember_me">\n' +
-                '\t\t\t\t\t\t<label class="custom-control-label" for="remember_me">Remember me?</label>\n' +
-                '\t\t\t\t\t</div>\n' +
-                '<div id="login_err" class="text-danger ml-n4 mt-2"></div>'+
-                '\t\t\t\t</div>\n' +
-                '\t\t\t</div>\n' +
-                '\t\t</form>\n' +
-                '\t</div>\n' +
-                '</div>'
-        }
-    },
     methods = {
         heartbeat : function(){
             let pass = function(data){
@@ -51,29 +20,6 @@ window.GuestManager = (function () {
                 window.location.reload()
             };
             TippinManager.heartbeat().gather(pass, fail);
-        },
-        showLoginModal : function(){
-            TippinManager.alert().Modal({
-                theme : 'primary',
-                h4 : false,
-                centered : true,
-                backdrop_ctrl : false,
-                icon : 'sign-in-alt',
-                title : 'Messenger Log In',
-                body : templates.loginModal(),
-                cb_btn_txt : 'Log In',
-                cb_btn_icon : 'sign-in-alt',
-                cb_btn_theme : 'success',
-                callback : function () {
-                    methods.Login(true)
-                },
-                onReady : function () {
-                    $("#login_form").keydown(function(event) {
-                        if (event.keyCode === 13) $("#modal_cb_btn").click()
-                    });
-                    $("#email_modal").focus()
-                }
-            })
         },
         errorTokenRetry : function(type, option){
             if(opt.bad_token){
@@ -118,32 +64,20 @@ window.GuestManager = (function () {
                 fail_alert : true
             });
         },
-        Login : function(modal){
+        Login : function(){
             if(opt.lock) return;
             opt.lock = true;
             TippinManager.button().addLoader({id : '#login_btn'});
             TippinManager.xhr().payload({
                 route : '/login',
                 data : {
-                    email : modal ? $("#email_modal").val() : $("#email").val(),
-                    password : modal ? $("#password_modal").val() : $("#password").val(),
+                    email : $("#email").val(),
+                    password : $("#password").val(),
                     remember : $("input[name=remember]:checked").val()
                 },
-                success : function(data){
-                    let form_elm = $("#login_form");
-                    if(modal){
-                        if(form_elm.length) form_elm.replaceWith(TippinManager.alert().loader());
-                        TippinManager.alert().fillModal({loader : true, no_close : true, body : null, title : 'Logging in...'});
-                        window.location.reload();
-                        return;
-                    }
-                    if("intended" in data){
-                        form_elm.replaceWith(TippinManager.alert().loader());
-                        data.intended === 'reload' ? window.location.reload() : window.location.replace(data.intended);
-                    }
-                    else{
-                        location.replace('/');
-                    }
+                success : function(){
+                    $("#login_form").replaceWith(TippinManager.alert().loader());
+                    window.location.reload();
                 },
                 fail : function(error){
                     if(error.status === 403
@@ -151,17 +85,10 @@ window.GuestManager = (function () {
                         && "error" in error.data
                         && error.data.error === 66
                     ){
-                        methods.errorTokenRetry('Login', modal);
+                        methods.errorTokenRetry('Login');
                         return;
                     }
-                    let login_err = $("#login_err"),
-                    modalError = function(msg){
-                        TippinManager.alert().Alert({
-                            toast : true,
-                            theme : 'error',
-                            title : msg
-                        })
-                    };
+                    let login_err = $("#login_err");
                     $("#login_form .form-group").addClass('has-error', 500);
                     switch (error.data.type) {
                         case 0:
@@ -190,7 +117,7 @@ window.GuestManager = (function () {
                 }
             });
         },
-        Register : function(reload){
+        Register : function(){
             if(opt.lock) return;
             opt.lock = true;
             TippinManager.button().addLoader({id : '#regBtn'});
@@ -204,12 +131,9 @@ window.GuestManager = (function () {
             TippinManager.xhr().payload({
                 route: '/register',
                 data : form,
-                success: function (data) {
-                    if(reload){
-                        window.location.reload();
-                        return;
-                    }
-                    location.replace("/messenger");
+                success: function () {
+                    $("#regForm").replaceWith(TippinManager.alert().loader());
+                    window.location.reload();
                 },
                 fail : function(error){
                     if(error.status === 403
@@ -217,7 +141,7 @@ window.GuestManager = (function () {
                         && "error" in error.data
                         && error.data.error === 66
                     ){
-                        methods.errorTokenRetry('Register', reload);
+                        methods.errorTokenRetry('Register');
                         return;
                     }
                     grecaptcha.reset()
@@ -228,7 +152,6 @@ window.GuestManager = (function () {
     };
     return {
         init : Initialize.init,
-        loginPopup : methods.showLoginModal,
         login : methods.Login,
         special : methods.specialLogin,
         register : methods.Register,
