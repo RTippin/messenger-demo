@@ -2,12 +2,7 @@
 
 namespace App\Console;
 
-use App\Jobs\CallHealthChecks;
-use App\Jobs\CheckThreadInvites;
-use App\Jobs\PurgeArchivedMessages;
-use App\Jobs\PurgeArchivedThreads;
-use Artisan;
-use Storage;
+
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -30,22 +25,23 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new CallHealthChecks())->everyMinute();
-        $schedule->job(new CheckThreadInvites())->everyFifteenMinutes();
-//        $schedule->call(function (){
-//            Storage::deleteDirectory('public/messenger/');
-//            Storage::deleteDirectory('public/profile/');
-//            Artisan::call('cache:clear');
-//            Artisan::call('migrate:fresh', [
-//                '--seed' => true,
-//            ]);
-//        })->weeklyOn(1, '3:00')->timezone('America/New_York');
+        $schedule->command('messenger:check --calls')
+            ->everyMinute();
 
-//use the following to force delete threads/messages soft deleted and are older than 90 days
+        $schedule->command('messenger:check --invites')
+            ->everyFifteenMinutes();
 
-//        $schedule->job(new PurgeArchivedMessages())->twiceDaily(1, 13)->timezone('America/New_York');
-//        $schedule->job(new PurgeArchivedThreads())->twiceDaily(2, 14)->timezone('America/New_York');
+        $schedule->command('messenger:purge --messages')
+            ->twiceDaily(1, 13)
+            ->timezone('America/New_York');
 
+        $schedule->command('messenger:purge --threads')
+            ->twiceDaily(2, 14)
+            ->timezone('America/New_York');
+
+        $schedule->command('telescope:prune')
+            ->dailyAt('4:00')
+            ->timezone('America/New_York');
     }
 
     /**

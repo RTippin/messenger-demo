@@ -19,13 +19,14 @@ class ModelChannel
     /**
      * Authenticate the user's access to the channel.
      *
-     * @param \App\User $user
+     * @param User $user
      * @param $alias
      * @param $id
      * @return array|bool
      */
-    public function join(User $user, $alias, $id)
+    public function join(User $user, $alias = null, $id = null)
     {
+        if(!$alias || !$id) return false;
         return messenger_alias() === $alias && messenger_profile()->id === $id;
     }
 }
