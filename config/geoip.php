@@ -24,7 +24,7 @@ return [
     |
     */
 
-    'include_currency' => false,
+    'include_currency' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -66,7 +66,7 @@ return [
         ],
 
         'ipapi' => [
-            'class' => Torann\GeoIP\Services\IPApi::class,
+            'class' => App\Services\Location\IPApi::class,
             'secure' => true,
             'key' => env('IPAPI_KEY', null),
             'continent_path' => storage_path('app/continents.json'),

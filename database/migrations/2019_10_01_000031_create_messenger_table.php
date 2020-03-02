@@ -21,8 +21,11 @@ class CreateMessengerTable extends Migration
             $table->boolean('message_popups')->default(1);
             $table->boolean('message_sound')->default(1);
             $table->boolean('call_ringtone_sound')->default(1);
+            $table->boolean('notify_sound')->default(1);
             $table->boolean('knoks')->default(1);
+            $table->boolean('friend_approval')->default(1);
             $table->boolean('calls_outside_networks')->default(0);
+            $table->boolean('dark_mode')->default(0);
             $table->integer('online_status')->default(1);
             $table->string('ip')->nullable()->default(null);
             $table->string('timezone')->nullable()->default(null);

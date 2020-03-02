@@ -3,6 +3,22 @@
 return [
     /*
     |--------------------------------------------------------------------------
+    | We set your active model and alias at runtime from our service provider
+    |--------------------------------------------------------------------------
+    |
+    | Start with a null model and alias for profile, and auto set using the
+    | provided middleware SetMessengerModel, which sets alias as well
+    | You may also call set_messenger_profile($model) at any point in
+    | pipeline to set/change active model/profile
+    |
+    */
+    'profile' => [
+        'model' => null,
+        'alias' => null
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Messenger Model Configuration
     |--------------------------------------------------------------------------
     |
@@ -45,18 +61,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | We set your active model and alias at runtime from our middleware
+    | Enable uploads or removing of avatars
     |--------------------------------------------------------------------------
     |
-    | Start with a null model and alias for profile, and auto set using the
-    | provided middleware SetMessengerModel, which sets alias as well
-    | You may also call set_messenger_profile($model) at any point in
-    | pipeline to set/change active model/profile
+    | If enabled, we check user_devices when broadcasting messenger events.
+    | If the user has a device, we push to FCM/APN depending if they
+    | have a voip token APN(apple) otherwise FCM(google/all)
     |
     */
-    'profile' => [
-        'model' => null,
-        'alias' => null
-    ],
+    'avatar_upload' => env('AVATAR_UPLOAD', true),
+
+    'avatar_removal' => env('AVATAR_REMOVAL', true),
 
 ];
