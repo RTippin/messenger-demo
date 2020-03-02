@@ -2,9 +2,8 @@ window.PageListeners = (function () {
     var opt = {
         FSinterval : null,
         animations : ['flip', 'rubberBand', 'bounce', 'swing', 'tada', 'jello'],
-        email_suggestion : null,
-        email_input : null,
-        knok_interval : null
+        knok_interval : null,
+        play_tooltip : true
     },
     mounted = {
         init : function(){
@@ -31,11 +30,18 @@ window.PageListeners = (function () {
                 }, false);
             });
         },
-        tooltips : function(){
-            let tips = $('.tooltip');
-            if(tips.length) tips.remove();
-            $('[data-toggle="tooltip"]').tooltip({container: "body"});
-            $('[data-tooltip="tooltip"]').tooltip({container: "body"})
+        tooltipState : function(state){
+            opt.play_tooltip = state;
+        },
+        disposeTooltips : function(force){
+            if(!opt.play_tooltip && !force) return;
+            $('.tooltip').remove();
+        },
+        tooltips : function(force){
+            if(!opt.play_tooltip && !force) return;
+            let tips = $('[data-toggle="tooltip"], [data-tooltip="tooltip"]');
+            tips.tooltip('dispose');
+            tips.tooltip();
         },
         txtAutosize : function(){
             autosize(document.querySelectorAll('.autoExpand'))

@@ -2,6 +2,8 @@ window.ThreadManager = (function () {
     var opt = {
         INIT : false,
         ORIGINAL_ARG : null,
+        SETUP : true,
+        API : '/demo-api/messenger/',
         thread : {
             id : null,
             type : null,
@@ -13,6 +15,7 @@ window.ThreadManager = (function () {
             can_call : true,
             lockout : false,
             thread_history : true,
+            history_id : null,
             initializing : false,
             _id : null
         },
@@ -20,11 +23,9 @@ window.ThreadManager = (function () {
             lock : true,
             load_in_retries : 0,
             state_lockout_retries : 0,
-            special_mode : false,
             thread_filtered : false,
             thread_filter_search : null,
-            messenger_search_term : null,
-            messenger_search_delay : 0
+            messenger_search_term : null
         },
         socket : {
             online_status_setting : 1,
@@ -51,6 +52,7 @@ window.ThreadManager = (function () {
             drag_drop_overlay_hide : null
         },
         elements : {
+            nav_search_link : $(".nav-search-link"),
             my_avatar_area : $("#my_avatar_status"),
             thread_area : $("#messages_ul"),
             message_container : $("#message_container"),
@@ -59,7 +61,7 @@ window.ThreadManager = (function () {
             thread_search_input : $("#thread_search_input"),
             thread_search_bar : $("#threads_search_bar"),
             drag_drop_zone : $('#drag_drop_overlay'),
-            messenger_avatar_upload : document.getElementById('messenger_avatar_upload'),
+            wb_chat_unread_count : $("#wb_chat_unread_count"),
             messenger_search_input : null,
             messenger_search_results : null,
             msg_panel : null,
@@ -77,26 +79,10 @@ window.ThreadManager = (function () {
     },
     mounted = {
         Initialize : function(arg) {
-            if(typeof window.ThreadTemplates === 'undefined'){
-                TippinManager.xhr().script({
-                    file : arg.templates,
-                    success : function(){
-                        opt.states.load_in_retries = 0;
-                        mounted.Initialize(arg)
-                    },
-                    fail : function(){
-                        opt.states.load_in_retries++;
-                        if(opt.states.load_in_retries > 4){
-                            TippinManager.alert().Alert({
-                                toast : true,
-                                title : 'Failed to load messenger templates. Please try refreshing your browser or clearing your cache',
-                                theme : 'error'
-                            });
-                            return;
-                        }
-                        mounted.Initialize(arg)
-                    }
-                });
+            if(!TippinManager.common().modules.includes('ThreadTemplates')){
+                setTimeout(function () {
+                    mounted.Initialize(arg)
+                }, 0);
                 return;
             }
             opt.states.lock = false;
@@ -109,7 +95,6 @@ window.ThreadManager = (function () {
             if("admin" in arg) opt.thread.admin = arg.admin;
             if("can_call" in arg) opt.thread.can_call = arg.can_call;
             if("setup" in arg && "thread_id" in arg && arg.type === 0){
-                if("special_mode" in arg) opt.states.special_mode = true;
                 mounted.setupOnce();
                 LoadIn.initiate_thread({thread_id : arg.thread_id});
                 return;
@@ -123,7 +108,7 @@ window.ThreadManager = (function () {
                 return;
             }
             opt.INIT = true;
-            $(".tooltip").remove();
+            PageListeners.listen().disposeTooltips();
             opt.thread.type = arg.type;
             if([1,2,3,4].includes(arg.type)){
                 opt.elements.emoji = $("#emojionearea");
@@ -181,63 +166,48 @@ window.ThreadManager = (function () {
             PageListeners.listen().tooltips()
         },
         setupOnce : function(){
-            if(!opt.states.special_mode){
-                LoadIn.threads();
-                setInterval(function(){
-                    if(!NotifyManager.sockets().forced_disconnect) LoadIn.threads()
-                }, 420000);
-                if(opt.thread.type === 5) window.history.replaceState({type : 5}, null, '/messenger');
-                window.onpopstate = function(event) {
-                    if(event.state && "type" in event.state && !opt.states.lock){
-                        switch(event.state.type){
-                            case 1:
-                            case 2:
-                                LoadIn.initiate_thread({thread_id : event.state.thread_id}, true);
-                            break;
-                            case 3:
-                                LoadIn.createPrivate({slug : event.state.create_slug, type : event.state.create_type}, true);
-                            break;
-                            case 4:
-                                LoadIn.createGroup(true);
-                            break;
-                            case 5:
-                                LoadIn.closeOpened();
-                            break;
-                            case 6:
-                                LoadIn.contacts(true);
-                            break;
-                            case 7:
-                                LoadIn.search(true);
-                            break;
-                        }
+            if(!opt.SETUP) return;
+            let elm = document.getElementById('message_container');
+            LoadIn.threads();
+            setInterval(function(){
+                if(!NotifyManager.sockets().forced_disconnect) LoadIn.threads()
+            }, 300000);
+            if(opt.thread.type === 5) window.history.replaceState({type : 5}, null, '/messenger');
+            window.onpopstate = function(event) {
+                if(event.state && "type" in event.state && !opt.states.lock){
+                    switch(event.state.type){
+                        case 1:
+                        case 2:
+                            LoadIn.initiate_thread({thread_id : event.state.thread_id}, true);
+                        break;
+                        case 3:
+                            LoadIn.createPrivate({slug : event.state.create_slug, type : event.state.create_type}, true);
+                        break;
+                        case 4:
+                            LoadIn.createGroup(true);
+                        break;
+                        case 5:
+                            LoadIn.closeOpened();
+                        break;
+                        case 6:
+                            LoadIn.contacts(true);
+                        break;
+                        case 7:
+                            LoadIn.search(true);
+                        break;
                     }
-                    else{
-                        return false;
-                    }
-                };
-                let elm = document.getElementById('message_container');
-                opt.elements.messenger_avatar_upload.addEventListener('change', methods.uploadMessengerAvatar, false);
-                opt.elements.thread_search_input.on("keyup mouseup", methods.checkThreadFilters);
-                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                    elm.addEventListener(eventName, methods.fileDragDrop, false)
-                });
-            }
-            setInterval(mounted.timeAgo, 30000);
-        },
-        toggleApp : function(onComplete){
-            if(!opt.states.special_mode) return false;
-            if(opt.INIT){
-                mounted.reset(true);
-                opt.INIT = false;
-                opt.elements.message_container.html('');
-                opt.elements.message_sidebar_container.hide();
-                if(onComplete) onComplete()
-            }
-            else{
-                opt.elements.message_sidebar_container.show();
-                mounted.Initialize(opt.ORIGINAL_ARG);
-                if(onComplete) onComplete()
-            }
+                }
+                else{
+                    return false;
+                }
+            };
+            opt.elements.thread_search_input.on("keyup mouseup", methods.checkThreadFilters);
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                elm.addEventListener(eventName, methods.fileDragDrop, false)
+            });
+            if(opt.elements.nav_search_link.length) opt.elements.nav_search_link.click(mounted.searchLinkClicked);
+            setInterval(mounted.timeAgo, 10000);
+            opt.SETUP = false;
         },
         reset : function(lock){
             mounted.stopWatchdog();
@@ -254,7 +224,7 @@ window.ThreadManager = (function () {
             opt.elements.message_container.removeClass('msg-ctnr-unread');
             opt.elements.thread_area.find('.thread_list_item').removeClass('alert-warning shadow-sm rounded');
             opt.elements.thread_area.find('.thread-group-avatar').removeClass('avatar-is-online').addClass('avatar-is-offline');
-            $(".tooltip").remove();
+            PageListeners.listen().disposeTooltips();
             opt = Object.assign({}, opt, {
                 thread : {
                     id : null,
@@ -267,6 +237,7 @@ window.ThreadManager = (function () {
                     can_call : true,
                     lockout : false,
                     thread_history : true,
+                    history_id : null,
                     initializing : false,
                     _id : null
                 },
@@ -274,11 +245,9 @@ window.ThreadManager = (function () {
                     lock : lock,
                     load_in_retries : 0,
                     state_lockout_retries : 0,
-                    special_mode : opt.states.special_mode,
                     thread_filtered : opt.states.thread_filtered,
                     thread_filter_search : opt.states.thread_filter_search,
-                    messenger_search_term : null,
-                    messenger_search_delay : 0
+                    messenger_search_term : null
                 },
                 socket : {
                     online_status_setting : opt.socket.online_status_setting,
@@ -305,6 +274,7 @@ window.ThreadManager = (function () {
                     drag_drop_overlay_hide : null
                 },
                 elements : {
+                    nav_search_link : opt.elements.nav_search_link,
                     my_avatar_area : opt.elements.my_avatar_area,
                     thread_area : opt.elements.thread_area,
                     message_container : opt.elements.message_container,
@@ -313,7 +283,7 @@ window.ThreadManager = (function () {
                     thread_search_input : opt.elements.thread_search_input,
                     thread_search_bar : opt.elements.thread_search_bar,
                     drag_drop_zone : opt.elements.drag_drop_zone,
-                    messenger_avatar_upload : opt.elements.messenger_avatar_upload,
+                    wb_chat_unread_count : opt.elements.wb_chat_unread_count,
                     messenger_search_input : null,
                     messenger_search_results : null,
                     msg_panel : null,
@@ -453,6 +423,11 @@ window.ThreadManager = (function () {
         stopDefault : function(e){
             e.preventDefault()
         },
+        searchLinkClicked : function(e){
+            mounted.stopDefault(e);
+            $('body').click();
+            LoadIn.search()
+        },
         runMessengerSearch : function(e){
             if(opt.thread.type !== 7) return;
             let current_term = opt.states.messenger_search_term, time = new Date();
@@ -463,19 +438,13 @@ window.ThreadManager = (function () {
             if(opt.elements.messenger_search_input.val().trim().length){
                 if(opt.elements.messenger_search_input.val().trim().length >= 3){
                     if(current_term !== opt.elements.messenger_search_input.val().trim()){
-                        if(((time.getTime() - opt.states.messenger_search_delay) / 1000) > 1){
-                            opt.states.messenger_search_term = opt.elements.messenger_search_input.val().trim();
-                            opt.states.messenger_search_delay = time.getTime();
-                            opt.elements.messenger_search_results.html(ThreadTemplates.render().loader());
-                            TippinManager.xhr().request({
-                                route : '/messenger/search?query='+opt.states.messenger_search_term,
-                                success : methods.manageMessengerSearch,
-                                fail_alert : true
-                            })
-                        }
-                        else{
-                            setTimeout(mounted.runMessengerSearch, 200)
-                        }
+                        opt.states.messenger_search_term = opt.elements.messenger_search_input.val().trim();
+                        opt.elements.messenger_search_results.html(ThreadTemplates.render().loader());
+                        TippinManager.xhr().request({
+                            route : opt.API+'search/'+opt.states.messenger_search_term,
+                            success : methods.manageMessengerSearch,
+                            fail_alert : true
+                        })
                     }
                 }
                 else{
@@ -511,7 +480,7 @@ window.ThreadManager = (function () {
             }
         },
         clickMarkRead : function(){
-            if(opt.thread.click_to_read) methods.markRead()
+            if(opt.thread.click_to_read || methods.checkThreadStorageUnread()) methods.markRead()
         },
         msgPanelClick : function(e){
             if(opt.thread.type === 7){
@@ -607,8 +576,7 @@ window.ThreadManager = (function () {
             }
             opt.socket.chat.here(function(users){
                 opt.storage.active_profiles = [];
-                $("#thread_error_area").hide();
-                $("#thread_info_area").show();
+                $('.thread_error_area').hide();
                 $.each(users, function() {
                     if(this.owner_id !== TippinManager.common().id){
                         opt.storage.active_profiles.push({
@@ -630,7 +598,7 @@ window.ThreadManager = (function () {
                     name : user.name,
                     online : user.online
                 });
-                methods.updateBobbleHead(user.owner_id, opt.storage.messages[(opt.storage.messages.length-1)].message_id);
+                if(opt.storage.messages.length) methods.updateBobbleHead(user.owner_id, opt.storage.messages[(opt.storage.messages.length-1)].message_id);
                 methods.drawBobbleHeads();
                 methods.sendOnlineStatus((opt.socket.is_away && opt.socket.online_status_setting !== 0 ? 2 : opt.socket.online_status_setting));
                 PageListeners.listen().tooltips()
@@ -671,14 +639,14 @@ window.ThreadManager = (function () {
     Health = {
         checkConnection : function(){
             if(!TippinManager.common().modules.includes('NotifyManager') || !NotifyManager.sockets().status || !NotifyManager.sockets().Echo){
-                if(opt.socket.socket_retries >= 15){
+                if(opt.socket.socket_retries >= 5){
                     opt.storage.active_profiles = [];
                     opt.socket.socket_retries = 0;
                     Health.unreadCheck();
-                    opt.elements.socket_error_msg.html(ThreadTemplates.render().socket_error(true));
+                    opt.elements.socket_error_msg.html(ThreadTemplates.render().socket_error());
                     if(opt.thread.id){
-                        $("#thread_info_area").hide();
-                        $("#thread_error_area").html(ThreadTemplates.render().socket_error(false)).show()
+                        $('.thread_error_area').show();
+                        $('.thread_error_btn').popover()
                     }
                 }
                 if(opt.timers.socket_interval === null){
@@ -688,7 +656,6 @@ window.ThreadManager = (function () {
                 }
                 opt.socket.socket_retries++;
                 if(TippinManager.common().modules.includes('NotifyManager') && NotifyManager.sockets().forced_disconnect) opt.elements.my_avatar_area.html(ThreadTemplates.render().my_avatar_status(0));
-                PageListeners.listen().tooltips();
                 return;
             }
             Health.onConnection()
@@ -701,8 +668,7 @@ window.ThreadManager = (function () {
             clearInterval(opt.timers.socket_interval);
             opt.timers.socket_interval = null;
             if(opt.thread.id && opt.thread.type !== 3){
-                $("#thread_error_area").html('').hide();
-                $("#thread_info_area").show();
+                $('.thread_error_area').hide();
                 mounted.startPresence(full)
             }
         },
@@ -720,7 +686,7 @@ window.ThreadManager = (function () {
             if(!TippinManager.common().modules.includes('NotifyManager') || NotifyManager.sockets().forced_disconnect) return;
             let checkTotalUnread = function () {
                 TippinManager.xhr().request({
-                    route : '/messenger/fetch/unread_count',
+                    route : opt.API+'get/unread_count',
                     success : function(data){
                         if(NotifyManager.counts().threads !== data.total_unread){
                             NotifyManager.updateMessageCount({total_unread : data.total_unread});
@@ -732,7 +698,7 @@ window.ThreadManager = (function () {
             };
             if(opt.thread.id){
                 TippinManager.xhr().request({
-                    route : '/messenger/fetch/'+opt.thread.id+'/is_unread',
+                    route : opt.API+'get/'+opt.thread.id+'/is_unread',
                     success : function(data){
                         if(data.unread){
                             opt.storage.bobble_heads = [];
@@ -758,21 +724,13 @@ window.ThreadManager = (function () {
                 methods.addMessage(data);
                 return;
             }
-            if(CallManager.state().initialized && CallManager.state().thread_id !== data.thread_id) return;
             if(opt.thread.initializing && opt.thread._id === data.thread_id){
                 opt.storage.pending_messages.push(data);
                 methods.updateThread(data, false, false, false, true);
                 return;
             }
             methods.updateThread(data, false, false, false, true);
-            if(CallManager.state().initialized && CallManager.state().thread_id === data.thread_id){
-                let thread = methods.locateStorageItem({type : 'thread', id :CallManager.state().thread_id }), elm = $("#wb_chat_unread_count");
-                if(thread.found){
-                    elm.html(opt.storage.threads[thread.index].unread_count);
-                    elm.addClass('glowing_btn')
-                }
-            }
-            NotifyManager.sound('message')
+            if(TippinManager.common().id !== data.owner_id) NotifyManager.sound('message')
         },
         callStatus : function(data){
             methods.threadCallStatus(data)
@@ -799,7 +757,7 @@ window.ThreadManager = (function () {
             opt.storage.bobble_heads = data.bobble_heads;
             opt.storage.messages = data.recent_messages;
             opt.elements.message_container.html(ThreadTemplates.render().render_private(data.thread, data.party));
-            if(!opt.states.special_mode && !noHistory) window.history.pushState({type : 1, thread_id : data.thread.thread_id}, null, '/messenger/'+data.thread.thread_id);
+            if(!noHistory) window.history.pushState({type : 1, thread_id : data.thread.thread_id}, null, '/messenger/'+data.thread.thread_id);
             mounted.Initialize({
                 type : data.thread.thread_type,
                 thread_id : data.thread.thread_id,
@@ -813,7 +771,7 @@ window.ThreadManager = (function () {
             opt.storage.bobble_heads = data.bobble_heads;
             opt.storage.messages = data.recent_messages;
             opt.elements.message_container.html(ThreadTemplates.render().render_group(data.thread));
-            if(!opt.states.special_mode && !noHistory) window.history.pushState({type : 2, thread_id : data.thread.thread_id}, null, '/messenger/'+data.thread.thread_id);
+            if(!noHistory) window.history.pushState({type : 2, thread_id : data.thread.thread_id}, null, '/messenger/'+data.thread.thread_id);
             mounted.Initialize({
                 type : data.thread.thread_type,
                 thread_id : data.thread.thread_id,
@@ -893,7 +851,7 @@ window.ThreadManager = (function () {
         threadScrollBottom : function(force, check){
             if(!opt.elements.the_thread) return false;
             let top = opt.elements.the_thread.prop("scrollTop"), height = opt.elements.the_thread.prop("scrollHeight"), offset = opt.elements.the_thread.prop("offsetHeight");
-            if(force || top === (height - offset) || ((height - offset) - top) < 75){
+            if(force || top === (height - offset) || ((height - offset) - top) < 200){
                 if(!check) opt.elements.the_thread.scrollTop(height);
                 return true;
             }
@@ -901,12 +859,23 @@ window.ThreadManager = (function () {
         },
         statusOnline : function(state, inactivity){
             opt.socket.is_away = (state === 2 && inactivity);
-            opt.elements.my_avatar_area.html(ThreadTemplates.render().my_avatar_status((state === 1 && opt.socket.online_status_setting === 2 ? 2 : (state === 1 && opt.socket.online_status_setting === 0 ? 0 : (state === 2 && opt.socket.online_status_setting === 0 ? 0 : state)))));
-            PageListeners.listen().tooltips();
+            if(opt.INIT && opt.elements.my_avatar_area.length){
+                opt.elements.my_avatar_area.html(ThreadTemplates.render().my_avatar_status((state === 1 && opt.socket.online_status_setting === 2 ? 2 : (state === 1 && opt.socket.online_status_setting === 0 ? 0 : (state === 2 && opt.socket.online_status_setting === 0 ? 0 : state)))));
+                PageListeners.listen().tooltips();
+            }
             methods.sendOnlineStatus((state === 1 && opt.socket.online_status_setting === 2 ? 2 : state))
         },
+        updateOnlineStatusSetting : function(state){
+            opt.socket.online_status_setting = state;
+            methods.statusOnline(state, false)
+        },
+        checkThreadStorageUnread : function(){
+            if(!opt.thread.id) return false;
+            let thread = methods.locateStorageItem({type : 'thread', id : opt.thread.id});
+            return thread.found && opt.storage.threads[thread.index].unread;
+        },
         markRead : function(){
-            if(!opt.thread.id) return;
+            if(!opt.thread.id || !methods.threadScrollBottom(false, true)) return;
             opt.thread.messages_unread = false;
             opt.elements.message_container.removeClass('msg-ctnr-unread');
             opt.thread.click_to_read = false;
@@ -914,12 +883,13 @@ window.ThreadManager = (function () {
             methods.updateThread({thread_id : opt.thread.id}, false, false, true, false);
             if(opt.storage.messages.length) methods.seenMessage(opt.storage.messages[(opt.storage.messages.length-1)].message_id);
             TippinManager.xhr().request({
-                route : '/messenger/fetch/'+opt.thread.id+'/mark_read',
+                route : opt.API+'get/'+opt.thread.id+'/mark_read',
                 fail : null
             })
         },
         loadDataTable : function(elm, special){
             if(opt.elements.data_table) opt.elements.data_table.destroy();
+            if(!elm || !elm.length) return;
             if(special){
                 opt.elements.data_table = elm.DataTable({
                     "language": {
@@ -950,7 +920,7 @@ window.ThreadManager = (function () {
                 "drawCallback": function(settings){
                     let api = new $.fn.DataTable.Api(settings), pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
                     pagination.toggle(api.page.info().pages > 1);
-                },
+                }
             });
         },
         addTypers : function(){
@@ -1068,8 +1038,13 @@ window.ThreadManager = (function () {
                 opt.storage.bobble_heads[i].added = false;
                 opt.storage.bobble_heads[i].typing = !!typing.length;
                 opt.storage.bobble_heads[i].caught_up = (typing.length ? true : opt.storage.bobble_heads[i].caught_up);
-                opt.storage.bobble_heads[i].in_chat = !!found;
-                if(found) opt.storage.bobble_heads[i].online = found.online;
+                opt.storage.bobble_heads[i].in_chat = (found || !found && !!typing.length);
+                if(found){
+                    opt.storage.bobble_heads[i].online = found.online;
+                }
+                else if(!found && !!typing.length){
+                    opt.storage.bobble_heads[i].online = 1;
+                }
                 $(".bobble_head_"+owner).remove();
                 $(".seen-by").each(function(){
                     if(!$(this).children().length) $(this).remove()
@@ -1141,7 +1116,7 @@ window.ThreadManager = (function () {
                     if(key !== 0
                         && opt.storage.messages[key-1].owner_id === value.owner_id
                         && [0,1,2].includes(opt.storage.messages[key-1].message_type)
-                        && TippinManager.format().timeDiffInMinutes(value.created_at, opt.storage.messages[key-1].created_at) < 30
+                        && TippinManager.format().timeDiffInUnit(value.created_at, opt.storage.messages[key-1].created_at, 'minutes') < 30
                     ){
                         opt.elements.msg_stack.append(ThreadTemplates.render().my_message_grouped(value));
                         return;
@@ -1152,7 +1127,7 @@ window.ThreadManager = (function () {
                 if(key !== 0
                     && opt.storage.messages[key-1].owner_id === value.owner_id
                     && [0,1,2].includes(opt.storage.messages[key-1].message_type)
-                    && TippinManager.format().timeDiffInMinutes(value.created_at, opt.storage.messages[key-1].created_at) < 30
+                    && TippinManager.format().timeDiffInUnit(value.created_at, opt.storage.messages[key-1].created_at, 'minutes') < 30
                 ){
                     opt.elements.msg_stack.append(ThreadTemplates.render().message_grouped(value));
                     return;
@@ -1182,7 +1157,7 @@ window.ThreadManager = (function () {
                     if(key !== 0
                         && opt.storage.messages[key-1].owner_id === value.owner_id
                         && [0,1,2].includes(opt.storage.messages[key-1].message_type)
-                        && TippinManager.format().timeDiffInMinutes(opt.storage.messages[key-1].created_at, value.created_at) < 30
+                        && TippinManager.format().timeDiffInUnit(opt.storage.messages[key-1].created_at, value.created_at, 'minutes') < 30
                     ){
                         opt.elements.msg_stack.find("#message_"+opt.storage.messages[key-1].message_id).replaceWith(ThreadTemplates.render().my_message_grouped(opt.storage.messages[key-1]))
                     }
@@ -1192,7 +1167,7 @@ window.ThreadManager = (function () {
                 if(key !== 0
                     && opt.storage.messages[key-1].owner_id === value.owner_id
                     && [0,1,2].includes(opt.storage.messages[key-1].message_type)
-                    && TippinManager.format().timeDiffInMinutes(opt.storage.messages[key-1].created_at, value.created_at) < 30
+                    && TippinManager.format().timeDiffInUnit(opt.storage.messages[key-1].created_at, value.created_at, 'minutes') < 30
                 ){
                     opt.elements.msg_stack.find("#message_"+opt.storage.messages[key-1].message_id).replaceWith(ThreadTemplates.render().message_grouped(opt.storage.messages[key-1]))
                 }
@@ -1232,7 +1207,7 @@ window.ThreadManager = (function () {
             else{
                 opt.states.lock = true;
                 TippinManager.xhr().request({
-                    route : '/messenger/fetch/'+opt.thread.id+'/recent_messages',
+                    route : opt.API+'get/'+opt.thread.id+'/recent_messages',
                     success : onLoad,
                     fail : function(){
                         opt.states.load_in_retries++;
@@ -1252,11 +1227,17 @@ window.ThreadManager = (function () {
         },
         loadHistory : function(){
             if(opt.states.lock || !opt.thread.thread_history || !opt.storage.messages.length) return;
-            opt.states.lock = true;
             let history_id = opt.storage.messages[0].message_id;
+            if(opt.thread.history_id === history_id){
+                opt.thread.thread_history = false;
+                opt.elements.msg_stack.prepend(ThreadTemplates.render().end_of_history());
+                return;
+            }
+            opt.states.lock = true;
+            opt.thread.history_id = history_id;
             opt.elements.msg_stack.prepend(ThreadTemplates.render().loading_history());
             TippinManager.xhr().request({
-                route : '/messenger/fetch/'+opt.thread.id+'/messages/'+history_id,
+                route : opt.API+'get/'+opt.thread.id+'/messages/'+history_id,
                 shared : {
                     history_id : history_id
                 },
@@ -1280,7 +1261,8 @@ window.ThreadManager = (function () {
             }
         },
         stopTyping : function(){
-            if(opt.socket.online_status_setting === 1 && opt.storage.active_profiles.length && opt.socket.chat){
+            if(opt.socket.online_status_setting === 1 && opt.storage.active_profiles.length && opt.socket.chat && opt.socket.send_typing > 0){
+                opt.socket.send_typing = 0;
                 opt.socket.chat.whisper('typing', {
                     owner_id: TippinManager.common().id,
                     name: TippinManager.common().name,
@@ -1363,10 +1345,11 @@ window.ThreadManager = (function () {
                 let pending = methods.makePendingMessage(0, message_contents);
                 methods.managePendingMessage('add', pending);
                 TippinManager.xhr().payload({
-                    route : '/messenger/update/'+opt.thread.id,
+                    route : opt.API+'save/'+opt.thread.id,
                     data : {
                         type : 'store_message',
-                        message : message_contents
+                        message : message_contents,
+                        temp_id : pending.message_id
                     },
                     success : function(x){
                         methods.managePendingMessage('completed', pending, x.message);
@@ -1381,7 +1364,7 @@ window.ThreadManager = (function () {
             }
         },
         sendUploadFiles : function(file){
-            let type = 0,
+            let type = false,
             images = [
                 'image/jpeg',
                 'image/png',
@@ -1419,8 +1402,9 @@ window.ThreadManager = (function () {
             let form = new FormData();
             form.append(type === 1 ? 'image_file' : 'doc_file', file);
             form.append('type', 'store_message');
+            form.append('temp_id', pending.message_id);
             TippinManager.xhr().payload({
-                route : '/messenger/update/'+opt.thread.id,
+                route : opt.API+'save/'+opt.thread.id,
                 data : form,
                 success : function(x){
                     methods.managePendingMessage('completed', pending, x.message)
@@ -1437,6 +1421,7 @@ window.ThreadManager = (function () {
                 avatar : TippinManager.common().slug,
                 body : body ? TippinManager.format().escapeHtml(body) : null,
                 created_at : null,
+                extra : null,
                 message_id : uuid(),
                 message_type : type,
                 name : TippinManager.common().name,
@@ -1520,10 +1505,16 @@ window.ThreadManager = (function () {
         addMessage : function(msg){
             if(msg.thread_id !== opt.thread.id) return;
             if(methods.locateStorageItem({type : 'message', id : msg.message_id}).found) return;
+            if(msg.temp_id){
+                let pending = methods.locateStorageItem({type : 'pending_message', id : msg.temp_id});
+                if(pending.found){
+                    msg.temp_id = null;
+                    methods.managePendingMessage('completed', opt.storage.pending_messages[pending.index], msg);
+                    return;
+                }
+            }
             methods.updateThread(msg, false, false, false, true);
             msg.added = true;
-            delete msg.thread_type;
-            delete msg.thread_subject;
             opt.storage.messages.push(msg);
             methods.updateBobbleHead(msg.owner_id, msg.message_id);
             if(![0,1,2].includes(msg.message_type)){
@@ -1532,7 +1523,7 @@ window.ThreadManager = (function () {
             else if(opt.storage.messages.length > 1
                 && opt.storage.messages[(opt.storage.messages.length-2)].owner_id === msg.owner_id
                 && [0,1,2].includes(opt.storage.messages[(opt.storage.messages.length-2)].message_type)
-                && TippinManager.format().timeDiffInMinutes(msg.created_at, opt.storage.messages[(opt.storage.messages.length-2)].created_at) < 30
+                && TippinManager.format().timeDiffInUnit(msg.created_at, opt.storage.messages[(opt.storage.messages.length-2)].created_at, 'minutes') < 30
             ){
                 msg.owner_id === TippinManager.common().id ? opt.elements.msg_stack.append(ThreadTemplates.render().my_message_grouped(msg)) : opt.elements.msg_stack.append(ThreadTemplates.render().message_grouped(msg));
             }
@@ -1544,17 +1535,24 @@ window.ThreadManager = (function () {
             if(opt.timers.recent_bobble_timeout) clearTimeout(opt.timers.recent_bobble_timeout);
             opt.timers.recent_bobble_timeout = setTimeout(function(){
                 methods.checkRecentBobbleHeads([88,97,98,99].includes(msg.message_type))
-            }, 6000);
+            }, 3000);
         },
         messageStatusState : function(message, sound){
             opt.thread.click_to_read = false;
-            let didScroll = methods.threadScrollBottom(message.owner_id === TippinManager.common().id, false);
-            methods.imageLoadListener(didScroll);
-            if(didScroll && document.hasFocus() && (!opt.socket.is_away || (opt.socket.is_away && opt.socket.online_status_setting === 2))){
+            let didScroll = methods.threadScrollBottom(message.owner_id === TippinManager.common().id, false),
+            hide = function () {
                 opt.elements.new_msg_alert.hide();
                 opt.thread.messages_unread = false;
                 opt.elements.message_container.removeClass('msg-ctnr-unread');
+            };
+            methods.imageLoadListener(didScroll);
+            if(didScroll && document.hasFocus() && (!opt.socket.is_away || (opt.socket.is_away && opt.socket.online_status_setting === 2))){
+                hide();
                 if(message.owner_id !== TippinManager.common().id || ![0,1,2].includes(message.message_type)) methods.markRead()
+            }
+            else if(message.owner_id === TippinManager.common().id){
+                if(![0,1,2].includes(message.message_type)) methods.markRead();
+                hide();
             }
             else{
                 opt.thread.messages_unread = true;
@@ -1570,7 +1568,7 @@ window.ThreadManager = (function () {
             }
         },
         threadCallStatus : function(call){
-            $('.tooltip').remove();
+            PageListeners.listen().disposeTooltips();
             let thread = methods.locateStorageItem({type : 'thread', id : call.thread_id});
             if(!thread.found){
                 LoadIn.thread(call.thread_id);
@@ -1643,7 +1641,7 @@ window.ThreadManager = (function () {
             temp.recent_message.message_type = data.message_type;
             temp.recent_message.name = data.name;
             temp.updated_at = data.created_at;
-            if(temp.thread_type === 1 && data.thread_id !== opt.thread.id) temp.online = 1;
+            if(temp.thread_type === 1 && data.thread_id !== opt.thread.id && data.owner_id !== TippinManager.common().id) temp.online = 1;
             if(temp.thread_type === 1 && data.thread_id === opt.thread.id && data.owner_id !== TippinManager.common().id){
                 let bobble = methods.locateStorageItem({type : 'bobble', id : data.owner_id}), i = bobble.index;
                 if(bobble.found){
@@ -1694,8 +1692,8 @@ window.ThreadManager = (function () {
             if(!opt.states.thread_filtered){
                 opt.storage.threads.forEach(function(value){
                     opt.elements.thread_area.append((value.thread_type === 2 ?
-                        opt.elements.thread_area.append(ThreadTemplates.render().group_thread(value, value.thread_id === opt.thread.id))
-                        : opt.elements.thread_area.append(ThreadTemplates.render().private_thread(value, value.thread_id === opt.thread.id)))
+                        ThreadTemplates.render().group_thread(value, value.thread_id === opt.thread.id)
+                        : ThreadTemplates.render().private_thread(value, value.thread_id === opt.thread.id))
                     )
                 });
                 return;
@@ -1706,8 +1704,8 @@ window.ThreadManager = (function () {
             if(filtered.length){
                 filtered.forEach(function(value){
                     opt.elements.thread_area.append((value.thread_type === 2 ?
-                        opt.elements.thread_area.append(ThreadTemplates.render().group_thread(value, value.thread_id === opt.thread.id))
-                        : opt.elements.thread_area.append(ThreadTemplates.render().private_thread(value, value.thread_id === opt.thread.id)))
+                        ThreadTemplates.render().group_thread(value, value.thread_id === opt.thread.id)
+                        : ThreadTemplates.render().private_thread(value, value.thread_id === opt.thread.id))
                     )
                 });
                 return;
@@ -1744,91 +1742,9 @@ window.ThreadManager = (function () {
                 if(thread.unread && thread.unread_count > 0) unread++;
             });
             NotifyManager.updateMessageCount({total_unread : unread})
-        },
-        saveSettings : function(){
-            TippinManager.xhr().payload({
-                route : '/messenger/update/settings',
-                data : {
-                    type : 'settings',
-                    message_popups : $("#message_popups").is(":checked"),
-                    message_sound : $("#message_sounds").is(":checked"),
-                    call_ringtone_sound : $("#call_ringtone_sound").is(":checked"),
-                    knoks : $("#allow_knoks").is(":checked"),
-                    calls_outside_networks : $("#allow_all_calls").is(":checked"),
-                    online_status : parseInt($('input[name="online_status"]:checked').val())
-                },
-                success : function(data){
-                    opt.socket.online_status_setting = data.online_status;
-                    methods.statusOnline(data.online_status, false);
-                    PageListeners.listen().tooltips();
-                    NotifyManager.settings(data);
-                    TippinManager.alert().Alert({
-                        title : 'Updated your messenger settings',
-                        toast : true
-                    })
-                },
-                fail_alert : true,
-                close_modal : true
-            });
-        },
-        uploadMessengerAvatar : function () {
-            if(opt.states.lock || !opt.elements.messenger_avatar_upload.files.length) return;
-            let data = new FormData();
-            data.append('image_file', opt.elements.messenger_avatar_upload.files[0]);
-            data.append('type', 'store_messenger_avatar');
-            $('.tooltip').remove();
-            TippinManager.alert().fillModal({loader : true, no_close : true, body : null, title : 'Uploading...'});
-            TippinManager.xhr().payload({
-                route : '/messenger/update/store_messenger_avatar',
-                data : data,
-                success : methods.manageNewAvatar,
-                fail : function(){
-                    opt.elements.messenger_avatar_upload.value = '';
-                },
-                bypass : true,
-                fail_alert : true,
-                close_modal : true
-            });
-        },
-        removeMessengerAvatar : function () {
-            TippinManager.xhr().payload({
-                route : '/messenger/update/remove_messenger_avatar',
-                data : {
-                    type : 'remove_messenger_avatar'
-                },
-                success : methods.manageNewAvatar,
-                fail_alert : true,
-                close_modal : true
-            });
-        },
-        manageNewAvatar : function (data) {
-            TippinManager.forms().updateSlug(data.avatar);
-            $('.my-global-avatar').attr('src', data.avatar);
-            opt.elements.messenger_avatar_upload.value = '';
-            TippinManager.alert().Alert({
-                toast : true,
-                theme : 'success',
-                title : 'Your avatar has been updated'
-            })
         }
     },
     archive = {
-        Avatar : function(){
-            TippinManager.alert().Modal({
-                backdrop_ctrl : false,
-                size : 'sm',
-                body : false,
-                centered : true,
-                unlock_buttons : false,
-                title: 'Remove Avatar?',
-                theme: 'danger',
-                cb_btn_txt: 'Remove',
-                cb_btn_theme : 'danger',
-                cb_btn_icon:'trash',
-                icon: 'trash',
-                callback : methods.removeMessengerAvatar
-            });
-        },
         Message : function(arg){
             if(!opt.thread.id) return;
             let msg = $("#message_"+arg.id);
@@ -1847,7 +1763,7 @@ window.ThreadManager = (function () {
                 icon: 'trash',
                 callback : function(){
                     TippinManager.xhr().payload({
-                        route : '/messenger/update/'+opt.thread.id,
+                        route : opt.API+'save/'+opt.thread.id,
                         data : {
                             type : 'remove_message',
                             thread_id : opt.thread.id,
@@ -1874,14 +1790,6 @@ window.ThreadManager = (function () {
         },
         Thread : function(){
             if(!opt.thread.id) return;
-            if(CallManager.state().initialized){
-                TippinManager.alert().Alert({
-                    toast : true,
-                    theme : 'warning',
-                    title : 'Can\'t delete while in a call'
-                });
-                return;
-            }
             TippinManager.alert().Modal({
                 theme : 'danger',
                 icon : 'trash',
@@ -1894,10 +1802,12 @@ window.ThreadManager = (function () {
                 cb_btn_theme : 'danger',
                 onReady : function(){
                     TippinManager.xhr().request({
-                        route : '/messenger/fetch/'+opt.thread.id+'/archive_thread',
+                        route : opt.API+'get/'+opt.thread.id+'/archive_thread',
                         success : function(data){
                             TippinManager.alert().fillModal({body : ThreadTemplates.render().archive_thread_warning(data), title : ' Delete Conversation?'});
                         },
+                        fail : TippinManager.alert().destroyModal,
+                        bypass : true,
                         fail_alert : true
                     })
                 },
@@ -1910,7 +1820,7 @@ window.ThreadManager = (function () {
             if(opt.states.lock) return;
             opt.states.lock = true;
             TippinManager.xhr().payload({
-                route : '/messenger/update/'+opt.thread.id,
+                route : opt.API+'save/'+opt.thread.id,
                 shared : {
                     thread_id : opt.thread.id
                 },
@@ -1936,9 +1846,12 @@ window.ThreadManager = (function () {
         viewParticipants : function(reload){
             let gather = () => {
                 TippinManager.xhr().request({
-                    route : '/messenger/fetch/'+opt.thread.id+'/participants',
+                    route : opt.API+'get/'+opt.thread.id+'/participants',
                     success : function(data){
-                        TippinManager.alert().fillModal({body : data.html, title : opt.thread.name+' Participants'});
+                        TippinManager.alert().fillModal({
+                            body : ThreadTemplates.render().group_participants(data.participants, data.admin),
+                            title : opt.thread.name+' Participants'
+                        });
                         methods.loadDataTable($("#view_group_participants"))
                     },
                     fail_alert : true
@@ -1958,7 +1871,7 @@ window.ThreadManager = (function () {
             });
         },
         viewInviteGenerator : function(){
-            let thread = (CallManager.state().initialized ? CallManager.state().thread_id : opt.thread.id);
+            let thread =opt.thread.id;
             TippinManager.alert().Modal({
                 icon : 'link',
                 theme : 'dark',
@@ -1969,7 +1882,7 @@ window.ThreadManager = (function () {
                 h4 : false,
                 onReady : function(){
                     TippinManager.xhr().request({
-                        route : '/messenger/fetch/'+thread+'/group_invites',
+                        route : opt.API+'get/'+thread+'/group_invites',
                         success : groups.manageInviteGenPage,
                         fail_alert : true
                     })
@@ -1979,7 +1892,7 @@ window.ThreadManager = (function () {
         manageInviteGenPage : function(data){
             let generate_click = function () {
                 $("#grp_inv_generate_btn").click(groups.generateInviteLink)
-            }, name = (CallManager.state().initialized ? CallManager.state().thread_name : opt.thread.name);
+            }, name = opt.thread.name;
             if(data.has_invite){
                 TippinManager.alert().fillModal({
                     body : ThreadTemplates.render().thread_show_invite(data.invite),
@@ -2020,14 +1933,14 @@ window.ThreadManager = (function () {
         },
         generateInviteLink : function(){
             let expire = parseInt($("#grp_inv_expires").val()), uses = parseInt($("#grp_inv_uses").val()),
-                thread = (CallManager.state().initialized ? CallManager.state().thread_id : opt.thread.id);
+                thread = opt.thread.id;
             TippinManager.alert().fillModal({
                 loader : true,
                 body : null,
                 title : 'Generating...'
             });
             TippinManager.xhr().payload({
-                route : '/messenger/update/'+thread,
+                route : opt.API+'save/'+thread,
                 data : {
                     type : 'store_group_invitation',
                     expires : expire,
@@ -2040,9 +1953,9 @@ window.ThreadManager = (function () {
             })
         },
         removeInviteLink : function(id){
-            let thread = (CallManager.state().initialized ? CallManager.state().thread_id : opt.thread.id);
+            let thread = opt.thread.id;
             TippinManager.xhr().payload({
-                route : '/messenger/update/'+thread,
+                route : opt.API+'save/'+thread,
                 data : {
                     type : 'remove_group_invitation',
                     invite_id : id
@@ -2056,8 +1969,8 @@ window.ThreadManager = (function () {
             })
         },
         addParticipants : function(){
-            let thread = (CallManager.state().initialized ? CallManager.state().thread_id : opt.thread.id),
-                name = (CallManager.state().initialized ? CallManager.state().thread_name : opt.thread.name);
+            let thread = opt.thread.id,
+                name = opt.thread.name;
             TippinManager.alert().Modal({
                 icon : 'user-plus',
                 theme : 'dark',
@@ -2072,9 +1985,12 @@ window.ThreadManager = (function () {
                 unlock_buttons : false,
                 onReady : function(){
                     TippinManager.xhr().request({
-                        route : '/messenger/fetch/'+thread+'/add_participants',
+                        route : opt.API+'get/'+thread+'/add_participants',
                         success : function(data){
-                            TippinManager.alert().fillModal({body : data.html, title : 'Add contacts to '+name});
+                            TippinManager.alert().fillModal({
+                                body : ThreadTemplates.render().group_add_participants(data.friends),
+                                title : 'Add contacts to '+name
+                            });
                             methods.loadDataTable($("#add_group_participants"));
                         },
                         fail_alert : true
@@ -2082,7 +1998,7 @@ window.ThreadManager = (function () {
                 },
                 callback : function(){
                     TippinManager.xhr().payload({
-                        route : '/messenger/update/'+thread,
+                        route : opt.API+'save/'+thread,
                         data : {
                             type : 'add_group_participants',
                             recipients : opt.elements.data_table.$('input[type="checkbox"]:checked').serializeArray()
@@ -2116,7 +2032,7 @@ window.ThreadManager = (function () {
                 cb_btn_theme : 'success',
                 onReady: function () {
                     TippinManager.xhr().request({
-                        route : '/messenger/fetch/'+opt.thread.id+'/group_settings',
+                        route : opt.API+'get/'+opt.thread.id+'/group_settings',
                         success : function(data){
                             TippinManager.alert().fillModal({
                                 title : opt.thread.name+' Settings',
@@ -2124,7 +2040,7 @@ window.ThreadManager = (function () {
                             });
                             PageListeners.listen().tooltips();
                             $(".m_setting_toggle").change(function(){
-                                $(this).is(':checked') ? $(this).closest('tr').addClass('alert-primary') : $(this).closest('tr').removeClass('alert-primary')
+                                $(this).is(':checked') ? $(this).closest('tr').addClass('alert-success') : $(this).closest('tr').removeClass('alert-success')
                             })
                         },
                         fail_alert : true
@@ -2136,7 +2052,7 @@ window.ThreadManager = (function () {
         saveSettings : function(){
             let send_messages = $("#g_s_send_message").is(":checked");
             TippinManager.xhr().payload({
-                route : '/messenger/update/'+opt.thread.id,
+                route : opt.API+'save/'+opt.thread.id,
                 data : {
                     type : 'admin_group_settings',
                     subject : $('#g_s_group_subject').val(),
@@ -2179,7 +2095,7 @@ window.ThreadManager = (function () {
                 data.append('type', 'store_avatar');
                 TippinManager.button().addLoader({id : '#group_avatar_upload_btn'});
                 TippinManager.xhr().payload({
-                    route : '/messenger/update/'+opt.thread.id,
+                    route : opt.API+'save/'+opt.thread.id,
                     data : data,
                     success : function(data){
                         TippinManager.alert().Alert({
@@ -2197,7 +2113,7 @@ window.ThreadManager = (function () {
             }
             TippinManager.button().addLoader({id : '#avatar_default_btn'});
             TippinManager.xhr().payload({
-                route : '/messenger/update/'+opt.thread.id,
+                route : opt.API+'save/'+opt.thread.id,
                 data : {
                     type : 'store_avatar',
                     action : arg.action,
@@ -2220,7 +2136,7 @@ window.ThreadManager = (function () {
             if(opt.states.lock) return;
             opt.states.lock = true;
             TippinManager.xhr().payload({
-                route : '/messenger/update/'+opt.thread.id,
+                route : opt.API+'save/'+opt.thread.id,
                 data : {
                     type : 'admin_remove_participant',
                     p_id: x
@@ -2241,7 +2157,7 @@ window.ThreadManager = (function () {
             opt.states.lock = true;
             TippinManager.alert().fillModal({loader : true});
             TippinManager.xhr().payload({
-                route : '/messenger/update/'+opt.thread.id,
+                route : opt.API+'save/'+opt.thread.id,
                 data : {
                     type : arg.type,
                     p_id : arg.id
@@ -2258,14 +2174,6 @@ window.ThreadManager = (function () {
             });
         },
         leaveGroup : function(){
-            if(CallManager.state().initialized){
-                TippinManager.alert().Alert({
-                    toast : true,
-                    theme : 'warning',
-                    title : 'Can\'t leave group while in a call'
-                });
-                return;
-            }
             TippinManager.alert().Modal({
                 icon : 'sign-out-alt',
                 centered : true,
@@ -2279,7 +2187,7 @@ window.ThreadManager = (function () {
                 cb_btn_theme : 'danger',
                 callback : function(){
                     TippinManager.xhr().payload({
-                        route : '/messenger/update/'+opt.thread.id,
+                        route : opt.API+'save/'+opt.thread.id,
                         shared : {
                             thread_id : opt.thread.id
                         },
@@ -2310,7 +2218,7 @@ window.ThreadManager = (function () {
             opt.states.lock = true;
             TippinManager.button().addLoader({id : '#make_thread_btn'});
             TippinManager.xhr().payload({
-                route : '/messenger/update/new_group',
+                route : opt.API+'save/new_group',
                 data : {
                     type : 'new_group',
                     recipients : (opt.elements.data_table ? opt.elements.data_table.$('input[type="checkbox"]:checked').serializeArray() : null),
@@ -2347,7 +2255,7 @@ window.ThreadManager = (function () {
             opt.states.lock = true;
             opt.elements.msg_stack.html(ThreadTemplates.render().loader());
             TippinManager.xhr().payload({
-                route : '/messenger/update/new_private',
+                route : opt.API+'save/new_private',
                 data : form,
                 success : function(x){
                     LoadIn.initiate_thread({
@@ -2363,11 +2271,11 @@ window.ThreadManager = (function () {
     },
     Calls = {
         initCall : function(){
-            if(opt.states.lock || !NotifyManager.sockets().status) return;
+            if(opt.states.lock) return;
             opt.states.lock = true;
             TippinManager.button().addLoader({id : '.video_btn'});
             TippinManager.xhr().payload({
-                route : '/messenger/update/'+opt.thread.id,
+                route : opt.API+'save/'+opt.thread.id,
                 data : {
                     type : 'initiate_call'
                 },
@@ -2382,7 +2290,7 @@ window.ThreadManager = (function () {
             if(opt.states.lock || !NotifyManager.sockets().status) return;
             TippinManager.button().addLoader({id : '#knok_btn'});
             TippinManager.xhr().payload({
-                route : '/messenger/update/'+opt.thread.id,
+                route : opt.API+'save/'+opt.thread.id,
                 data : {
                     type : 'send_knock'
                 },
@@ -2408,7 +2316,7 @@ window.ThreadManager = (function () {
     },
     LoadIn = {
         closeOpened : function(){
-            if(opt.states.lock || opt.states.special_mode) return;
+            if(opt.states.lock) return;
             if(TippinManager.common().mobile) ThreadTemplates.mobile(false);
             mounted.reset(false);
             mounted.Initialize({
@@ -2418,7 +2326,7 @@ window.ThreadManager = (function () {
         },
         threads : function(){
             TippinManager.xhr().request({
-                route : '/messenger/fetch/threads',
+                route : opt.API+'get/threads',
                 success : function(data){
                     opt.storage.threads = data.threads;
                     if(opt.elements.thread_area.length){
@@ -2457,7 +2365,7 @@ window.ThreadManager = (function () {
                 h4: false,
                 onReady: function () {
                     TippinManager.xhr().request({
-                        route : '/messenger/fetch/'+opt.thread.id+'/thread_logs',
+                        route : opt.API+'get/'+opt.thread.id+'/thread_logs',
                         success : function(data){
                             TippinManager.alert().fillModal({
                                 title : opt.thread.name+' Logs',
@@ -2474,7 +2382,7 @@ window.ThreadManager = (function () {
         },
         thread : function(thread_id){
             TippinManager.xhr().request({
-                route : '/messenger/fetch/'+thread_id+'/load_thread',
+                route : opt.API+'get/'+thread_id+'/load_thread',
                 success : function(data){
                     let thread = methods.locateStorageItem({type : 'thread', id : thread_id});
                     if(!thread.found) opt.storage.threads.unshift(data);
@@ -2486,7 +2394,7 @@ window.ThreadManager = (function () {
         bobbleHeads : function(){
             if(!opt.thread.id) return;
             TippinManager.xhr().request({
-                route : '/messenger/fetch/'+opt.thread.id+'/bobble_heads',
+                route : opt.API+'get/'+opt.thread.id+'/bobble_heads',
                 success : function(data){
                     opt.storage.bobble_heads = data.bobble_heads;
                     $(".bobble-head-item").remove();
@@ -2501,39 +2409,6 @@ window.ThreadManager = (function () {
                     methods.drawBobbleHeads()
                 },
                 fail : null
-            })
-        },
-        settings : function(){
-            if(!opt.INIT) return;
-            TippinManager.alert().Modal({
-                backdrop_ctrl : false,
-                theme : 'dark',
-                icon : 'cog',
-                title: 'Loading Settings...',
-                pre_loader: true,
-                centered : true,
-                h4: false,
-                cb_btn_txt : 'Save Settings',
-                cb_btn_icon : 'save',
-                cb_btn_theme : 'success',
-                onReady: function () {
-                    TippinManager.xhr().request({
-                        route : '/messenger/fetch/settings',
-                        success : function(data){
-                            TippinManager.alert().fillModal({
-                                title : 'Messenger Settings',
-                                body : ThreadTemplates.render().global_settings(data)
-                            });
-                            PageListeners.listen().tooltips();
-                            $(".m_setting_toggle").change(function(){
-                                $(this).is(':checked') ? $(this).closest('tr').addClass('bg-light') : $(this).closest('tr').removeClass('bg-light')
-                            })
-                        }
-                    })
-                },
-                callback : function(){
-                    methods.saveSettings()
-                }
             })
         },
         search : function(noHistory){
@@ -2553,10 +2428,9 @@ window.ThreadManager = (function () {
             mounted.reset(false);
             opt.thread.type = 6;
             TippinManager.xhr().request({
-                route : '/messenger/fetch/contacts',
+                route : '/demo-api/friends',
                 success : function(data){
-                    $("#messenger_contacts_ctnr").html(data.html);
-                    PageListeners.listen().tooltips();
+                    $("#messenger_contacts_ctnr").html(ThreadTemplates.render().contacts(data.friends));
                     if(!noHistory) window.history.pushState({type : 6}, null, '/messenger?contacts');
                     methods.loadDataTable( $("#contact_list_table"), true)
                 },
@@ -2566,16 +2440,12 @@ window.ThreadManager = (function () {
             })
         },
         createPrivate : function(arg, noHistory){
-            if(CallManager.state().initialized){
-                window.open('/messenger/create/'+arg.slug+'/'+arg.type);
-                return;
-            }
             opt.elements.message_container.html(ThreadTemplates.render().loading_thread_base());
             mounted.reset(false);
             if(TippinManager.common().mobile) ThreadTemplates.mobile(true);
             $(".modal").modal('hide');
             TippinManager.xhr().request({
-                route : '/messenger/create/'+arg.slug+'/'+arg.type,
+                route : opt.API+'create/'+arg.slug+'/'+arg.type,
                 success : function(data){
                     if(data.exist){
                         LoadIn.initiate_thread({thread_id : data.thread_id});
@@ -2605,10 +2475,10 @@ window.ThreadManager = (function () {
                 type : 4
             });
             TippinManager.xhr().request({
-                route : '/messenger/fetch/new_group',
+                route : '/demo-api/friends',
                 success : function(data){
                     if(opt.thread.type === 4){
-                        $("#messages_container_new_group").html(data.html);
+                        $("#messages_container_new_group").html(ThreadTemplates.render().new_group_friends(data.friends));
                         methods.loadDataTable($("#add_group_participants"), true)
                     }
                 },
@@ -2623,7 +2493,7 @@ window.ThreadManager = (function () {
             opt.thread.initializing = true;
             opt.thread._id = arg.thread_id;
             TippinManager.xhr().request({
-                route : '/messenger/fetch/'+arg.thread_id+'/initiate_thread',
+                route : opt.API+'get/'+arg.thread_id+'/initiate_thread',
                 success : function(data){
                     if("thread" in data){
                         switch (data.thread.thread_type) {
@@ -2683,7 +2553,8 @@ window.ThreadManager = (function () {
                 reConnected : Health.reConnected,
                 online : function(state){
                     methods.statusOnline(state, true)
-                }
+                },
+                statusSetting : methods.updateOnlineStatusSetting
             };
         },
         toggle : mounted.toggleApp

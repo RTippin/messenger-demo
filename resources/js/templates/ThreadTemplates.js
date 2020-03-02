@@ -4,11 +4,18 @@ window.ThreadTemplates = (function () {
             return autolinker.link(body)
         },
         makeYoutube : function(body){
-            let regExp = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig;
-            return body.replace(regExp,'<div class="embed-responsive embed-responsive-16by9 my-2"><iframe allowfullscreen class="embed-responsive-item" src="https://www.youtube.com/embed/$1"></iframe></div>');
+            let regExp = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube(?:-nocookie)?\.com\S*?[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig,
+                html = '<div class="embed-responsive embed-responsive-16by9 my-2"><iframe allowfullscreen class="embed-responsive-item" src="https://www.youtube.com/embed/$1"></iframe></div>';
+            if(TippinManager.common().mobile){
+                html = '<a class="youtube_thumb_view" target="_blank" href="https://www.youtube.com/watch?v=$1">' +
+                    '<img class="msg_image NS img-fluid" src="https://img.youtube.com/vi/$1/hqdefault.jpg" />' +
+                    '<div class="h3 spinner-border text-secondary" style="width: 4rem; height: 4rem;" role="status"><span class="sr-only">loading...</span></div><span class="yt_logo_place"></span>'+
+                    '</a>';
+            }
+            return body.replace(regExp, html);
         },
         switch_mobile_view : function (power) {
-            let nav = $("#RT_navbar"), main_section = $("#RT_main_section"), msg_sidebar = $("#message_sidebar_container"), msg_content = $("#message_content_container");
+            let nav = $("#FS_navbar"), main_section = $("#FS_main_section"), msg_sidebar = $("#message_sidebar_container"), msg_content = $("#message_content_container");
             if(power){
                 nav.addClass('NS');
                 main_section.removeClass('pt-5 mt-4').addClass('pt-0 mt-3');
@@ -43,60 +50,13 @@ window.ThreadTemplates = (function () {
             return '<div class="container h-100">\n' +
                 '    <div class="row align-items-end h-100">\n' +
                 '        <div class="col-12 text-center mb-5">\n' +
-                '            <button data-toggle="tooltip" title="Search Profiles" data-placement="top" onclick="ThreadManager.load().search()" class="btn btn-outline-primary btn-circle btn-circle-xl mx-4 my-2"><i class="fas fa-search fa-3x"></i></button>\n' +
-                '            <button data-toggle="tooltip" title="Create Group" data-placement="top" onclick="ThreadManager.load().createGroup()" class="btn btn-outline-success btn-circle btn-circle-xl mx-4 my-2"><i class="fas fa-edit fa-3x"></i></button>\n' +
+                '            <button data-toggle="tooltip" title="Search Profiles" data-placement="top" onclick="ThreadManager.load().search()" class="btn btn-outline-success btn-circle btn-circle-xl mx-4 my-2"><i class="fas fa-search fa-3x"></i></button>\n' +
+                '            <button data-toggle="tooltip" title="Create Group" data-placement="top" onclick="ThreadManager.load().createGroup()" class="btn btn-outline-primary btn-circle btn-circle-xl mx-4 my-2"><i class="fas fa-edit fa-3x"></i></button>\n' +
                 '            <button data-toggle="tooltip" title="Contacts" data-placement="top" onclick="ThreadManager.load().contacts()" class="btn btn-outline-info btn-circle btn-circle-xl mx-4 my-2"><i class="far fa-address-book fa-3x"></i></button>\n' +
-                '            <button data-toggle="tooltip" title="Messenger Settings" data-placement="top" onclick="ThreadManager.load().settings()" class="btn btn-outline-dark btn-circle btn-circle-xl mx-4 my-2"><i class="fas fa-cog fa-3x"></i></button>\n' +
+                '            <button data-toggle="tooltip" title="Messenger Settings" data-placement="top" onclick="MessengerSettings.show()" class="btn btn-outline-dark btn-circle btn-circle-xl mx-4 my-2"><i class="fas fa-cog fa-3x"></i></button>\n' +
                 '        </div>\n' +
                 '    </div>\n' +
                 '</div>'
-        },
-        global_settings : function(data){
-            return '<div class="form-row">\n' +
-                '<div class="col-6"><label class="control-label d-block h5 font-weight-bold" for="online_status_switch">Online Status</label>\n' +
-                '<div id="online_status_switch" class="btn-group btn-group-toggle" data-toggle="buttons">\n' +
-                '<label data-toggle="tooltip" title="Online" data-placement="left" class="pointer_area btn btn-success '+(data.online_status === 1 ? 'active glowing_btn' : '')+'">\n' +
-                '<input type="radio" name="online_status" value="1" autocomplete="off" '+(data.online_status === 1 ? 'checked' : '')+'><i class="fas fa-wifi"></i>\n' +
-                '</label>\n' +
-                '<label data-toggle="tooltip" title="Away" data-placement="bottom" class="pointer_area btn btn-danger '+(data.online_status === 2 ? 'active glowing_btn' : '')+'">\n' +
-                '<input type="radio" name="online_status" value="2" autocomplete="off" '+(data.online_status === 2 ? 'checked' : '')+'><i class="fas fa-user-slash"></i>\n' +
-                '</label>\n' +
-                '<label data-toggle="tooltip" title="Offline" data-placement="right" class="pointer_area btn btn-dark '+(data.online_status === 0 ? 'active glowing_btn' : '')+'">\n' +
-                '<input type="radio" name="online_status" value="0" autocomplete="off" '+(data.online_status === 0 ? 'checked' : '')+'><i class="fas fa-power-off"></i>\n' +
-                '</label>\n' +
-                '</div></div>\n' +
-                '<div class="col-6 mt-1 text-right">' +
-                '    <div class="btn-group-vertical mr-1">' +
-                '        <button data-toggle="tooltip" data-placement="left" title="Upload Avatar" onclick="$(\'#messenger_avatar_upload\').click()" class="btn btn-sm btn-outline-success"><i class="fas fa-cloud-upload-alt"></i></button>'+
-                '        <button data-toggle="tooltip" data-placement="left" title="Remove Avatar" onclick="ThreadManager.archive().Avatar()" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>' +
-                '    </div>'+
-                '    <div data-toggle="tooltip" title="Upload avatar" data-placement="right" onclick="$(\'#messenger_avatar_upload\').click()" class="pointer_area d-inline">\n' +
-                '         <img alt="Avatar" height="62" width="62" class="rounded avatar-is-'+(data.online_status === 1 ? "online" : data.online_status === 2 ? "away" : "offline")+'" src="'+TippinManager.common().slug+'"/>\n' +
-                '    </div>\n' +
-                '</div>' +
-                '</div><hr>'+
-                '<table class="table mb-0 table-sm table-hover"><tbody>\n' +
-                '<tr class="'+(data.message_popups ? 'bg-light' : '')+'">\n' +
-                '<td class="pointer_area" onclick="$(\'#message_popups\').click()"><div class="h4 mt-1"><i class="fas fa-caret-right"></i> <span class="h5">Message Popups</span></div></td>\n' +
-                '<td><div class="mt-1 float-right"><span class="switch switch-sm mt-1"><input class="switch switch_input m_setting_toggle" id="message_popups" name="message_popups" type="checkbox" '+(data.message_popups ? 'checked' : '')+'/><label for="message_popups"></label></span></div></td>\n' +
-                '</tr>\n' +
-                '<tr class="'+(data.message_sound ? 'bg-light' : '')+'">\n' +
-                '<td class="pointer_area" onclick="$(\'#message_sounds\').click()"><div class="h4 mt-1"><i class="fas fa-caret-right"></i> <span class="h5">Message Sounds</span></div></td>\n' +
-                '<td><div class="mt-1 float-right"><span class="switch switch-sm mt-1"><input class="switch switch_input m_setting_toggle" id="message_sounds" name="message_sounds" type="checkbox" '+(data.message_sound ? 'checked' : '')+'/><label for="message_sounds"></label></span></div></td>\n' +
-                '</tr>\n' +
-                '<tr class="'+(data.call_ringtone_sound ? 'bg-light' : '')+'">\n' +
-                '<td class="pointer_area" onclick="$(\'#call_ringtone_sound\').click()"><div class="h4 mt-1"><i class="fas fa-caret-right"></i> <span class="h5">Call Ringtone</span></div></td>\n' +
-                '<td><div class="mt-1 float-right"><span class="switch switch-sm mt-1"><input class="switch switch_input m_setting_toggle" id="call_ringtone_sound" name="call_ringtone_sound" type="checkbox" '+(data.call_ringtone_sound ? 'checked' : '')+'/><label for="call_ringtone_sound"></label></span></div></td>\n' +
-                '</tr>\n' +
-                '<tr class="'+(data.knoks ? 'bg-light' : '')+'">\n' +
-                '<td class="pointer_area" onclick="$(\'#allow_knoks\').click()"><div class="h4 mt-1"><i class="fas fa-caret-right"></i> <span class="h5">Receive Knocks</span></div></td>\n' +
-                '<td><div class="mt-1 float-right"><span class="switch switch-sm mt-1"><input class="switch switch_input m_setting_toggle" id="allow_knoks" name="allow_knoks" type="checkbox" '+(data.knoks ? 'checked' : '')+'/><label for="allow_knoks"></label></span></div></td>\n' +
-                '</tr>\n' +
-                '<tr class="'+(data.calls_outside_networks ? 'bg-light' : '')+'">\n' +
-                '<td class="pointer_area" onclick="$(\'#allow_all_calls\').click()"><div class="h4 mt-1"><i class="fas fa-caret-right"></i> <span class="h5">Receive calls from non-friends</span></div></td>\n' +
-                '<td><div class="mt-1 float-right"><span class="switch switch-sm mt-1"><input class="switch switch_input m_setting_toggle" id="allow_all_calls" name="allow_all_calls" type="checkbox" '+(data.calls_outside_networks ? 'checked' : '')+'/><label for="allow_all_calls"></label></span></div></td>\n' +
-                '</tr>\n' +
-                '</tbody></table>\n'
         },
         send_msg_btn : function(emoji){
             if(emoji){
@@ -106,14 +66,17 @@ window.ThreadTemplates = (function () {
             return '<div id="inline_send_msg_btn" class="float-right inline_send_msg_btn_2"><a title="Click to send or press enter" href="#" ' +
                 'onclick="'+(ThreadManager.state().type === 3 ? 'ThreadManager.newForms().newPrivate(0);' : 'ThreadManager.send();')+' return false;" class="text-success h3"><i class="fas fa-comment-dots"></i></a></div>'
         },
-        socket_error : function(margin){
-            if(margin){
-                return '<div class="my-2 alert alert-danger text-danger text-center"><span class="spinner-border spinner-border-sm"></span> Connection error, messages may be delayed</div>';
-            }
-            return '<div class="d-inline alert alert-danger shadow-sm mr-2 text-danger text-center pt-2"><span class="spinner-border spinner-border-sm"></span> Connection error</div>'
+        socket_error : function(){
+            return '<div class="my-2 alert alert-danger text-danger socket-error-main text-center"><span class="spinner-border spinner-border-sm"></span> Connection error, messages may be delayed</div>';
+        },
+        thread_socket_error : function(group){
+            return '<span class="thread_error_area NS">' +
+                '    <button data-trigger="focus" data-toggle="popover" title="Connection Error" data-content="You may be experiencing connection issues. Messenger may be delayed while we attempt to connect" data-placement="bottom" ' +
+                '     class="'+(group ? 'mr-1' : '')+' thread_error_btn glowing_warning_btn btn btn-lg btn-warning pt-1 pb-0 px-2"><i class="fas fa-exclamation-triangle fa-2x"></i></button>' +
+                '</span>'
         },
         seen_by : function(data){
-            return '<div id="seen-by_'+data.message_id+'" class="seen-by pb-1 w-100"></div>'
+            return '<div id="seen-by_'+data.message_id+'" class="seen-by pb-1 w-100 bobble-zone"></div>'
         },
         bobble_head : function(data, bottom){
             return '<div class="bobble-head-item d-inline bobble_head_'+data.owner_id+'"><img class="rounded-circle bobble-image '+(bottom && (!data.in_chat || [0,2].includes(data.online)) ? "bobble-image-away" : "")+'" src="'+data.avatar+'" ' +
@@ -166,14 +129,14 @@ window.ThreadTemplates = (function () {
                 return ' <span class="shadow-sm badge badge-pill badge-danger">Locked <i class="fas fa-lock"></i></span>'
             }
             if(data.unread && data.unread_count > 0){
-                return ' <span class="shadow-sm badge badge-pill badge-primary">'+data.unread_count+' <i class="fas fa-comment-dots"></i></span>'
+                return ' <span class="shadow-sm badge badge-pill badge-primary">'+(data.unread_count >= 40 ? '40+' : data.unread_count)+' <i class="fas fa-comment-dots"></i></span>'
             }
             return ''
         },
         thread_logs : function(data){
             let html = '<div class="col-12">';
             data.forEach(function (message) {
-                html += '<div class="text-right"><span class="badge badge-pill badge-light">'+(new Date(message.created_at).toDateString())+'</span></div>';
+                html += '<span class="badge badge-pill badge-light">'+moment(TippinManager.format().makeUtcLocal(message.created_at)).format('ddd, MMM Do YYYY, h:mm:ssa')+'</span>';
                 html += templates.system_message(message)
             });
             html += '</div>';
@@ -190,7 +153,6 @@ window.ThreadTemplates = (function () {
         },
         messenger_search : function(profile){
             let type = '<span class="badge badge-light"><i class="fas fa-restroom"></i> User</span>';
-            if(profile.alias === 'company') type = '<span class="badge badge-light"><i class="fas fa-building"></i> Company</span>';
             return '<li title="'+TippinManager.format().escapeHtml(profile.name)+'" class="thread_list_item">' +
                 '<a onclick="ThreadManager.load().createPrivate({slug : \''+profile.slug+'\', type : \''+profile.alias+'\'}); return false;" href="#">' +
                 '<div class="media"><div class="media-left media-middle"><img src="'+profile.avatar+'" class="media-object rounded-circle thread-list-avatar avatar-is-'+(profile.online === 1 ? "online" : profile.online === 2 ? "away" : "offline")+'" /></div>' +
@@ -199,23 +161,23 @@ window.ThreadTemplates = (function () {
                 templates.messenger_search_friend(profile) +
                 '</div></div></div></a></li>'
         },
-        private_thread : function(data, selected){
+        private_thread : function(data, selected, special){
             return '<li title="'+TippinManager.format().escapeHtml(data.name)+'" id="thread_list_'+data.thread_id+'" class="thread_list_item '+(selected ? "alert-warning shadow-sm rounded" : "")+' '+templates.thread_highlight(data)+'">' +
                 '<div class="thread-list-status">'+templates.thread_status(data)+'</div> '+
-                '<a onclick="ThreadManager.load().initiate_thread({thread_id : \''+data.thread_id+'\'}); return false;" href="/messenger/'+data.thread_id+'">' +
+                '<a '+(special ? '' : 'onclick="ThreadManager.load().initiate_thread({thread_id : \''+data.thread_id+'\'}); return false;"')+' href="/messenger/'+data.thread_id+'">' +
                 '<div class="media"><div class="media-left media-middle"><img src="'+data.avatar+'" class="media-object rounded-circle thread-list-avatar avatar-is-'+(data.online === 1 ? "online" : data.online === 2 ? "away" : "offline")+'" /></div>' +
-                '<div class="media-body thread_body_li"><div class="header d-inline"><small><div class="d-none d-sm-block float-right date"><time class="timeago" datetime="'+data.updated_at+'">'+TippinManager.format().makeTimeAgo(data.updated_at)+'</time></div></small>' +
-                '<div class="from">'+data.name+'</div></div><div class="description">' +
+                '<div class="media-body thread_body_li"><div class="header d-inline"><small><div class="float-right date"><time class="timeago" datetime="'+data.updated_at+'">'+TippinManager.format().makeTimeAgo(data.updated_at)+'</time></div></small>' +
+                '<div class="from font-weight-bold">'+data.name+'</div></div><div class="description">' +
                 templates.thread_body(data) +
                 '</div></div></div></a></li>'
         },
-        group_thread : function(data, selected){
+        group_thread : function(data, selected, special){
             return '<li title="'+TippinManager.format().escapeHtml(data.name)+'" id="thread_list_'+data.thread_id+'" class="thread_list_item '+(selected ? "alert-warning shadow-sm rounded" : "")+' '+templates.thread_highlight(data)+'">' +
                 '<div class="thread-list-status">'+templates.thread_status(data)+'</div> '+
-                '<a onclick="ThreadManager.load().initiate_thread({thread_id : \''+data.thread_id+'\'}); return false;" href="/messenger/'+data.thread_id+'">' +
+                '<a '+(special ? '' : 'onclick="ThreadManager.load().initiate_thread({thread_id : \''+data.thread_id+'\'}); return false;"')+' href="/messenger/'+data.thread_id+'">' +
                 '<div class="media"><div class="media-left media-middle"><img src="'+data.avatar+'/thumb" class="show_group_avatar_'+data.thread_id+' media-object rounded-circle thread-list-avatar thread-group-avatar '+(selected ? "avatar-is-online" : "avatar-is-offline")+'" /></div>' +
-                '<div class="media-body thread_body_li"><div class="header d-inline"><small><div class="d-none d-sm-block float-right date"><time class="timeago" datetime="'+data.updated_at+'">'+TippinManager.format().makeTimeAgo(data.updated_at)+'</time></div></small>' +
-                '<div class="from"><span class="font-weight-bold">'+data.name+'</span></div></div><div class="description">' +
+                '<div class="media-body thread_body_li"><div class="header d-inline"><small><div class="float-right date"><time class="timeago" datetime="'+data.updated_at+'">'+TippinManager.format().makeTimeAgo(data.updated_at)+'</time></div></small>' +
+                '<div class="from font-weight-bold">'+data.name+'</div></div><div class="description">' +
                 templates.thread_body(data) +
                 '</div></div></div></a></li>'
         },
@@ -260,7 +222,7 @@ window.ThreadTemplates = (function () {
                 '<h5> <i class="far fa-clock"></i>a few seconds ago</h5></div><hr><div class="message-text">' +
                 templates.message_body(data, true) +
                 '</div></div></div>' +
-                '<div id="pending_message_loading_'+data.message_id+'" class="float-right mr-1 pt-2 h6 text-primary NS"><span title="Sending..." class="spinner-border spinner-border-sm"></span></div>' +
+                '<div id="pending_message_loading_'+data.message_id+'" class="float-right pt-2 h6 text-primary NS"><span title="Sending..." class="spinner-border spinner-border-sm"></span></div>' +
                 '<div class="clearfix"></div></div>'
         },
         pending_message_grouped : function(data){
@@ -268,31 +230,31 @@ window.ThreadTemplates = (function () {
                 '<div class="message-text pt-2">' +
                 templates.message_body(data, true) +
                 '</div></div></div>' +
-                '<div id="pending_message_loading_'+data.message_id+'" class="float-right mr-1 pt-1 h6 text-primary NS"><span title="Sending..." class="spinner-border spinner-border-sm"></span></div>' +
+                '<div id="pending_message_loading_'+data.message_id+'" class="float-right pt-1 h6 text-primary NS"><span title="Sending..." class="spinner-border spinner-border-sm"></span></div>' +
                 '<div class="clearfix"></div></div>'
         },
         my_message : function(data){
             return '<div id="message_'+data.message_id+'" class="message my-message"><div class="message-body"><div class="message-body-inner"><div class="message-info">' +
-                '<h5> <i class="far fa-clock"></i><time title="'+TippinManager.format().makeUtcLocal(data.created_at)+'" class="timeago" datetime="'+data.created_at+'">'+TippinManager.format().makeTimeAgo(data.created_at)+'</time></h5></div><hr><div class="message-text">' +
+                '<h5> <i class="far fa-clock"></i><time title="'+moment(TippinManager.format().makeUtcLocal(data.created_at)).format('ddd, MMM Do YYYY, h:mm:ssa')+'" class="timeago" datetime="'+data.created_at+'">'+TippinManager.format().makeTimeAgo(data.created_at)+'</time></h5></div><hr><div class="message-text">' +
                 templates.message_body(data, false) +
                 '</div></div></div>'+templates.my_message_archive(data, false)+'<div class="clearfix"></div></div>'
         },
         my_message_grouped : function(data){
             return '<div id="message_'+data.message_id+'" class="message grouped-message my-message"><div class="message-body"><div class="message-body-inner">' +
-                '<div title="'+TippinManager.format().escapeHtml(data.name)+' on '+TippinManager.format().makeUtcLocal(data.created_at)+'" class="message-text pt-2">' +
+                '<div title="'+TippinManager.format().escapeHtml(data.name)+' on '+moment(TippinManager.format().makeUtcLocal(data.created_at)).format('ddd, MMM Do YYYY, h:mm:ssa')+'" class="message-text pt-2">' +
                 templates.message_body(data, false) +
                 '</div></div></div>'+templates.my_message_archive(data, true)+'<div class="clearfix"></div></div>'
         },
         message : function(data){
             return '<div id="message_'+data.message_id+'" class="message info"><a href="'+data.slug+'" target="_blank"><img title="'+TippinManager.format().escapeHtml(data.name)+'" class="rounded-circle message-avatar" src="'+data.avatar+'"></a>' +
                 '<div class="message-body"><div class="message-body-inner"><div class="message-info">' +
-                '<h4>'+data.name+'</h4><h5> <i class="far fa-clock"></i><time title="'+TippinManager.format().makeUtcLocal(data.created_at)+'" class="timeago" datetime="'+data.created_at+'">'+TippinManager.format().makeTimeAgo(data.created_at)+'</time></h5></div><hr><div class="message-text">' +
+                '<h4>'+data.name+'</h4><h5> <i class="far fa-clock"></i><time title="'+moment(TippinManager.format().makeUtcLocal(data.created_at)).format('ddd, MMM Do YYYY, h:mm:ssa')+'" class="timeago" datetime="'+data.created_at+'">'+TippinManager.format().makeTimeAgo(data.created_at)+'</time></h5></div><hr><div class="message-text">' +
                 templates.message_body(data, false) +
                 '</div></div></div>' +templates.message_archive(data, false)+ '<div class="clearfix"></div></div>'
         },
         message_grouped : function(data){
             return '<div id="message_'+data.message_id+'" class="message grouped-message info"><div class="message-body"><div class="message-body-inner">' +
-                '<div title="'+TippinManager.format().escapeHtml(data.name)+' on '+TippinManager.format().makeUtcLocal(data.created_at)+'" class="message-text pt-2">' +
+                '<div title="'+TippinManager.format().escapeHtml(data.name)+' on '+moment(TippinManager.format().makeUtcLocal(data.created_at)).format('ddd, MMM Do YYYY, h:mm:ssa')+'" class="message-text pt-2">' +
                 templates.message_body(data, false) +
                 '</div></div></div> '+templates.message_archive(data, true)+' <div class="clearfix"></div></div>'
         },
@@ -301,11 +263,11 @@ window.ThreadTemplates = (function () {
                 '<span class="text-primary spinner-border spinner-border-sm"></span></div>';
         },
         end_of_history : function(){
-            return '<div id="end_history_marker" class="alert-dark shadow-sm rounded mb-4 mt-n3 w-100 text-center"> ' +
+            return '<div id="end_history_marker" class="alert-dark shadow-sm rounded mb-4 mt-n3 w-100 text-center text-dark"> ' +
                 '<strong><i class="fas fa-comment-slash"></i> End of conversation</div>';
         },
         system_message : function (data) {
-            let icon = 'fas fa-info-circle';
+            let icon = 'fas fa-info-circle', extra = '';
             switch(data.message_type){
                 case 90:
                     icon = 'fas fa-video';
@@ -340,8 +302,8 @@ window.ThreadTemplates = (function () {
                 break;
             }
             return '<div id="message_'+data.message_id+'" class="system-message alert-warning rounded py-1 w-100 text-center" ' +
-                    'title="'+TippinManager.format().escapeHtml(data.name)+' on '+TippinManager.format().makeUtcLocal(data.created_at)+'"><i class="'+icon+'"></i> ' +
-                    '<strong>'+data.name+'</strong> '+TippinManager.format().escapeHtml(data.body)+'</div>';
+                    'title="'+TippinManager.format().escapeHtml(data.name)+' on '+moment(TippinManager.format().makeUtcLocal(data.created_at)).format('ddd, MMM Do YYYY, h:mm:ssa')+'"><i class="'+icon+'"></i> ' +
+                    '<strong>'+data.name+'</strong> '+TippinManager.format().escapeHtml(data.body)+extra+'</div>';
         },
         thread_call_state : function(data){
             if(data.options.lockout) return '';
@@ -369,13 +331,12 @@ window.ThreadTemplates = (function () {
             admin = '<a class="dropdown-item" onclick="ThreadManager.group().viewSettings(); return false;" id="threadOptionLink" href="#"><i class="fas fa-cog"></i> Group Settings</a>\n'+
                     '<a class="dropdown-item" onclick="ThreadManager.group().viewInviteGenerator(); return false;" id="threadOptionLink" href="#"><i class="fas fa-link"></i> Generate Invite Link</a>\n';
             return '<div id="thread_header_area"><div class="dropdown float-right">\n' +
-                    '<span id="thread_info_area">' +
+                    templates.thread_socket_error(true)+
                     '<span id="thread_option_call">'+templates.thread_call_state(data)+'</span>\n' +
                     (!data.options.lockout && data.options.admin ? knok : '')+
-                    '</span><span id="thread_error_area"></span>'+
                     '    <button class="btn btn-lg text-secondary btn-light dropdown-toggle pt-1 pb-0 px-2" type="button" data-toggle="dropdown"><i class="fas fa-cog fa-2x"></i></button>\n' +
                     '    <div class="dropdown-menu dropdown-menu-right">\n' +
-                    '        <div class="dropdown-header py-0 h6"><img id="group_avatar_'+data.thread_id+'" alt="Group Image" class="show_group_avatar_'+data.thread_id+' rounded-circle small_img" src="'+data.avatar+'/thumb"/>' +
+                    '        <div class="dropdown-header py-0 h6 text-dark"><img id="group_avatar_'+data.thread_id+'" alt="Group Image" class="show_group_avatar_'+data.thread_id+' rounded-circle small_img" src="'+data.avatar+'/thumb"/>' +
                     '           <span id="group_name_area">'+data.name+'</span></div>\n' +
                     '        <div class="dropdown-divider"></div>\n' +
                     '        <a onclick="ThreadManager.load().threadLogs(); return false;" class="dropdown-item" href="#"><i class="fas fa-database"></i> View Logs</a>\n' +
@@ -384,7 +345,7 @@ window.ThreadTemplates = (function () {
                     (!data.options.lockout && data.options.admin ? admin : '')+
                     '<div class="dropdown-divider"></div><a class="dropdown-item" onclick="ThreadManager.group().leaveGroup(); return false;" id="leaveGroupLink" href="#"><i class="fas fa-sign-out-alt"></i> Leave Group</a>'+
                     '</div>'+
-                '<button onclick="ThreadManager.load().closeOpened()" title="Close" class="btn btn-lg text-danger btn-light pt-1 pb-0 px-2 mr-1" type="button"><i class="fas fa-times fa-2x"></i></button>'+
+                    '<button onclick="ThreadManager.load().closeOpened()" title="Close" class="btn btn-lg text-danger btn-light pt-1 pb-0 px-2 mr-1" type="button"><i class="fas fa-times fa-2x"></i></button>'+
                 '</div>'+
                 '<img onclick="ThreadTemplates.render().show_thread_avatar(\''+data.avatar+'\')" data-toggle="tooltip" data-placement="right" title="'+TippinManager.format().escapeHtml(data.name)+'" class="ml-1 rounded-circle medium-image main-bobble-online pointer_area" src="'+data.avatar+'/thumb" />'+
                 '<div id="thread_error_area"></div></div>'
@@ -401,16 +362,14 @@ window.ThreadTemplates = (function () {
         },
         thread_private_header : function(data, party){
             return '<div id="thread_header_area"><div class="dropdown float-right">\n' +
-                '<span id="thread_info_area">' +
+                templates.thread_socket_error()+
                 '    <span id="thread_option_call">'+(!party.can_call && !data.call.status ? '' : templates.thread_call_state(data))+'</span>\n' +
                 (!data.options.lockout && party.knoks ?
                     '<button onclick="ThreadManager.calls().sendKnock()" id="knok_btn" data-toggle="tooltip" title="Knock at '+TippinManager.format().escapeHtml(data.name)+'" data-placement="bottom" class="btn btn-lg text-secondary btn-light pt-1 pb-0 px-2 mr-1" type="button"><i class="fas fa-hand-rock fa-2x"></i></button>'
                     : '')+
-                '</span><span id="thread_error_area"></span>'+
-
                 '<button class="btn btn-lg text-secondary btn-light dropdown-toggle pt-1 pb-0 px-2" type="button" data-toggle="dropdown"><i class="fas fa-cog fa-2x"></i></button>\n' +
                 '<div class="dropdown-menu dropdown-menu-right">\n' +
-                '    <div onclick="window.open(\''+party.route+'\')" class="pointer_area dropdown-header py-0 h6"><img alt="Profile Image" class="rounded-circle small_img" src="'+data.avatar+'"/> '+data.name+'</div>\n' +
+                '    <div onclick="window.open(\''+party.route+'\')" class="pointer_area dropdown-header py-0 h6 text-dark"><img alt="Profile Image" class="rounded-circle small_img" src="'+data.avatar+'"/> '+data.name+'</div>\n' +
                 '    <div class="dropdown-divider"></div>\n' +
                 '    <a onclick="ThreadManager.load().threadLogs(); return false;" class="dropdown-item" href="#"><i class="fas fa-database"></i> View Logs</a>\n' +
                 '    <div id="network_for_'+party.owner_id+'" class="profile_network_options">'+templates.thread_network_opt(party)+'</div>'+
@@ -420,12 +379,9 @@ window.ThreadTemplates = (function () {
         },
         thread_new_header : function(party){
             return '<div id="thread_header_area"><div class="dropdown float-right">\n' +
-                '<span id="thread_info_area">' +
-                '<span id="thread_option_call"></span>' +
-                '</span><span id="thread_error_area"></span>'+
                 '<button class="btn btn-lg text-secondary btn-light dropdown-toggle pt-1 pb-0 px-2" type="button" data-toggle="dropdown"><i class="fas fa-cog fa-2x"></i></button>\n' +
                 '<div class="dropdown-menu dropdown-menu-right">\n' +
-                '    <div onclick="window.open(\''+party.route+'\')" class="pointer_area dropdown-header py-0 h6"><img alt="Profile Image" class="rounded-circle small_img" src="'+party.avatar+'"/> '+party.name+'</div>\n' +
+                '    <div onclick="window.open(\''+party.route+'\')" class="pointer_area dropdown-header py-0 h6 text-dark"><img alt="Profile Image" class="rounded-circle small_img" src="'+party.avatar+'"/> '+party.name+'</div>\n' +
                 '    <div class="dropdown-divider"></div>\n' +
                 '    <div id="network_for_'+party.owner_id+'" class="profile_network_options">'+templates.thread_network_opt(party)+'</div>'+
                 '</div>'+
@@ -439,7 +395,7 @@ window.ThreadTemplates = (function () {
                 '</div>'
         },
         thread_empty_search : function(more, none){
-            let msg = 'Search above for other profiles in Tipz Messenger!';
+            let msg = 'Search above for other profiles on Tipz Messenger!';
             if(more) msg = none ? 'No matching profiles were found' : 'Use at least 3 characters in your query';
             return '<div class="col-12 text-center text-info font-weight-bold h4 mt-5">\n' +
                 '<i class="fas fa-search"></i> '+msg+
@@ -455,7 +411,7 @@ window.ThreadTemplates = (function () {
                     else{
                         status = 'is offline';
                     }
-                    break;
+                break;
                 case 1: status = 'is online'; break;
                 case 2: status = 'is away'; break;
             }
@@ -490,16 +446,20 @@ window.ThreadTemplates = (function () {
                 '        </div>\n' +
                 '    </div>\n' +
                 '    <hr>\n' +
-                '    <div class="mx-n2 form-group input-group-lg rounded bg-gradient-light text-dark pb-3 pt-2 px-3 shadow-sm">\n' +
-                '        <label class="font-weight-bold h5 control-label" for="g_s_group_subject">Group Name:</label>\n' +
-                '        <input maxlength="50" class="form-control font-weight-bold shadow-sm" id="g_s_group_subject" placeholder="Name the group conversation" name="subject" required value="'+settings.name+'">\n' +
-                '    </div>\n' +
+                '<div class="form-row mx-n2 rounded bg-light text-dark py-3 px-2 shadow-sm">\n' +
+                '    <div class="input-group input-group-lg col-12 mb-0">\n' +
+                '        <div class="input-group-prepend">\n' +
+                '            <div class="input-group-text"><i class="fas fa-edit"></i></div>\n' +
+                '         </div>\n' +
+                '         <input maxlength="50" class="form-control font-weight-bold shadow-sm" id="g_s_group_subject" placeholder="Group Name" name="subject" required value="'+settings.name+'">' +
+                '     </div>\n' +
+                '</div>'+
                 '    <hr>\n' +
-                '    <div class="form-row mx-n2 rounded bg-gradient-light text-dark pb-3 pt-2 px-3 shadow-sm">\n' +
+                '    <div class="form-row mx-n2 rounded bg-light text-dark pb-3 pt-2 px-3 shadow-sm">\n' +
                 '        <label class="font-weight-bold h5 control-label" for="g_s_table">Non-Admin Permissions:</label>\n' +
                 '        <table id="g_s_table" class="table mb-0 table-sm table-hover">\n' +
                 '            <tbody>\n' +
-                '            <tr class="'+(settings.add_participants ? 'alert-primary' : '')+'">\n' +
+                '            <tr class="'+(settings.add_participants ? 'alert-success' : '')+'">\n' +
                 '                <td class="pointer_area" onclick="$(\'#g_s_add_participants\').click()">\n' +
                 '                    <div class="h4 mt-1"><i class="fas fa-caret-right"></i> <span class="h5">Add Participants</span></div>\n' +
                 '                </td>\n' +
@@ -510,7 +470,7 @@ window.ThreadTemplates = (function () {
                 '                    </span></div>\n' +
                 '                </td>\n' +
                 '            </tr>\n' +
-                '            <tr class="'+(settings.start_calls ? 'alert-primary' : '')+'">\n' +
+                '            <tr class="'+(settings.start_calls ? 'alert-success' : '')+'">\n' +
                 '                <td class="pointer_area" onclick="$(\'#g_s_admin_call\').click()">\n' +
                 '                    <div class="h4 mt-1"><i class="fas fa-caret-right"></i> <span class="h5">Start calls</span></div>\n' +
                 '                </td>\n' +
@@ -521,7 +481,7 @@ window.ThreadTemplates = (function () {
                 '                    </span></div>\n' +
                 '                </td>\n' +
                 '            </tr>\n' +
-                '            <tr class="'+(settings.send_messages ? 'alert-primary' : '')+'">\n' +
+                '            <tr class="'+(settings.send_messages ? 'alert-success' : '')+'">\n' +
                 '                <td class="pointer_area" onclick="$(\'#g_s_send_message\').click()">\n' +
                 '                    <div class="h4 mt-1"><i class="fas fa-caret-right"></i> <span class="h5">Send messages</span></div>\n' +
                 '                </td>\n' +
@@ -550,7 +510,7 @@ window.ThreadTemplates = (function () {
                 '</div>\n' +
                 '<div class="row mt-2">\n' +
                 '    <div class="col-12 accordion_arrow text-dark" id="avatar_opts">\n' +
-                '        <div class="card bg-gradient-light mb-1">\n' +
+                '        <div class="card bg-light mb-1">\n' +
                 '            <div class="card-header h4 pointer_area collapsed" data-toggle="collapse" data-target="#opt1">\n' +
                 '                <i class="fas fa-ellipsis-v"></i> Choose a default group avatar\n' +
                 '            </div>\n' +
@@ -576,7 +536,7 @@ window.ThreadTemplates = (function () {
                 '                </div>\n' +
                 '            </div>\n' +
                 '        </div>\n' +
-                '        <div class="card bg-gradient-light mb-1">\n' +
+                '        <div class="card bg-light mb-1">\n' +
                 '            <div class="card-header h4 pointer_area collapsed" data-toggle="collapse" data-target="#opt2">\n' +
                 '                <i class="fas fa-ellipsis-v"></i> Upload your own group avatar\n' +
                 '            </div>\n' +
@@ -675,11 +635,120 @@ window.ThreadTemplates = (function () {
                 '    </div>\n' +
                 '</div>'
         },
+        friends_fill : function(friend){
+            return '<tr>\n' +
+                '<td class="pointer_area" onclick="$(this).parent().children().find(\'.switch_input\').click()">\n' +
+                '    <div class="nowrap">\n' +
+                '        <img class="rounded-circle group-image avatar-is-'+(friend.online === 1 ? "online" : friend.online === 2 ? "away" : "offline")+'" src="'+friend.avatar+'"/>\n' +
+                '        <span class="h5"><span class="badge badge-light">'+friend.name+'</span></span>\n' +
+                '    </div>\n' +
+                '</td>\n' +
+                '<td>\n' +
+                '    <div class="mt-1 float-right">\n' +
+                '        <span class="switch switch-sm mt-1">\n' +
+                '            <input onchange="ThreadManager.switchToggle()" class="switch switch_input" id="recipients['+friend.type+'_'+friend.owner_id+']" name="recipients[]" value="'+friend.type+'_'+friend.owner_id+'" type="checkbox" />\n' +
+                '            <label for="recipients['+friend.type+'_'+friend.owner_id+']" class=""></label>\n' +
+                '        </span>\n' +
+                '    </div>\n' +
+                '</td>\n' +
+                '</tr>'
+        },
+        new_group_friends : function(friends){
+            let top = '<div class="col-12">', bot = '</div>',
+                none = '<h4 class="text-center my-5"><span class="badge badge-pill badge-secondary"><i class="fas fa-user-friends"></i> No friends to add</span></h4>',
+                table_top = '<label class="font-weight-bold control-label h5 mb-3">Add friends to group:</label>' +
+                    '<div class="row">\n' +
+                    '    <div class="col-12">\n' +
+                    '        <div class="table-responsive-sm">\n' +
+                    '            <table id="add_group_participants" class="table table-sm table-hover">\n' +
+                    '                <thead>\n' +
+                    '                <tr>\n' +
+                    '                    <th>Name</th>\n' +
+                    '                    <th><span class="float-right">Add</span></th>\n' +
+                    '                </tr>\n' +
+                    '                </thead>\n' +
+                    '                <tbody>',
+                table_bot = '</tbody></table></div></div></div>',
+                table_fill = '';
+            if(!friends || !friends.length){
+                return top+none+bot;
+            }
+            friends.forEach((friend) => {
+                table_fill += templates.friends_fill(friend)
+            });
+            return top+table_top+table_fill+table_bot+bot
+        },
+        group_participants : function(participants, admin){
+            let table_top = '<div class="row">\n' +
+                '    <div class="col-12">\n' +
+                '        <div class="table-responsive-sm">\n' +
+                '            <table id="view_group_participants" class="table table-sm table-hover">\n' +
+                '                <thead>\n' +
+                '                <tr>\n' +
+                '                    <th>Name</th>\n' +
+                '                    <th>Action</th>\n' +
+                '                </tr>\n' +
+                '                </thead>\n' +
+                '                <tbody>',
+                table_bot = '</tbody></table></div></div></div>',
+                table_fill = '';
+            let participant_fill = (participant) => {
+                return '<tr id="row_'+participant.id+'">\n' +
+                    '     <td class="pointer_area" onclick="ThreadManager.load().createPrivate({slug : \''+participant.slug+'\', type : \''+participant.type+'\'})">\n' +
+                    '      <div class="participant_link table_links">\n' +
+                    '        <div class="nowrap">\n' +
+                    '          <img class="rounded-circle group-image avatar-is-'+(participant.online === 1 ? "online" : participant.online === 2 ? "away" : "offline")+'" src="'+participant.avatar+'" />\n' +
+                    '          <span class="h5"><span class="badge badge-light">'+participant.name+'</span></span>\n' +
+                    (participant.admin ? '<span class="badge badge-warning">Admin</span>' : '')+
+                    '         </div>\n' +
+                    '       </div>\n' +
+                    '  </td>'+
+                    '  <td>\n' +
+                    '  <div class="dropdown float-right">\n' +
+                    '    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fas fa-cog"></i></button>\n' +
+                    '    <div class="dropdown-menu dropdown-menu-right">\n' +
+                    (admin ?
+                        '<a class="dropdown-item" onclick="ThreadManager.group().removeParticipant(\''+participant.id+'\'); return false;" href="#" title="Remove"><i class="fas fa-trash-alt"></i> Remove</a>' +
+                        (participant.admin ?
+                            '<a class="dropdown-item" onclick="ThreadManager.group().adminParticipant({type : \'participant_admin_revoke\', id : \''+participant.id+'\'}); return false;" href="#" title="Revoke admin"><i class="fas fa-user-shield"></i> Revoke admin</a>'
+                            : '<a class="dropdown-item" onclick="ThreadManager.group().adminParticipant({type : \'participant_admin_grant\', id : \''+participant.id+'\'}); return false;" href="#" title="Make admin"><i class="fas fa-chess-queen"></i> Make admin</a>')
+                        : '')+
+                    ' <span id="network_for_'+participant.owner_id+'">\n' +
+                        templates.thread_network_opt(participant)+
+                    ' </span>\n' +
+                    ' </div></div></td>\n' +
+                    '</tr>'
+            };
+            if(participants && participants.length){
+                participants.forEach((participant) => {
+                    table_fill += participant_fill(participant)
+                })
+            }
+            return table_top+table_fill+table_bot
+        },
+        group_add_participants : function(friends){
+            let table_top = '<div class="row">\n' +
+                '    <div class="col-12">\n' +
+                '        <div class="table-responsive-sm">\n' +
+                '            <table id="add_group_participants" class="table table-sm table-hover">\n' +
+                '                <thead>\n' +
+                '                <tr>\n' +
+                '                    <th>Name</th>\n' +
+                '                    <th><span class="float-right">Add</span></th>\n' +
+                '                </tr>\n' +
+                '                </thead>\n' +
+                '                <tbody>',
+                table_bot = '</tbody></table></div></div></div>',
+                table_fill = '';
+            if(friends && friends.length){
+                friends.forEach((friend) => {
+                    table_fill += templates.friends_fill(friend)
+                })
+            }
+            return table_top+table_fill+table_bot
+        },
         new_group_base : function(){
             return '<div id="thread_header_area"><div class="dropdown float-right">\n' +
-                '<span id="thread_info_area">' +
-                '<span id="thread_option_call"></span>' +
-                '</span></span><span id="thread_error_area"></span>'+
                 '<button onclick="ThreadManager.load().closeOpened()" title="Close" class="btn btn-lg text-danger btn-light pt-1 pb-0 px-2 mr-1" type="button"><i class="fas fa-times fa-2x"></i></button>'+
                 '</div><div class="h3 font-weight-bold"><div class="d-inline-block mt-2 ml-2"><i class="fas fa-edit"></i> Create a group</div></div>'+
                 '</div>'+
@@ -713,9 +782,6 @@ window.ThreadTemplates = (function () {
         },
         search_base : function(){
             return '<div id="thread_header_area"><div class="dropdown float-right">\n' +
-                '<span id="thread_info_area">' +
-                '<span id="thread_option_call"></span>' +
-                '</span></span><span id="thread_error_area"></span>'+
                 '<button onclick="ThreadManager.load().closeOpened()" title="Close" class="btn btn-lg text-danger btn-light pt-1 pb-0 px-2 mr-1" type="button"><i class="fas fa-times fa-2x"></i></button>'+
                 '</div><div class="h3 font-weight-bold">' +
                 '<div class="form-inline ml-2">\n' +
@@ -736,17 +802,17 @@ window.ThreadTemplates = (function () {
         },
         loading_thread_base : function(){
             return '<div id="thread_header_area"><div class="dropdown float-right">\n' +
-                '<span id="thread_info_area">' +
-                '<span id="thread_option_call"></span>' +
-                '</span></span><span id="thread_error_area"></span>'+
                 '<button onclick="ThreadManager.load().closeOpened()" title="Close" class="btn btn-lg text-danger btn-light pt-1 pb-0 px-2 mr-1" type="button"><i class="fas fa-times fa-2x"></i></button>'+
-                '</div><div class="h3 font-weight-bold"><div class="d-inline-block mt-2 ml-2"><div class="spinner-border text-primary" role="status"></div></div></div>'+
+                '</div>' +
+                '<div class="h3 font-weight-bold"><div class="d-inline-block mt-2 ml-2"><div class="spinner-border text-primary" role="status"></div></div></div>'+
                 '</div>'+
                 '<div class="card messages-panel mt-1">\n' +
                 '    <div class="message-body" id="thread_new_group">\n' +
                 '        <div class="message-chat">\n' +
                 '            <div id="loading_thread" class="chat-body pb-0 mb-0">\n'+
-                '               <div id="loading_thread_content">'+templates.loader()+'</div>\n'+
+                '               <div id="loading_thread_content">'+
+                templates.loader()+
+                '</div>\n'+
                 '            </div>\n' +
                 '            <div class="chat-footer">\n' +
                 '                <div class="card bg-light mb-0 border-0">\n' +
@@ -766,11 +832,47 @@ window.ThreadTemplates = (function () {
                 '    </div>\n' +
                 '</div>'
         },
+        contacts : function(friends){
+            let top = '<div class="'+(TippinManager.common().mobile ? '' : 'px-3')+' mt-2">', bot = '</div>',
+                none = '<h4 class="text-center mt-4"><span class="badge badge-pill badge-secondary"><i class="fas fa-user-friends"></i> No friends to show</span></h4>',
+                table_top = '<div class="table-responsive-sm">\n' +
+                    '            <table id="contact_list_table" class="table table-sm table-hover table-striped">\n' +
+                    '                <thead class="bg-gradient-dark text-light">\n' +
+                    '                <tr>\n' +
+                    '                    <th>Name</th>\n' +
+                    '                    <th><span class="float-right">Added On</span></th>\n' +
+                    '                </tr>\n' +
+                    '                </thead>\n' +
+                    '                <tbody>',
+                table_bot = '</tbody></table></div>',
+                table_fill = '';
+            if(!friends || !friends.length){
+                return top+none+bot;
+            }
+            let friend_fill = (friend) => {
+                return '<tr onclick="ThreadManager.load().createPrivate({slug : \''+friend.slug+'\', type : \''+friend.type+'\'})" class="pointer_area">\n' +
+                    '<td>\n' +
+                    '    <div class="table_links">\n' +
+                    '        <div class="nowrap">\n' +
+                    '            <img class="rounded-circle group-image avatar-is-'+(friend.online === 1 ? "online" : friend.online === 2 ? "away" : "offline")+'" src="'+friend.avatar+'"/>\n' +
+                    '            <span class="h5"><span class="badge badge-light">'+friend.name+'</span></span>\n' +
+                    '         </div>\n' +
+                    '     </div>\n' +
+                    '</td>\n' +
+                    '<td>\n' +
+                    '    <div class="float-right nowrap">\n' +
+                    '        <span class="mt-2 shadow-sm badge badge-pill badge-secondary"><i class="far fa-calendar-alt"></i> '+(moment(TippinManager.format().makeUtcLocal(friend.created_at)).format('ddd, MMM Do YYYY'))+'</span>\n' +
+                    '    </div>\n' +
+                    '</td>\n' +
+                    '</tr>'
+            };
+            friends.forEach((friend) => {
+                table_fill += friend_fill(friend)
+            });
+            return top+table_top+table_fill+table_bot+bot
+        },
         contacts_base : function(){
             return '<div id="thread_header_area"><div class="dropdown float-right">\n' +
-                '<span id="thread_info_area">' +
-                '<span id="thread_option_call"></span>' +
-                '</span></span><span id="thread_error_area"></span>'+
                 '<button onclick="ThreadManager.load().closeOpened()" title="Close" class="btn btn-lg text-danger btn-light pt-1 pb-0 px-2 mr-1" type="button"><i class="fas fa-times fa-2x"></i></button>'+
                 '</div><div class="h3 font-weight-bold">' +
                 '<div class="d-inline-block mt-2 ml-2"><i class="far fa-address-book"></i> Contacts</div>' +
@@ -792,9 +894,9 @@ window.ThreadTemplates = (function () {
                 '            <div id="msg_thread_'+(creating ? '' : data.thread_id)+'" class="chat-body pb-0 mb-0">\n'+
                 '               <div id="messages_container_'+(creating ? '' : data.thread_id)+'">'+(creating ? templates.thread_new_fill(data) : templates.loader())+'</div>\n'+
                 '               <div id="pending_messages" class="w-100"></div>\n' +
-                '               <div id="seen-by_final" class="seen-by-final w-100"></div>\n' +
+                '               <div id="seen-by_final" class="seen-by-final w-100 bobble-zone"></div>\n' +
                 '               <div id="new_message_alert" class="pointer_area NS">' +
-                templates.thread_new_message_alert() +
+                                templates.thread_new_message_alert() +
                 '               </div>'+
                 '            </div>\n' +
                 '            <div class="chat-footer">\n' +

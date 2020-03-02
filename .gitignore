@@ -5,6 +5,7 @@
 /vendor
 .env
 .env.backup
+.editorconfig
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -12,8 +13,10 @@ npm-debug.log
 yarn-error.log
 /public/pma
 /public/js
+/storage
 /.idea
 /public/css/app.css
+/public/css/dark.css
 /public/css/messages.css
 /public/css/calls.css
 /public/mix-manifest.json
@@ -21,10 +24,10 @@ laravel-echo-server.json
 laravel-echo-server.lock
 _ide_helper.php
 /public/uploads/
-.editorconfig
-
+.phpstorm.meta.php
 #\.env\.example
 
+/storage/framework/views
 
 # OSX
 #

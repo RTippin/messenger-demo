@@ -42,9 +42,8 @@ window.NetworksManager = (function () {
                 TippinManager.button().addLoader({id : '#'+arg.action+'_network_'+arg.slug});
             }
             let construct = {
-                route : '/social/networks',
+                route : '/demo-api/friends/'+arg.action,
                 data : {
-                    action : arg.action,
                     slug : arg.slug,
                     type : arg.type
                 },
@@ -81,7 +80,7 @@ window.NetworksManager = (function () {
                 theme : (data.action === 'remove' || data.action === 'deny' ? 'error' : data.action === 'cancel' ? 'warning' : 'success')
             });
             PageListeners.listen().tooltips();
-            NotifyManager.heartbeat()
+            NotifyManager.friends()
         }
     };
     return {

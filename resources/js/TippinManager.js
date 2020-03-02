@@ -3,6 +3,7 @@ window.TippinManager = (function () {
         initialized : false,
         lockout : false,
         model : 'guest',
+        auth : false,
         id : null,
         name : null,
         slug : null,
@@ -10,6 +11,10 @@ window.TippinManager = (function () {
         logs : false,
         teapot : 0,
         modal_close : null,
+        css : {
+            base : null,
+            dark : null
+        },
         csrf_token : document.querySelector('meta[name=csrf-token]').content,
         modules : [],
         modal_queue : []
@@ -21,10 +26,13 @@ window.TippinManager = (function () {
             if("call" in arg) CallManager.init(arg.call);
             if("common" in arg){
                 opt.model = arg.common.model;
+                opt.auth = true;
                 opt.id = arg.common.id;
                 opt.name = arg.common.name;
                 opt.slug = arg.common.slug;
                 opt.mobile = arg.common.mobile;
+                if('base_css' in arg.common) opt.css.base = arg.common.base_css;
+                if('dark_css' in arg.common) opt.css.dark = arg.common.dark_css;
                 if('debug' in arg.common) opt.logs = true;
             }
             else{
@@ -44,10 +52,7 @@ window.TippinManager = (function () {
                     file : obj.src,
                     name : key,
                     options : obj,
-                    success : function(js){
-                        opt.modules.push(js.name);
-                        if(typeof window[js.name] !== 'undefined' && typeof window[js.name]['init'] !== 'undefined') window[js.name].init(js.options)
-                    }
+                    success : methods.initModule
                 })
             }
             for(let key in arg.modules){
@@ -57,13 +62,17 @@ window.TippinManager = (function () {
                     file : obj.src,
                     name : key,
                     options : obj,
-                    success : function(js){
-                        opt.modules.push(js.name);
-                        if(typeof window[js.name] !== 'undefined' && typeof window[js.name]['init'] !== 'undefined') window[js.name].init(js.options)
-                    }
+                    success : methods.initModule
                 })
             }
             PageListeners.listen().tooltips()
+        },
+        initModule : function(js){
+            try{
+                if(typeof window[js.name] !== 'undefined' && typeof window[js.name]['init'] !== 'undefined') window[js.name].init(js.options)
+            }catch (e) {
+                console.log(e)
+            }
         },
         LockSmith : function(){
             opt.teapot = 0;
@@ -112,6 +121,22 @@ window.TippinManager = (function () {
         },
         manage : function (data) {
             methods.checkCsrfToken(data.token);
+            if(opt.auth && !data.auth){
+                window.location.reload();
+                return;
+            }
+            if(opt.auth && data.auth){
+                if(data.model === opt.model){
+                    if("onPass" in data && typeof data.onPass === 'function'){
+                        data.onPass(data)
+                    }
+                    return;
+                }
+                window.location.reload()
+            }
+            if(!opt.auth && data.auth){
+                window.location.reload()
+            }
             if("onPass" in data && typeof data.onPass === 'function'){
                 data.onPass(data)
             }
@@ -150,11 +175,11 @@ window.TippinManager = (function () {
                 elm.setSelectionRange(elm.value.length, elm.value.length)
             }
         },
-        timeDiffInMinutes : function (date1, date2) {
-            if(!date1 || !date2) return 0;
+        timeDiffInUnit : function (date1, date2, unit) {
+            if(!date1 || !date2 || !unit) return 0;
             let d1 = moment(format.makeUtcLocal(date1)),
                 d2 = moment(format.makeUtcLocal(date2));
-            return d1.diff(d2, 'minutes')
+            return d1.diff(d2, unit)
         }
     },
     buttons = {
@@ -163,6 +188,17 @@ window.TippinManager = (function () {
             if(!button.length) return;
             $(arg.id).append(' <i class="fas fa-sync-alt bLoading"></i>');
             $(arg.id).prop("disabled", true);
+        },
+        spinAction : function(elm, disabled){
+            if(typeof elm === 'undefined' || elm === null) return;
+            if(disabled){
+                elm.prop('disabled', true);
+                elm.find('i').addClass('spin-me-round');
+            }
+            else{
+                elm.prop('disabled', false);
+                elm.find('i').removeClass('spin-me-round');
+            }
         },
         removeLoader : function(){
             $(".bLoading").remove();
@@ -239,7 +275,7 @@ window.TippinManager = (function () {
                 opt.modal_queue.push(arg);
                 return;
             }
-            $(".tooltip").remove();
+            PageListeners.listen().disposeTooltips();
             if(elm.modal.length || elm.modal_backdrop.length){
                 alerts.destroyModal()
             }
@@ -277,10 +313,10 @@ window.TippinManager = (function () {
             })
             .on('click', '.modal_callback', function() {
                 if(options.callback){
-                    if('cb_close' in options) $(".modal").modal("hide");
                     buttons.addLoader({id : $(this)});
+                    options.callback();
+                    if('cb_close' in options) $(".modal").modal("hide");
                     if('onClosed' in options) options.onClosed();
-                    options.callback()
                 }
             })
             .on('hidden.bs.modal', function () {
@@ -408,7 +444,7 @@ window.TippinManager = (function () {
             axios.post(arg.route,arg.data)
             .then(function (response) {
                 methods.LockSmith();
-                $('.tooltip').remove();
+                PageListeners.listen().disposeTooltips();
                 if('close_modal' in arg) alerts.destroyModal();
                 if('exports' in arg){
                     window[arg.exports.name][arg.exports.sub](Object.assign(response.data, arg.exports));
@@ -427,16 +463,15 @@ window.TippinManager = (function () {
                     console.trace();
                     console.log(error.response)
                 }
-                if(error && "response" in error){
-                    if(error.response.status === 418){
+                try{
+                    if(error && "response" in error && error.response.status === 418){
                         handle.fillTeapot('payload', arg);
                         return;
                     }
-                    if(error.response.status === 403){
-                        Heartbeat.gather(null, null)
-                    }
+                }catch (e) {
+                    console.log(e)
                 }
-                $('.tooltip').remove();
+                PageListeners.listen().disposeTooltips();
                 methods.LockSmith();
                 buttons.removeLoader();
                 if('close_modal' in arg) alerts.destroyModal();
@@ -452,7 +487,7 @@ window.TippinManager = (function () {
             if("lockout" in arg) opt.lockout = true;
             axios.get(arg.route)
             .then(function (response) {
-                $('.tooltip').remove();
+                PageListeners.listen().disposeTooltips();
                 if('close_modal' in arg) alerts.destroyModal();
                 methods.LockSmith();
                 if('exports' in arg){
@@ -472,11 +507,15 @@ window.TippinManager = (function () {
                     console.trace();
                     console.log(error.response)
                 }
-                if(error && "response" in error && error.response.status === 418){
-                    handle.fillTeapot('request', arg);
-                    return;
+                try{
+                    if(error && "response" in error && error.response.status === 418){
+                        handle.fillTeapot('request', arg);
+                        return;
+                    }
+                }catch (e) {
+                    console.log(e)
                 }
-                $('.tooltip').remove();
+                PageListeners.listen().disposeTooltips();
                 methods.LockSmith();
                 buttons.removeLoader();
                 if('close_modal' in arg) alerts.destroyModal();
@@ -494,6 +533,7 @@ window.TippinManager = (function () {
             axios.get(arg.file)
             .then(function(response) {
                 methods.addScripts(response);
+                opt.modules.push(arg.name);
                 if("success" in arg) arg.success(arg);
             })
             .catch(function(error) {
@@ -548,11 +588,7 @@ window.TippinManager = (function () {
             }
             if(arg.response.status === 401 || arg.response.status === 403){
                 errToast('Your request was denied. You may try again, or reload the page as your session may have changed', true);
-                if(arg.response.status === 401){
-                    setTimeout(function () {
-                        window.location.replace('/')
-                    }, 1500)
-                }
+                Heartbeat.gather(null, null);
                 return;
             }
             if(arg.response.status === 413){
@@ -585,6 +621,18 @@ window.TippinManager = (function () {
                 return;
             }
             errModal(arg.response.data.errors.forms);
+        },
+        switchCss : function (dark){
+            let og = document.getElementById('main_css'),
+                head  = document.getElementsByTagName('head')[0],
+                link  = document.createElement('link');
+            link.rel  = 'stylesheet';
+            link.href = (dark ? opt.css.dark : opt.css.base);
+            head.prepend(link);
+            link.onload = function () {
+                og.remove();
+                this.id = 'main_css'
+            }
         }
     },
     forms = {
@@ -593,7 +641,7 @@ window.TippinManager = (function () {
         },
         Logout : function(){
             if(opt.model === 'guest') return;
-            TippinManager.alert().Modal({
+            alerts.Modal({
                 size : 'sm',
                 icon : 'sign-out-alt',
                 pre_loader : true,

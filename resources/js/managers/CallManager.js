@@ -1,6 +1,8 @@
 window.CallManager = (function () {
     var opt = {
         initialized : false,
+        INIT_time : null,
+        API : '/demo-api/messenger/',
         processing : false,
         call : false,
         call_id : null,
@@ -33,28 +35,37 @@ window.CallManager = (function () {
             opt.call_admin = arg.call_admin;
             opt.thread_admin = arg.thread_admin;
             opt.created_at = arg.created_at;
-            if(!TippinManager.common().modules.includes('NotifyManager') || !NotifyManager.sockets().status){
-                setTimeout(function () {
-                    mounted.Initialize(arg)
-                }, 100);
-                return;
-            }
-            opt.initialized = true;
+            opt.INIT_time = moment.now();
+            Sockets.heartbeat(false);
             if(opt.call_type === 1){
                 window.addEventListener("beforeunload", methods.windowClosed, false);
                 window.addEventListener("keydown", methods.checkForRefresh, false);
             }
-            Sockets.heartbeat(false);
+            mounted.setConnections();
+            opt.initialized = true;
+        },
+        setConnections : function (delayed) {
+            if(!TippinManager.common().modules.includes('NotifyManager') || !NotifyManager.sockets().status){
+                if(TippinManager.format().timeDiffInUnit(moment.now(), opt.INIT_time, 'seconds') >= 8){
+                    delayed = true;
+                    Sockets.callStartupError()
+                }
+                setTimeout(function () {
+                    mounted.setConnections(true)
+                }, delayed ? 1000 : 0);
+                return;
+            }
             Sockets.setup();
-            if(opt.call_type === 1) Sockets.setupRTC()
+            Sockets.setupRTC();
         }
     },
     Sockets = {
         heartbeat : function(check){
+            if(opt.call_mode === 4) return;
             let beat = function(){
-                if(!NotifyManager.sockets().forced_disconnect){
+                if(TippinManager.common().modules.includes('NotifyManager') && !NotifyManager.sockets().forced_disconnect){
                     TippinManager.xhr().request({
-                        route : window.location.href+"/heartbeat",
+                        route : opt.API+opt.thread_id+'/call/'+opt.call_id+'/heartbeat',
                         success : function(){
                             opt.heartbeat_retries = 0
                         },
@@ -123,12 +134,23 @@ window.CallManager = (function () {
         },
         setupRTC : function(){
             if(!opt.channel_status || !TippinManager.common().modules.includes('WebRTCManager')){
-                setTimeout(function () {
-                    Sockets.setupRTC()
-                }, 0);
+                setTimeout(Sockets.setupRTC, 0);
                 return;
             }
             WebRTCManager.setup()
+        },
+        callStartupError : function(){
+            if(TippinManager.format().timeDiffInUnit(moment.now(), opt.INIT_time, 'seconds') >= 6) return;
+            TippinManager.alert().Alert({
+                toast : true,
+                close_toast : true,
+                title : "You may be experiencing connection issues, your video streams may become interrupted or not load until we establish a strong connection",
+                theme : "warning",
+                toast_options : {
+                    positionClass : "toast-top-left",
+                    timeOut : 15000
+                }
+            });
         },
         pushJoin : function (user) {
             if(!TippinManager.common().modules.includes('WebRTCManager')){
@@ -149,10 +171,12 @@ window.CallManager = (function () {
             WebRTCManager.peerLeave(user)
         },
         disconnected : function () {
+            opt.channel_status = false;
             if(TippinManager.common().modules.includes('WebRTCManager')) WebRTCManager.socket().onDisconnect()
         },
-        reconnected : function () {
-            if(TippinManager.common().modules.includes('WebRTCManager')) WebRTCManager.socket().onReconnect()
+        reconnected : function (full) {
+            opt.channel_status = true;
+            if(TippinManager.common().modules.includes('WebRTCManager')) WebRTCManager.socket().onReconnect(full)
         }
     },
     templates = {
@@ -243,7 +267,7 @@ window.CallManager = (function () {
                     theme: 'info',
                     onReady : function () {
                         TippinManager.xhr().payload({
-                            route : '/messenger/update/'+call.thread_id,
+                            route : opt.API+'save/'+call.thread_id,
                             data : {
                                 type : 'join_call'
                             },
@@ -264,12 +288,13 @@ window.CallManager = (function () {
         },
         leaveCall : function(parent, call){
             if(!parent){
+                opt.processing = true;
                 if(opt.heartbeat_interval) clearInterval(opt.heartbeat_interval);
                 if(opt.channel_status) opt.channel.unsubscribe();
                 if(opt.call_type === 1) window.removeEventListener("beforeunload", methods.windowClosed, false);
             }
             TippinManager.xhr().payload({
-                route : '/messenger/update/'+(parent ? call.thread_id : opt.thread_id),
+                route : opt.API+'save/'+(parent ? call.thread_id : opt.thread_id),
                 data : {
                     type : 'leave_call'
                 },
@@ -319,7 +344,7 @@ window.CallManager = (function () {
                     close : true,
                     toast : true,
                     theme : 'error',
-                    title : 'It appears your browser is blocking popups. Please allow popups from Tippindev to enable us to launch your video calls'
+                    title : 'It appears your browser is blocking popups. Please allow popups from Messenger to enable us to launch your video calls'
                 });
                 return;
             }
@@ -329,13 +354,13 @@ window.CallManager = (function () {
         endCall : function(){
             if(!opt.call_admin) return;
             if(opt.heartbeat_interval) clearInterval(opt.heartbeat_interval);
+            opt.initialized = false;
             TippinManager.xhr().payload({
-                route : '/messenger/update/'+opt.thread_id,
+                route : opt.API+'save/'+opt.thread_id,
                 data : {
                     type : 'end_call'
                 },
                 success : function(){
-                    opt.initialized = false;
                     if(opt.call_type === 1){
                         window.removeEventListener("beforeunload", methods.windowClosed, false);
                         window.close();
@@ -367,11 +392,10 @@ window.CallManager = (function () {
             }
         },
         popupNoCall : function(){
-            methods.callEnded(opt);
             TippinManager.alert().Alert({
                 toast : true,
                 theme : 'error',
-                title : 'It appears that call is not available or does not exist'
+                title : 'It appears that call/replay is not available or does not exist'
             })
         }
     };
@@ -386,6 +410,7 @@ window.CallManager = (function () {
         state : function () {
             return {
                 initialized : opt.initialized,
+                processing : opt.processing,
                 call : opt.call,
                 call_id : opt.call_id,
                 call_mode : opt.call_mode,

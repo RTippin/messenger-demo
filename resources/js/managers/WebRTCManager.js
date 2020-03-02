@@ -135,10 +135,26 @@ window.WebRTCManager = (function () {
             methods.peerLeaving(user)
         },
         disconnected : function(){
-            //coming later
+            if(!opt.initialized || CallManager.state().processing) return;
+            TippinManager.alert().Alert({
+                toast : true,
+                close_toast : true,
+                theme : 'warning',
+                title : 'You may be experiencing connection issues, your video streams may become interrupted'
+            });
         },
-        reconnected : function(){
-            //coming later
+        reconnected : function(full){
+            if(!opt.initialized) return;
+            TippinManager.alert().Alert({
+                toast : true,
+                close_toast : true,
+                theme : 'success',
+                title : 'Reconnected'
+            });
+            if(full || CallManager.channel().profiles.length > opt.local_storage.peers.length){
+                methods.closeOut();
+                setTimeout(Init.Setup, 3000)
+            }
         }
     },
     UserMedia = {

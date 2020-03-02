@@ -4,8 +4,12 @@
 }
 
 #message_sidebar_container{
-    min-width: 90px;
+    min-width: 300px;
     max-width: 450px;
+}
+
+#message_content_container{
+    width : 1%;
 }
 
 #messenger_container{
@@ -21,6 +25,26 @@
     bottom : 80px;
     width: calc(100% - 15px);
     z-index: 2;
+}
+
+.bobble-zone{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis !important;
+}
+
+.youtube_thumb_view span.yt_logo_place {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    background-repeat: no-repeat;
+    background-position : center center;
+    background-size: 25% 25%;
+    background-image: url('/images/yt_icon_rgb.png');
 }
 
 .drag_drop_overlay {
@@ -48,10 +72,10 @@
 }
 
 .msg-ctnr-unread{
-    background-color: #fefbdd;
+    background-color: #fefbdd !important;
 }
 
-.inbox {
+.inbox.main-inbox {
     height: calc(100vh - 56px);
 }
 
@@ -71,18 +95,23 @@
 .seen-by .bobble-image {
     width: 20px;
     height: 20px;
+    margin-left: 1px;
+    box-shadow: 0 0 2px 1px #999 !important;
     opacity: 0.5;
 }
 
 .seen-by-final .bobble-image {
     width: 22px;
     height: 22px;
+    margin-left: 1px;
+    box-shadow: 0 0 2px 1px #2ecc71 !important;
 }
 
 .seen-by-final .bobble-image.bobble-image-away {
     width: 20px;
     height: 20px;
     opacity: 0.5;
+    box-shadow: 0 0 2px 1px #999 !important;
 }
 
 .main-bobble-offline{
@@ -181,10 +210,6 @@
     //margin-right: 5px;
 }
 
-.my-messenger-avatar{
-
-}
-
 .thread-list-avatar{
     width: 45px;
     height: 45px;
@@ -199,15 +224,12 @@
 
 .messages-panel {
     width: 100%;
-    //min-height: 460px;
-    background-color: #fbfcff;
     display: inline-block;
 }
 
 .chat-body {
     width: 100%;
     height: calc(100vh - 215px); //214
-    background-color: #fbfcff;
     margin-bottom: 10px;
     padding: 30px 5px 5px 5px;
     overflow-y: auto;
@@ -237,6 +259,7 @@
     margin-bottom: 0;
     padding: 0;
 }
+
 
 .message {
     position: relative;
@@ -380,11 +403,11 @@
 }
 
 .seen-by-final {
-    margin-bottom: 5px !important;
+    padding-bottom: 4px !important;
 }
 
 .seen-by {
-    margin-bottom: 10px !important;
+    margin-bottom: 15px !important;
 }
 
 .seen-by:hover {
@@ -397,8 +420,12 @@
     color: #263238;
 }
 
-.message.info .message-body a {
-    color: #263238;
+.message .message-body a {
+    color: #121212;
+}
+
+.message .message-body a:hover {
+    color: #707075;
 }
 
 .message.info:after, .message.info:before {
@@ -490,6 +517,11 @@
     padding-top: 1em;
 }
 
+.emojionearea .emojionearea-button{
+    border-radius: 50%;
+    background-color : #fff !important;
+}
+
 #emojionearea{
     height: 34px;
 }
@@ -536,7 +568,7 @@
 
 @media(max-width : 767px){
     #message_sidebar_container{
-        min-width: 90px;
+        min-width: 150px;
         max-width: 100%;
     }
     #messenger_container{
@@ -554,7 +586,10 @@
     //.chat-body {
     //    height: calc(100vh - 215px);
     //}
+    //
+    //.chat-body.chat-special {
+    //    height: calc(100vh - 134px);
+    //    margin-bottom: 0;
+    //    padding: 0;
+    //}
 }
-
-
-

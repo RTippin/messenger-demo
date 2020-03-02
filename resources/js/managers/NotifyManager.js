@@ -21,11 +21,11 @@ window.NotifyManager = (function () {
             thread_count_area : $("#nav_thread_count"),
             pending_friends_count_area : $("#nav_friends_count"),
             mobile_nav_count_area : $("#nav_mobile_total_count"),
-            notify_area : $("#notification_container"),
             active_call_link : $("#active_calls_nav"),
             pending_friends_link : $("#pending_friends_nav"),
             active_calls_ctnr : $("#active_calls_ctnr"),
-            pending_friends_ctnr : $("#pending_friends_ctnr")
+            pending_friends_ctnr : $("#pending_friends_ctnr"),
+            click_friends_tab : $("#click_friends_tab")
         },
         settings : {
             notifications : true,
@@ -35,13 +35,17 @@ window.NotifyManager = (function () {
             message_sound : true,
             call_ringtone_sound : true,
             sound_playing : false,
-            is_away : false
+            is_away : false,
+            global_away : false,
+            away : function () {
+                return this.is_away && this.global_away;
+            }
         },
         storage : {
             unread_thread : 0,
             pending_friends_count : 0,
-            active_calls : null,
-            pending_friends : null,
+            active_calls : [],
+            pending_friends : [],
             original_title : null,
             current_title : null,
             heartbeat_interval : null,
@@ -51,12 +55,15 @@ window.NotifyManager = (function () {
             Echo : null,
             private_channel : null,
             socket_status : false,
-            forced_disconnect : false
+            forced_disconnect : false,
+            private_channel_retries : 0,
+            presence_channel_retries : 0,
         }
     },
     Initialize = {
         Init : function(arg){
             opt.settings.message_popups = arg.message_popups;
+            opt.settings.notify_sound = arg.notify_sound;
             opt.settings.message_sound = arg.message_sound;
             opt.settings.call_ringtone_sound = arg.call_ringtone_sound;
             NetworksManager.init();
@@ -68,6 +75,7 @@ window.NotifyManager = (function () {
             $('.notify-drop').click(function(e){
                 e.stopPropagation();
             });
+            opt.elements.click_friends_tab.click(methods.pullFriendRequest);
             opt.sounds.message_sound_file.volume = 0.2;
             InactivityManager.setup({
                 type : 1,
@@ -88,14 +96,7 @@ window.NotifyManager = (function () {
                             methods.manageHeartbeatData(data);
                             opt.settings.is_away = false;
                             broadcaster.heartBeat(true, false, false);
-                            broadcaster.Echo((TippinManager.common().modules.includes('ThreadManager') ?
-                                {
-                                    onConnect : function(){
-                                        ThreadManager.state().reConnected(true)
-                                    }
-                                }
-                                : false
-                            ))
+                            broadcaster.Echo(true);
                         }
                     });
                 }
@@ -103,12 +104,10 @@ window.NotifyManager = (function () {
             InactivityManager.setup({
                 type : 2,
                 inactive : function(){
-                    if(TippinManager.common().modules.includes('ThreadManager')) ThreadManager.state().online(2);
                     opt.settings.is_away = true;
                     if(!opt.socket.forced_disconnect) broadcaster.heartBeat(false, true, false)
                 },
                 activate : function(){
-                    if(TippinManager.common().modules.includes('ThreadManager')) ThreadManager.state().online(1);
                     opt.settings.is_away = false;
                     if(!opt.socket.forced_disconnect) broadcaster.heartBeat(false, true, false)
                 }
@@ -116,7 +115,7 @@ window.NotifyManager = (function () {
         }
     },
     broadcaster = {
-        Echo : function(onConnect){
+        Echo : function(reconnected){
             opt.socket.forced_disconnect = false;
             opt.socket.Echo = new Echo({
                 broadcaster: 'socket.io',
@@ -124,39 +123,64 @@ window.NotifyManager = (function () {
             });
             opt.socket.Echo.connector.socket.on('connect', function(){
                 opt.socket.socket_status = true;
-                broadcaster.Broadcast(TippinManager.common().id);
-                if(onConnect) onConnect.onConnect()
+                broadcaster.PrivateChannel(TippinManager.common().id);
+                if(reconnected) broadcaster.reconnected(true)
             });
-            opt.socket.Echo.connector.socket.on('reconnect', function(){
-                broadcaster.heartBeat(false, true, true);
-                if(TippinManager.common().modules.includes('ThreadManager')) ThreadManager.state().reConnected();
-                if(CallManager.state().initialized) CallManager.channel().reconnected()
-            });
+            opt.socket.Echo.connector.socket.on('reconnect', broadcaster.reconnected);
             opt.socket.Echo.connector.socket.on('disconnect', function(){
                 opt.socket.socket_status = false;
                 if(TippinManager.common().modules.includes('ThreadManager')) ThreadManager.state().socketStatusCheck();
                 if(CallManager.state().initialized) CallManager.channel().disconnected()
-            })
+            });
+            opt.socket.Echo.connector.socket.on('subscription_error', broadcaster.subscriptionError)
+        },
+        reconnected : function(full){
+            if(typeof full === "boolean" && !full) broadcaster.heartBeat(false, true, true);
+            if(TippinManager.common().modules.includes('ThreadManager')) ThreadManager.state().reConnected(typeof full === "boolean" && full);
+            if(CallManager.state().initialized) CallManager.channel().reconnected(typeof full === "boolean" && full)
+        },
+        subscriptionError : function(e){
+            let private_channel = /private-/i, presence_channel = /presence-/i;
+            if(private_channel.test(e)){
+                broadcaster.Disconnect();
+                if(opt.socket.private_channel_retries === 2) return;
+                opt.socket.private_channel_retries++;
+                TippinManager.heartbeat().gather(function(){
+                    broadcaster.Echo(true)
+                }, null)
+            }
+            if(presence_channel.test(e)){
+                broadcaster.Disconnect();
+                if(opt.socket.presence_channel_retries === 2){
+                    opt.socket.private_channel_retries = 0;
+                    broadcaster.Echo(false);
+                    return;
+                }
+                opt.socket.presence_channel_retries++;
+                TippinManager.heartbeat().gather(function(){
+                    broadcaster.Echo(true)
+                }, null)
+            }
         },
         Disconnect : function(){
             if(opt.socket.Echo !== null) opt.socket.Echo.disconnect();
             opt.socket.forced_disconnect = true;
             opt.socket.socket_status = false;
         },
-        Broadcast : function(id){
+        PrivateChannel : function(id){
             if(!opt.socket.Echo) return;
             if(typeof opt.socket.Echo.connector.channels['private-'+TippinManager.common().model+'_notify_'+id] !== 'undefined'){
                 opt.socket.private_channel = opt.socket.Echo.connector.channels['private-'+TippinManager.common().model+'_notify_'+id];
                 return;
             }
             opt.socket.private_channel = opt.socket.Echo.private(TippinManager.common().model+'_notify_'+id);
-            opt.socket.private_channel.listen('.message_received', methods.incomingMessage)
-            .listen('.add_group', methods.addedToGroup)
+            opt.socket.private_channel.listen('.new_message', methods.incomingMessage)
+            .listen('.thread_joined', methods.addedToGroup)
             .listen('.message_purged', methods.messagePurged)
-            .listen('.new_call', methods.incomingCall)
+            .listen('.call_started', methods.incomingCall)
             .listen('.call_ended', methods.callEnded)
-            .listen('.kicked', methods.incomingKicked)
-            .listen('.knok', methods.incomingKnok)
+            .listen('.thread_kicked', methods.incomingKicked)
+            .listen('.knock_knock', methods.incomingKnok)
             .listen('.friend_add', methods.friendAdd)
             .listen('.friend_accept', methods.friendAccept)
             .listen('.friend_denied', methods.friendDenied)
@@ -226,12 +250,17 @@ window.NotifyManager = (function () {
         },
         incomingMessage : function(data){
             if(!opt.settings.notifications) return;
-            methods.togglePageTitle(data.name+' says...');
+            let runTitle = function(){
+                methods.togglePageTitle(data.name+' says...');
+            },
+            myself = TippinManager.common().id === data.owner_id;
             if(TippinManager.common().modules.includes('ThreadManager')){
                 ThreadManager.Import().newMessage(data);
+                if(!myself) runTitle();
                 return;
             }
-            if(CallManager.state().initialized) return;
+            if(CallManager.state().initialized || myself) return;
+            runTitle();
             broadcaster.heartBeat(false, true, true);
             methods.playAlertSound('message');
             if(![0,1,2].includes(data.message_type) || !opt.settings.message_popups) return;
@@ -261,14 +290,7 @@ window.NotifyManager = (function () {
             })
         },
         incomingKnok : function(data){
-            if(!opt.settings.notifications) return;
-            if(CallManager.state().initialized){
-                if(CallManager.state().thread_id === data.thread_id){
-                    methods.playAlertSound('knok');
-                    methods.togglePageTitle(data.name+' is knocking...');
-                }
-                return;
-            }
+            if(!opt.settings.notifications || CallManager.state().initialized) return;
             if(TippinManager.common().modules.includes('ThreadManager') && ThreadManager.state().thread_id === data.thread_id){
                 methods.playAlertSound('knok');
                 methods.togglePageTitle(data.name+' is knocking...');
@@ -342,18 +364,14 @@ window.NotifyManager = (function () {
             methods.updatePageStates()
         },
         manageHeartbeatData : function(data){
-            if(data.auth && data.model === TippinManager.common().model){
-                TippinManager.token(data.token);
-                if("states" in data){
-                    opt.storage.unread_thread = data.states.unread_threads_count;
-                    opt.storage.active_calls = (data.states.active_calls && data.states.active_calls.length ? data.states.active_calls : null);
-                    opt.storage.pending_friends_count = (data.states.pending_friends && data.states.pending_friends.length ? data.states.pending_friends.length : 0);
-                    opt.storage.pending_friends = (data.states.pending_friends && data.states.pending_friends.length ? data.states.pending_friends : null);
-                }
-                methods.updatePageStates();
-                return;
+            if("states" in data){
+                opt.settings.global_away = data.states.away;
+                opt.storage.unread_thread = data.states.unread_threads_count;
+                opt.storage.active_calls = data.states.active_calls;
+                opt.storage.pending_friends_count = data.states.pending_friends_count;
+                if(TippinManager.common().modules.includes('ThreadManager')) ThreadManager.state().online(data.states.away ? 2 : 1);
             }
-            window.location.reload()
+            methods.updatePageStates();
         },
         updatePageStates : function(){
             if(!CallManager.state().initialized){
@@ -366,11 +384,10 @@ window.NotifyManager = (function () {
             }
             methods.updateTitle();
             methods.updateActiveCalls();
-            methods.updatePendingFriends();
             opt.storage.unread_thread > 0 ? opt.elements.thread_count_area.html(opt.storage.unread_thread) : opt.elements.thread_count_area.html('');
             opt.storage.pending_friends_count > 0 ? opt.elements.pending_friends_count_area.html(opt.storage.pending_friends_count) : opt.elements.pending_friends_count_area.html('');
-            if(opt.storage.unread_thread > 0 || opt.storage.pending_friends_count > 0){
-                opt.elements.mobile_nav_count_area.html(opt.storage.unread_thread+opt.storage.pending_friends_count);
+            if(opt.storage.unread_thread > 0 || opt.storage.pending_friends_count > 0 || opt.storage.active_calls.length){
+                opt.elements.mobile_nav_count_area.html(opt.storage.unread_thread+opt.storage.pending_friends_count+opt.storage.active_calls.length);
                 return;
             }
             opt.elements.mobile_nav_count_area.html('')
@@ -386,12 +403,16 @@ window.NotifyManager = (function () {
                 opt.elements.active_calls_ctnr.append(templates.active_call(call))
             });
         },
-        updatePendingFriends : function(){
-            if(CallManager.state().initialized) return;
-            if(!opt.storage.pending_friends || !opt.storage.pending_friends.length){
-                opt.elements.pending_friends_ctnr.html('<div class="col-12 text-center h5 mt-2"><span class="badge badge-pill badge-secondary"><i class="fas fa-user-friends"></i> No Friend Request</span></div>');
+        updatePendingFriends : function(data){
+            if(!data.pending_friends || !data.pending_friends.length){
+                opt.storage.pending_friends_count = 0;
+                opt.elements.pending_friends_ctnr.html('<div class="col-12 text-center h5 mt-2"><span class="badge badge-pill badge-light shadow-sm"><i class="fas fa-user-friends"></i> No Friend Request</span></div>');
+                methods.updatePageStates();
                 return;
             }
+            opt.storage.pending_friends = data.pending_friends;
+            opt.storage.pending_friends_count = opt.storage.pending_friends.length;
+            methods.updatePageStates();
             opt.elements.pending_friends_ctnr.html('');
             opt.storage.pending_friends.forEach(function(friend){
                 opt.elements.pending_friends_ctnr.append(templates.pending_friend(friend))
@@ -399,7 +420,7 @@ window.NotifyManager = (function () {
         },
         updateTitle : function(){
             let total = opt.storage.unread_thread+opt.storage.pending_friends_count;
-            if(opt.storage.active_calls && opt.storage.active_calls.length && !CallManager.state().initialized) total = total+opt.storage.active_calls.length;
+            if(opt.storage.active_calls.length && !CallManager.state().initialized) total = total+opt.storage.active_calls.length;
             if(total > 0){
                 let the_title = '('+total+') '+opt.storage.original_title;
                 opt.storage.current_title = the_title;
@@ -429,9 +450,19 @@ window.NotifyManager = (function () {
             opt.storage.toggle_title_interval = null;
             methods.updateTitle()
         },
+        pullFriendRequest : function(fill, data){
+            if(fill && data) return methods.updatePendingFriends(data);
+            if(fill && data === null) return methods.updatePendingFriends({pending_friends : null});
+            TippinManager.xhr().request({
+                route : '/demo-api/friends/pending',
+                success : methods.updatePendingFriends,
+                fail_alert : true
+            })
+        },
         settingsToggle : function(arg){
             if("message_popups" in arg) opt.settings.message_popups = arg.message_popups;
             if("message_sound" in arg) opt.settings.message_sound = arg.message_sound;
+            if("notify_sound" in arg) opt.settings.notify_sound = arg.notify_sound;
             if("call_ringtone_sound" in arg) opt.settings.call_ringtone_sound = arg.call_ringtone_sound;
             if("notifications" in arg) opt.settings.notifications = arg.notifications;
         },
@@ -446,7 +477,7 @@ window.NotifyManager = (function () {
                     opt.sounds.message_sound_file.play().then(soundOff).catch(soundOff);
                 break;
                 case 'notify':
-                    if(opt.settings.sound_playing) return;
+                    if(!opt.settings.notify_sound || opt.settings.sound_playing) return;
                     opt.settings.sound_playing = true;
                     opt.sounds.notify_sound_file.play().then(soundOff).catch(soundOff);
                 break;
@@ -515,17 +546,17 @@ window.NotifyManager = (function () {
         pending_friend : function (friend) {
             return '<a onclick="return false;" href="#" class="list-group-item list-group-item-action p-2 text-dark bg-light">\n' +
                 '    <div class="media">\n' +
-                '        <div class="media-left media-top" onclick="window.location.href=\'/profile/'+friend.type+'/'+friend.slug+'\'">\n' +
+                '        <div class="media-left media-top" onclick="window.location.href=\''+friend.route+'\'">\n' +
                 '            <img class="rounded media-object" height="50" width="50" src="'+friend.avatar+'">\n' +
                 '        </div>\n' +
                 '        <div class="media-body">\n' +
                 '        <span class="mt-n1 float-right small">'+TippinManager.format().makeTimeAgo(friend.created_at)+' <i class="far fa-clock"></i></span>'+
-                '            <h6 onclick="window.location.href=\'/profile/'+friend.type+'/'+friend.slug+'\'" class="ml-2 mb-1 font-weight-bold">'+friend.name+'</h6>\n' +
+                '            <h6 onclick="window.location.href=\''+friend.route+'\'" class="ml-2 mb-1 font-weight-bold">'+friend.name+'</h6>\n' +
                 '            <div id="friend_actions_'+friend.id+'" class="mt-2 col-12 px-0">' +
                 '               <span class="float-right">' +
                 '                   <button title="Accept friend request" onclick="NotifyManager.pendingFriends(\''+friend.id+'\', \'accept\')" class="btn btn-sm btn-success pt-1 pb-0 px-1"><i class="h5 far fa-check-circle"></i></button>' +
                 '                   <button title="Deny friend request" onclick="NotifyManager.pendingFriends(\''+friend.id+'\', \'deny\')" class="btn btn-sm btn-danger mx-1 pt-1 pb-0 px-1"><i class="h5 fas fa-ban"></i></button>' +
-                '                   <button title="Message" onclick="ThreadManager.load().createPrivate({slug : \''+friend.slug+'\', type : \''+friend.type+'\'})" class="btn btn-sm btn-primary pt-1 pb-0 px-1"><i class="h5 fas fa-comments"></i></button>'+
+                '                   <button title="Message" onclick="window.location.href=\''+friend.route+'/message\'" class="btn btn-sm btn-primary pt-1 pb-0 px-1"><i class="h5 fas fa-comments"></i></button>'+
                 '               </span>' +
                 '            </div>\n' +
                 '        </div>\n' +
@@ -541,6 +572,7 @@ window.NotifyManager = (function () {
         settings : methods.settingsToggle,
         calls : methods.callAction,
         pendingFriends : methods.pendingFriendAction,
+        friends : methods.pullFriendRequest,
         heartbeat : function(){
             broadcaster.heartBeat(false, true, true);
         },
@@ -554,7 +586,7 @@ window.NotifyManager = (function () {
                 forced_disconnect : opt.socket.forced_disconnect,
                 status : opt.socket.socket_status,
                 Echo : opt.socket.Echo,
-                away : opt.settings.is_away,
+                away : opt.settings.away(),
                 disconnect : broadcaster.Disconnect
             }
         }

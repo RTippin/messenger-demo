@@ -33,7 +33,7 @@ window.InactivityManager = (function () {
                 case 2:
                     presence_chat = setTimeout(function(){
                         methods.runInactive(arg)
-                    }, (CallManager.state().initialized ? 1800000 : 600000)); //10 minutes (600000) - 30 minutes if in call (1800000)
+                    }, (CallManager.state().initialized ? 1800000 : 360000)); //6 minutes (360000) - 30 minutes if in call (1800000)
                 break;
             }
         },
