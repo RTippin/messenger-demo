@@ -2,28 +2,29 @@
 
 namespace App\Events;
 
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class SendKnok implements ShouldBroadcastNow
+class MockRead implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels, InteractsWithQueue;
 
-    public $tries = 1;
-    protected $data, $channels;
+    public $tries = 3;
+    protected $message, $model;
 
     /**
      * MessageSent constructor.
-     * @param $data
-     * @param $channels
+     * @param $model
+     * @param $message
      */
-    public function __construct($data, $channels)
+    public function __construct($model, $message)
     {
-        $this->data = $data;
-        $this->channels = $channels;
+        $this->model = $model;
+        $this->message = $message;
     }
 
     /**
@@ -33,16 +34,19 @@ class SendKnok implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return $this->channels;
+        return new PresenceChannel('thread_'.$this->message->thread_id);
     }
 
     public function broadcastAs()
     {
-        return 'knok';
+        return 'client-read';
     }
 
     public function broadcastWith()
     {
-        return $this->data;
+        return [
+            'owner_id' => $this->model->id,
+            'message_id' => $this->message->id
+        ];
     }
 }

@@ -8,11 +8,11 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class KickedFromGroup implements ShouldBroadcastNow
+class KnockKnock implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels, InteractsWithQueue;
 
-    public $tries = 3;
+    public $tries = 1;
     protected $data, $channels;
 
     /**
@@ -38,7 +38,7 @@ class KickedFromGroup implements ShouldBroadcastNow
 
     public function broadcastAs()
     {
-        return 'kicked';
+        return 'knock_knock';
     }
 
     public function broadcastWith()

@@ -2,28 +2,29 @@
 
 namespace App\Events;
 
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class MessageSent implements ShouldBroadcastNow
+class MockTyping implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels, InteractsWithQueue;
 
     public $tries = 3;
-    protected $data, $channels;
+    protected $thread, $model;
 
     /**
      * MessageSent constructor.
-     * @param $data
-     * @param $channels
+     * @param $model
+     * @param $thread
      */
-    public function __construct($data, $channels)
+    public function __construct($model, $thread)
     {
-        $this->data = $data;
-        $this->channels = $channels;
+        $this->model = $model;
+        $this->thread = $thread;
     }
 
     /**
@@ -33,16 +34,20 @@ class MessageSent implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return $this->channels;
+        return new PresenceChannel('thread_'.$this->thread->id);
     }
 
     public function broadcastAs()
     {
-        return 'message_received';
+        return 'client-typing';
     }
 
     public function broadcastWith()
     {
-        return $this->data;
+        return [
+            'owner_id' => $this->model->id,
+            'name' => $this->model->name,
+            'typing' => true
+        ];
     }
 }

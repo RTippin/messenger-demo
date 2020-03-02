@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class AddedToGroup implements ShouldBroadcastNow
+class NewMessage implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels, InteractsWithQueue;
 
@@ -38,7 +38,7 @@ class AddedToGroup implements ShouldBroadcastNow
 
     public function broadcastAs()
     {
-        return 'add_group';
+        return 'new_message';
     }
 
     public function broadcastWith()
