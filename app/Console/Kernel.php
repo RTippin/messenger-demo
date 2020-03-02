@@ -38,10 +38,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('messenger:purge --threads')
             ->twiceDaily(2, 14)
             ->timezone('America/New_York');
-
-        $schedule->command('telescope:prune')
-            ->dailyAt('4:00')
-            ->timezone('America/New_York');
     }
 
     /**
