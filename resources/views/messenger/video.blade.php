@@ -15,7 +15,7 @@
         <div class="mine_video_call NS" id="my_video_ctrn"></div>
     </div>
     <div id="hang_up" class="fixed-bottom">
-        <nav id="FS_navbar" class="navbar fixed-bottom navbar-expand navbar-dark bg-dark">
+        <nav id="RT_navbar" class="navbar fixed-bottom navbar-expand navbar-dark bg-dark">
             <div class="navbar-collapse collapse justify-content-start">
                 <ul id="video_main_nav" class="navbar-nav">
                     @if($call_admin && $thread->ttype === 2)

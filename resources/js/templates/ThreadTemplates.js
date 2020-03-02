@@ -15,7 +15,7 @@ window.ThreadTemplates = (function () {
             return body.replace(regExp, html);
         },
         switch_mobile_view : function (power) {
-            let nav = $("#FS_navbar"), main_section = $("#FS_main_section"), msg_sidebar = $("#message_sidebar_container"), msg_content = $("#message_content_container");
+            let nav = $("#RT_navbar"), main_section = $("#RT_main_section"), msg_sidebar = $("#message_sidebar_container"), msg_content = $("#message_content_container");
             if(power){
                 nav.addClass('NS');
                 main_section.removeClass('pt-5 mt-4').addClass('pt-0 mt-3');
