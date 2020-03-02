@@ -6,6 +6,7 @@
     TippinManager.init({
         load : {
             NotifyManager : {
+                notify_sound : {{messenger_profile()->messenger->notify_sound}},
                 message_popups : {{messenger_profile()->messenger->message_popups}},
                 message_sound : {{messenger_profile()->messenger->message_sound}},
                 call_ringtone_sound : {{messenger_profile()->messenger->call_ringtone_sound}},
@@ -19,6 +20,8 @@
             name : '{{ messenger_profile()->name }}',
             slug : '{{ messenger_profile()->avatar}}',
             mobile : {{ agent()->isMobile() ? 'true' : 'false' }},
+            base_css : '{{ mix("css/app.css") }}',
+            dark_css : '{{ mix("css/dark.css") }}',
             {{config('app.env') === 'local' ? 'debug : true' : ''}}
         },
         modules : {

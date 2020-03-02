@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-    {{ config('app.name', 'Messenger') }} - Join Group
+    {{ config('app.name', 'Tipz Messenger') }} - Join Group
 @endsection
 @push('css')
     @include('layouts.bgGradient')
@@ -9,10 +9,10 @@
     <div class="container">
         <div class="jumbotron bg-gradient-dark text-light">
             <div class="float-right d-none d-sm-block pl-2">
-                <img class="pl-2" id="RTlog" height="95" src="{{asset('images/tipz.png')}}">
+                <img class="pl-2" id="FSlog" height="95" src="{{asset('images/navFS.png')}}">
             </div>
             <h1 class="display-4"><i class="fas fa-users"></i> {{$invite->thread->name}}</h1>
-            {!! Auth::check() && !$can_join ? '' : '<h3 class="mt-3"><i class="far fa-dot-circle"></i> Join this group on Messenger Demo'.($can_join ? '?' : '!').'</h3>'!!}
+            {!! Auth::check() && !$can_join ? '' : '<h3 class="mt-3"><i class="far fa-dot-circle"></i> Join this group on Messenger'.($can_join ? '?' : '!').'</h3>'!!}
             <p class="h4 mt-4 text-warning">
                 <i class="far fa-dot-circle"></i>
                 @if(Auth::check())
@@ -57,7 +57,7 @@
             let requestJoin = function () {
                 $("#join_ctnr").html(TippinManager.alert().loader());
                 TippinManager.xhr().payload({
-                    route : window.location.href,
+                    route : '/demo-api/messenger/join/{{request()->slug}}',
                     data : {
                         action : 'join',
                         slug : '{{$invite->slug}}'
@@ -90,7 +90,7 @@
                 $("#register_area").slideUp();
             };
     @endif
-    PageListeners.listen().animateLogo({elm : "#RTlog"});
+    PageListeners.listen().animateLogo({elm : "#FSlog"});
     </script>
 @endpush
 @if(Auth::guest())

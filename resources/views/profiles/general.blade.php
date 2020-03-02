@@ -10,7 +10,7 @@
                         Welcome to Tippin's Laravel Messenger demo app! I am working towards releasing this as an entire suite/package!
                         You may sign up anytime and test out our features currently provided, such as real time messaging/video
                         calling/screen sharing/group messaging, etc. We also provide a list of pre-populated users to choose
-                        from on the login page. We will reset this database and all uploaded files once each week.
+                        from on the login page. We will periodically reset this database and all uploaded files.
                     </h5>
                     <hr>
                     <div class="col-12 mt-2 text-center h5">
