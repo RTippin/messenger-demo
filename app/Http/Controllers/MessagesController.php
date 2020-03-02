@@ -318,17 +318,6 @@ class MessagesController extends Controller
         return response()->json(['errors' => ['forms' => 'Error gathering the data you requested']], 400);
     }
 
-    public function storeMessage()
-    {
-        $message = $this->messenger->routeCreate('store_message');
-        if(!$message['state']){
-            return response()->json(['errors' => ['forms' => $message['error']]], 400);
-        }
-        return response()->json([
-            'message' => $message['data']
-        ]);
-    }
-
     public function showThread()
     {
         return view('messenger.portal')->with(['mode' => 0, 'thread_id' => $this->request->thread_id]);

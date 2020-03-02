@@ -177,7 +177,6 @@ class CallService
 
     public static function PerformCallShutdown(Thread $thread, Calls $call)
     {
-        $finalize = true;
         $thread_participants = collect([]);
          if(self::CallEnded($call)){
              $active = self::LocateActiveParticipants($call);
