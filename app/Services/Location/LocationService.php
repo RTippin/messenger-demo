@@ -4,7 +4,7 @@ namespace App\Services\Location;
 
 use Illuminate\Http\Request;
 use Exception;
-use GeoIP;
+use Torann\GeoIP\Facades\GeoIP;
 
 class LocationService
 {

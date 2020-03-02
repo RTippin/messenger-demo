@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\Messages\GroupInviteLink;
 use App\Services\Messenger\InvitationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -17,10 +16,7 @@ class CheckThreadInvites implements ShouldQueue
 
     public function handle()
     {
-        $invites = GroupInviteLink::all();
-        foreach($invites as $invite){
-            InvitationService::ValidateInviteLink($invite);
-        }
+        InvitationService::ValidateAllInvites();
         return;
     }
 }

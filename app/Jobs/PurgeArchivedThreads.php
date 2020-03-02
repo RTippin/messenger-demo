@@ -2,9 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Services\Purge\MessagingPurge;
-use App\Models\Messages\Thread;
-use Carbon\Carbon;
+use App\Services\Messenger\ThreadService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -14,16 +12,19 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class PurgeArchivedThreads implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     public $tries = 1;
+
+    public $days;
+
+    public function __construct($days)
+    {
+        $this->days = $days;
+    }
 
     public function handle()
     {
-        $threads = Thread::onlyTrashed()->get();
-        foreach($threads as $thread){
-            if($thread->deleted_at->addMonths(3) <= Carbon::now()){
-                (new MessagingPurge($thread))->startDelete('thread');
-            }
-        }
+        ThreadService::PurgeArchivedThreads($this->days);
         return;
     }
 }

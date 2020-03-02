@@ -16,7 +16,7 @@ class CallHealthChecks implements ShouldQueue
 
     public function handle()
     {
-        CallService::PerformCallHealthChecks();
+        CallService::CallParticipantChecks();
         return;
     }
 }
