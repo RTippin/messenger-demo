@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 
 class DownloadsController extends Controller
 {
-    protected $messenger, $request;
+    protected $messenger,
+        $request;
+
     public function __construct(Request $request, MessengerService $messenger)
     {
         $this->request = $request;

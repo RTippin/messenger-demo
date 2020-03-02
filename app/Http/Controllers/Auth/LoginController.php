@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\LoginLoggerService;
+use App\Services\Messenger\MessengerLocationService;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Cache;
@@ -12,21 +15,60 @@ use Exception;
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
-    protected $redirectTo = '/messenger';
-    protected $decayMinutes = 5;
-    protected $request;
 
-    public function __construct(Request $request)
+    /**
+     * @var string
+     */
+    protected $redirectTo = '/messenger';
+
+    /**
+     * @var int
+     */
+    protected $decayMinutes = 5;
+
+    /**
+     * @var Request
+     */
+    protected $request;
+    /**
+     * @var LoginLoggerService
+     */
+    protected $loggerService;
+    /**
+     * @var MessengerLocationService
+     */
+    protected $messengerLocationService;
+
+    /**
+     * LoginController constructor.
+     * @param Request $request
+     * @param LoginLoggerService $loggerService
+     * @param MessengerLocationService $messengerLocationService
+     */
+    public function __construct(Request $request,
+                                LoginLoggerService $loggerService,
+                                MessengerLocationService $messengerLocationService
+    )
     {
         $this->request = $request;
         $this->middleware('guest', ['except' => 'logout']);
+        $this->loggerService = $loggerService;
+        $this->messengerLocationService = $messengerLocationService;
     }
 
+    /**
+     * @return array
+     */
     protected function credentials()
     {
         return array_merge($this->request->only($this->username(), 'password'), ['active' => 1]);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response|void
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function login(Request $request)
     {
         $validate = $this->validateLogin($request);
@@ -45,6 +87,10 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse();
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     public function validateLogin(Request $request)
     {
         return $validator = Validator::make($request->all(),
@@ -55,6 +101,9 @@ class LoginController extends Controller
         );
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     protected function logout()
     {
         if(auth()->check()){
@@ -69,17 +118,25 @@ class LoginController extends Controller
         return $this->loggedOut($this->request) ?: redirect('/');
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     protected function sendFailedLoginResponse()
     {
         return response()->json(['error' => 'These credentials do not match our records', 'type' => 0], 401);
     }
 
-    public function authenticated($request, $user)
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function authenticated(Request $request, User $user)
     {
         try{
-            $user->messenger->timezone = geoip()->getLocation($this->request->ip())->getAttribute('timezone');
-            $user->messenger->ip = $this->request->ip();
-            $user->messenger->save();
+            set_messenger_profile($user);
+            $this->loggerService->store($user);
+            $this->messengerLocationService->update();
         }catch (Exception $e){
             report($e);
         }

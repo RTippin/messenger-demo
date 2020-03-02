@@ -6,7 +6,6 @@ use App\Services\Messenger\MessengerRepo;
 use App\Services\Messenger\MessengerService;
 use App\Services\Messenger\ThreadService;
 use Illuminate\Http\Request;
-use View;
 
 
 class MessagesController extends Controller
@@ -34,14 +33,9 @@ class MessagesController extends Controller
                     'threads' => MessengerRepo::MakeProfileThreads()
                 ]);
             break;
-            case 'contacts':
+            case 'recent_threads':
                 return response()->json([
-                    'html' => View::make('messenger.partials.contacts')->with('networks', messenger_profile()->networks->load(['party.messenger']))->render()
-                ]);
-            break;
-            case 'new_group':
-                return response()->json([
-                    'html' => View::make('messenger.partials.addGroupContacts')->with('networks', messenger_profile()->networks->load(['party.messenger']))->render()
+                    'recent_threads' => MessengerRepo::MakeProfileRecentThreads()
                 ]);
             break;
             case 'load_thread':
@@ -117,7 +111,8 @@ class MessagesController extends Controller
                 $data = $this->messenger->routeRequest('participants');
                 if($data['state']){
                     return response()->json([
-                        "html" => View::make('messenger.partials.participants')->with('participants', $data['data']['participants'])->with('owner', $data['data']['owner'])->render()
+                        'participants' => $data['data']['participants'],
+                        'admin' => $data['data']['admin']
                     ]);
                 }
             break;
@@ -125,7 +120,7 @@ class MessagesController extends Controller
                 $data = $this->messenger->routeRequest('add_participants');
                 if($data['state']){
                     return response()->json([
-                        'html' => View::make('messenger.partials.groupConnections')->with('networks', $data['data'])->render()
+                        'friends' => $data['data']
                     ]);
                 }
             break;
@@ -323,16 +318,29 @@ class MessagesController extends Controller
         return response()->json(['errors' => ['forms' => 'Error gathering the data you requested']], 400);
     }
 
+    public function storeMessage()
+    {
+        $message = $this->messenger->routeCreate('store_message');
+        if(!$message['state']){
+            return response()->json(['errors' => ['forms' => $message['error']]], 400);
+        }
+        return response()->json([
+            'message' => $message['data']
+        ]);
+    }
+
     public function showThread()
     {
         return view('messenger.portal')->with(['mode' => 0, 'thread_id' => $this->request->thread_id]);
     }
 
+    public function viewCreatePrivate()
+    {
+        return view('messenger.portal')->with('slug', $this->request->slug)->with('type', $this->request->alias)->with('mode', 3);
+    }
+
     public function checkCreatePrivate()
     {
-        if(!$this->request->expectsJson()){
-            return view('messenger.portal')->with('slug', $this->request->slug)->with('type', $this->request->alias)->with('mode', 3);
-        }
         $threads = ThreadService::LocateThreads(1, ['participants']);
         $check = ThreadService::LocateExistingPrivate($threads, ['check' => 'profile', 'alias' => $this->request->alias, 'slug' => $this->request->slug]);
         if($check['state']){
@@ -366,7 +374,7 @@ class MessagesController extends Controller
         }
         $dispatch = $this->messenger->routeRequest('view_call');
         if($dispatch['state']){
-            return view('messenger.partials.video')->with('thread', $dispatch['data']['thread'])->with('call', $dispatch['data']['call'])->with('call_admin', $dispatch['data']['call_admin']);
+            return view('messenger.video')->with('thread', $dispatch['data']['thread'])->with('call', $dispatch['data']['call'])->with('call_admin', $dispatch['data']['call_admin']);
         }
         return response()->view('errors.custom', ['err' => 'callError'], 403);
     }
@@ -396,7 +404,7 @@ class MessagesController extends Controller
         }
         $dispatch = $this->messenger->routeRequest('invitation_join', false);
         if($dispatch['state']){
-            return view('messenger.invitation')->with('invite', $dispatch['data']['invite'])->with('can_join', $dispatch['data']['can_join']);
+            return view('messenger.invitation')->with('invite', $dispatch['data']['invite'])->with('special_flow', true)->with('can_join', $dispatch['data']['can_join']);
         }
         return response()->view('errors.custom', ['err' => 'badJoinLink'], 404);
     }

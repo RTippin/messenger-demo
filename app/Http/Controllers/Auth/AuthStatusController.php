@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\Messenger\MessengerLocationService;
 use App\Services\Messenger\MessengerRepo;
-use App\Services\Social\NetworksService;
 use Cache;
 use Illuminate\Http\Request;
 use Auth;
@@ -14,12 +14,18 @@ use Exception;
 class AuthStatusController extends Controller
 {
     protected $request;
-    public function __construct(Request $request)
+    /**
+     * @var MessengerLocationService
+     */
+    protected $messengerLocationService;
+
+    public function __construct(Request $request, MessengerLocationService $messengerLocationService)
     {
         $this->request = $request;
         if(Auth::check()){
             $this->middleware('IsActive');
         }
+        $this->messengerLocationService = $messengerLocationService;
     }
 
     private function markOnline()
@@ -37,10 +43,10 @@ class AuthStatusController extends Controller
     public function authHeartBeat()
     {
         if($this->request->expectsJson()){
-            $notify = 0;
+            $away = false;
             $threads = 0;
+            $friend_request = 0;
             $active_calls = [];
-            $network_request = [];
             if(auth()->check()){
                 if($this->request->isMethod('post')){
                     switch($this->request->input('status')){
@@ -48,13 +54,17 @@ class AuthStatusController extends Controller
                             $this->markOnline();
                         break;
                         case 2:
-                            $this->markAway();
+                            if(!Cache::has(messenger_alias().'_online_'.messenger_profile()->id)){
+                                $this->markAway();
+                                $away = true;
+                            }
                         break;
                     }
                 }
                 else{
                     if(Cache::has(messenger_alias().'_away_'.messenger_profile()->id)){
                         $this->markAway();
+                        $away = true;
                     }
                     else{
                         $this->markOnline();
@@ -62,16 +72,14 @@ class AuthStatusController extends Controller
                 }
                 try{
                     if($this->request->ip() !== messenger_profile()->messenger->ip){
-                        messenger_profile()->messenger->ip = $this->request->ip();
-                        messenger_profile()->messenger->timezone = geoip()->getLocation($this->request->ip())->getAttribute('timezone');
-                        messenger_profile()->messenger->save();
+                        $this->messengerLocationService->update();
                     }
                     else{
                         messenger_profile()->messenger->touch();
                     }
                     $threads = messenger_profile()->unreadThreadsCount();
                     $active_calls = MessengerRepo::MakeActiveCalls();
-                    if(messenger_profile()->pendingReceivedNetworks->count()) $network_request = NetworksService::MakeNetworkRequest();
+                    if(messenger_profile()->pendingReceivedNetworks->count()) $friend_request = messenger_profile()->pendingReceivedNetworks->count();
                 }catch (Exception $e){
                     report($e);
                 }
@@ -81,9 +89,10 @@ class AuthStatusController extends Controller
                 'token' => csrf_token(),
                 'model' => (auth()->check() ? messenger_alias() : 'guest'),
                 'states' => (auth()->check() ? [
+                    'away' => $away,
                     'unread_threads_count' => $threads,
-                    'active_calls' => $active_calls,
-                    'pending_friends' => $network_request
+                    'pending_friends_count' => $friend_request,
+                    'active_calls' => $active_calls
                 ] : null)
             ], 200);
         }

@@ -13,8 +13,9 @@ use Exception;
 
 class ImageController extends Controller
 {
+    protected $messenger,
+        $request;
 
-    protected $messenger, $request;
     public function __construct(Request $request, MessengerService $messenger)
     {
         $this->request = $request;
