@@ -16,6 +16,7 @@ Laravel 6 messenger demo app by Richard Tippin. Working to release this messenge
 * Models use morphs, able to message between any model using the HasMessenger trait and declare in the messenger config what models and their respective aliases are to be used in your application
 * Real-time messaging
 * Mobile friendly mode
+* Dark Mode
 * Messenger inbox is a SPA portal. Page reloads or history state changes are tracked and managed when inside */messenger*
 * Messenger settings (online/away/offline, accept knocks, sounds, calls from non friends)
 * Inactivity status (afk after 10 minutes)
@@ -156,6 +157,11 @@ If you choose to use this outside of demo purposes, I recommend you setup your o
 
 ### Inside a group conversation
 ![Screenshot](public/images/example/screen1.png?raw=true "Screenshot")
+
+- - - -
+
+### Dark Mode
+![Screenshot](public/images/example/screen4.png?raw=true "Screenshot")
 
 - - - -
 
