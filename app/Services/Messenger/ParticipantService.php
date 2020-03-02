@@ -13,7 +13,7 @@ class ParticipantService
 {
     /**
      * @param Thread $thread
-     * @param $model
+     * @param Model $model
      * @return Participant|null
      */
     public static function LocateParticipant(Thread $thread, Model $model = null)
@@ -97,8 +97,8 @@ class ParticipantService
             }
             $call = CallService::LocateActiveCall($thread);
             if($call) (new BroadcastService($thread))->broadcastChannels(false, false, true, $ids)->broadcastCall($call);
-            (new BroadcastService($thread->fresh('participants.owner.devices')))->broadcastChannels()->broadcastAddedToThread();
-            MessageService::StoreSystemMessage($thread, messenger_profile(), $ids, 99, $broadcast_log);
+            (new BroadcastService($thread))->broadcastChannels(false, false, true, $ids)->broadcastAddedToThread();
+            MessageService::StoreSystemMessage($thread->fresh('participants.owner.devices'), messenger_profile(), $ids, 99, $broadcast_log);
             return [
                 'state' => true,
                 'subject' => $thread->name,
@@ -222,7 +222,7 @@ class ParticipantService
                     case 1:
                         self::RemoveParticipant($thread, $participant);
                         ThreadService::RemoveThread($thread);
-                    break;
+                        break;
                     case 2:
                         $promote = self::ChangeParticipantAdmin($thread, $thread->participants->firstWhere('admin', 0), true);
                         if(!$promote){
@@ -232,7 +232,7 @@ class ParticipantService
                             ];
                         }
                         self::RemoveParticipant($thread, $participant);
-                    break;
+                        break;
                     default:
                         if(ThreadService::IsLocked($thread, $participant)){
                             self::RemoveParticipant($thread, $participant);
@@ -257,5 +257,4 @@ class ParticipantService
             'data' => 'You left the group '.$name
         ];
     }
-
 }

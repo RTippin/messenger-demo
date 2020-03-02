@@ -3,14 +3,14 @@
 namespace App\Services;
 
 use Edujugon\PushNotification\PushNotification;
-use Log;
+use Illuminate\Support\Collection;
 
 class PushNotificationService
 {
     protected $apple, $google;
-    public function sendPushNotify($devices, $data, $voip = false)
+    public function sendPushNotify(Collection $devices, $data, $voip = false)
     {
-        if(!config('messenger.mobile_notify') || !$devices->count()){
+        if(!config('messenger.mobile_notify') || !$devices || !$devices->count()){
             return;
         }
         $this->apple = [];
@@ -23,6 +23,7 @@ class PushNotificationService
                 array_push($this->google, $device->device_token);
             }
         }
+
         $this->notificationFCM($data);
         if($voip) $this->notificationAPN($data);
         return;
@@ -38,12 +39,13 @@ class PushNotificationService
                 'sound' => 'default'
 
             ],
-            'data' => $data['data']
+            'data' => [
+                'channelId' => 'default',
+                'extraPayload' => $data['data'],
+            ]
         ])
         ->setDevicesToken($this->google)
         ->send();
-//        Log::info(print_r($push->getFeedback(), true));
-
     }
 
     private function notificationAPN($data)
@@ -58,7 +60,7 @@ class PushNotificationService
                 'sound' => 'default',
                 'badge' => 1
             ],
-            'extraPayLoad' => $data['data']
+            'extraPayLoad' =>  $data['data'],
         ])
         ->setUrl((config('app.env') === 'production') ? 'ssl://gateway.push.apple.com:2195' : 'ssl://gateway.sandbox.push.apple.com:2195')
         ->setDevicesToken($this->apple)

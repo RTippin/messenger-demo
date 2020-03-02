@@ -5,6 +5,7 @@ namespace App\Services\Messenger;
 use App\GhostUser;
 use App\Models\Messages\Calls;
 use App\Models\Messages\Participant;
+use App\Services\Purge\MessagingPurge;
 use App\Services\UploadService;
 use App\Models\Messages\Thread;
 use Carbon\Carbon;
@@ -29,6 +30,9 @@ class ThreadService
                 case 2:
                     return messenger_profile()->threads()->where('ttype', 2)->with($with)->get();
                 break;
+                case 3:
+                    return messenger_profile()->threads()->limit(5)->with($with)->get();
+                break;
             }
         }catch (Exception $e){
             report($e);
@@ -45,9 +49,15 @@ class ThreadService
         return null;
     }
 
-    public static function RemoveThread(Thread $thread, $broadcast = false)
+    public static function RemoveThread(Thread $thread, $broadcast = false, $force = false)
     {
         try{
+            if($force){
+                $thread->forceDelete();
+                return [
+                    'state' => true
+                ];
+            }
             if(self::IsGroup($thread)){
                 $name = $thread->name;
                 MessageService::StoreSystemMessage($thread, messenger_profile(),'archived the group', 92, $broadcast);
@@ -63,7 +73,7 @@ class ThreadService
                 $name = 'Profile';
                 if($party){
                     $name = $party->owner->name;
-                    (new BroadcastService($thread))->broadcastChannels()->broadcastKicked($party);
+                    (new BroadcastService($thread))->broadcastKicked($party);
                 }
                 MessageService::StoreSystemMessage($thread, messenger_profile(),'archived the conversation', 92, false);
                 $thread->delete();
@@ -193,16 +203,17 @@ class ThreadService
 
     public static function UnreadMessages(Thread $thread, Participant $participant)
     {
-        $messages = $thread->messages;
+        //limit of 40 means will never show more than 40 unread count
+        $messages = $thread->messages()->latest()->limit(40)->get();
         if(!$participant->last_read) return $messages;
         return $messages->filter(function ($message) use ($participant) {
-            return $message->updated_at->gt($participant->last_read);
+            return $message->created_at->gt($participant->last_read);
         });
     }
 
     public static function RecentMessage(Thread $thread)
     {
-        $message = $thread->messages->sortByDesc('created_at')->first();
+        $message = $thread->relationLoaded('messages') ? $thread->messages->sortByDesc('created_at')->first() : $thread->latestMessage();
         if(!$message) return null;
         return $message;
     }
@@ -380,6 +391,12 @@ class ThreadService
 
     public static function CheckArchiveThread(Thread $thread, Participant $participant)
     {
+        if(CallService::LocateActiveCall($thread)){
+            return [
+                'state' => false,
+                'error' => 'Unable to proceed, please end the active call first'
+            ];
+        }
         if(self::IsPrivate($thread)){
             $party = self::OtherParty($thread, $participant);
             return [
@@ -392,7 +409,7 @@ class ThreadService
                 ]
             ];
         }
-        if(!self::IsLocked($thread, $participant) && self::IsThreadAdmin($thread, $participant)){
+        if(self::IsGroup($thread) && !self::IsLocked($thread, $participant) && self::IsThreadAdmin($thread, $participant)){
             return [
                 'state' => true,
                 'data' => [
@@ -462,7 +479,7 @@ class ThreadService
                             'avatar' => $thread->avatar
                         ]
                     ];
-                break;
+                    break;
                 case 'upload':
                     $upload = (new UploadService($request))->newUpload('group_avatar');
                     if($upload["state"]){
@@ -488,7 +505,7 @@ class ThreadService
                         'state' => false,
                         'error' => $upload['error']
                     ];
-                break;
+                    break;
             }
         }catch (Exception $e){
             report($e);
@@ -499,7 +516,7 @@ class ThreadService
         ];
     }
 
-    public static function SendKnock(Thread $thread, Participant $participant)
+    public static function SendKnock(Thread $thread, Participant $participant, $force = false)
     {
         if(self::IsLocked($thread, $participant)){
             return [
@@ -508,14 +525,14 @@ class ThreadService
             ];
         }
         if(self::IsThreadAdmin($thread, $participant)){
-            if(Cache::has('sent_knok_'.$thread->id)){
+            if(Cache::has('sent_knok_'.$thread->id) && !$force){
                 return [
                     'state' => false,
                     'error' => 'You may only knock at '.$thread->name.' once every five minutes'
                 ];
             }
             Cache::put('sent_knok_'.$thread->id, true, Carbon::now()->addMinutes(5));
-            (new BroadcastService($thread))->broadcastChannels(false, true)->broadcastGroupKnok();
+            (new BroadcastService($thread))->broadcastChannels($force, true)->broadcastGroupKnok();
             return [
                 'state' => true,
                 'data' => $thread->name
@@ -529,7 +546,7 @@ class ThreadService
                     'error' => $party->owner->name.' is not accepting knocks at this time'
                 ];
             }
-            if(Cache::has('sent_knok_'.$thread->id.'_'.$party->owner_id)){
+            if(Cache::has('sent_knok_'.$thread->id.'_'.$party->owner_id) && !$force){
                 return [
                     'state' => false,
                     'error' => 'You may only knock at '.$party->owner->name.' once every five minutes'
@@ -546,5 +563,15 @@ class ThreadService
             'state' => false,
             'error' => 'Access Denied'
         ];
+    }
+
+    public static function PurgeArchivedThreads($days = 90)
+    {
+        $threads = Thread::onlyTrashed()->get();
+        foreach($threads as $thread){
+            if($thread->deleted_at->addDays($days) <= Carbon::now()){
+                (new MessagingPurge($thread))->startDelete('thread');
+            }
+        }
     }
 }

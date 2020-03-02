@@ -3,7 +3,9 @@
 namespace App\Services\Messenger;
 
 use App\Models\Messages\Thread;
+use App\Services\Social\NetworksService;
 use App\Services\UploadService;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Validator;
 use Exception;
@@ -52,13 +54,36 @@ class MessengerService
         $data = null;
         $error = null;
         $type_loads = [
-            'load_thread' => ['participants.owner.messenger', 'activeCall', 'messages', 'calls'],
-            'load_private' => ['participants', 'messages.owner.messenger', 'activeCall', 'calls.participants.owner'],
-            'load_group' => ['participants.owner.messenger', 'activeCall', 'messages.owner.messenger', 'calls.participants.owner'],
+            'load_thread' => ['participants.owner.messenger', 'activeCall', 'calls'],
+            'load_private' => [
+                'participants',
+                'activeCall',
+                'calls.participants.owner',
+                'calls',
+                'messages' => function(HasMany $query){
+                    $query->latest()->limit(40)->with('owner.messenger');
+                }
+            ],
+            'load_group' => [
+                'participants.owner.messenger',
+                'activeCall',
+                'calls.participants.owner',
+                'calls',
+                'messages' => function(HasMany $query){
+                    $query->latest()->limit(40)->with('owner.messenger');
+                }
+            ],
+            'recent_messages' => [
+                'participants.owner',
+                'calls.participants.owner',
+                'calls',
+                'messages' => function(HasMany $query){
+                    $query->latest()->limit(40)->with('owner.messenger');
+                }
+            ],
             'bobble_heads' => ['participants.owner.messenger'],
-            'recent_messages' => ['participants.owner', 'messages.owner.messenger', 'calls.participants.owner'],
-            'messages' => ['participants.owner', 'messages.owner.messenger', 'calls.participants.owner'],
-            'thread_logs' => ['messages.owner.messenger', 'calls.participants.owner'],
+            'messages' => ['participants.owner', 'calls.participants.owner', 'calls'],
+            'thread_logs' => ['calls.participants.owner', 'calls'],
             'participants' => ['participants.owner.messenger'],
             'add_participants' => ['participants.owner.messenger'],
             'group_settings' => ['participants'],
@@ -117,15 +142,15 @@ class MessengerService
                     $error = "Permission denied";
                     if(ThreadService::IsGroup($this->thread)){
                         $data = [
-                            "participants" => ThreadService::OtherParticipants($this->thread, $this->participant),
-                            "owner" => ThreadService::IsThreadAdmin($this->thread, $this->participant)
+                            "participants" => MessengerRepo::MakeGroupParticipants(ThreadService::OtherParticipants($this->thread, $this->participant)),
+                            "admin" => ThreadService::IsThreadAdmin($this->thread, $this->participant)
                         ];
                     }
                 break;
                 case 'add_participants':
                     $error = "Permission denied";
                     if(ThreadService::CanAddParticipants($this->thread, $this->participant)){
-                        $data = ThreadService::ContactsFilterAdd($this->thread);
+                        $data = NetworksService::MakeFriendsFiltered(ThreadService::ContactsFilterAdd($this->thread));
                     }
                 break;
                 case 'group_settings':
@@ -199,7 +224,7 @@ class MessengerService
             'participant_admin_grant' => ['participants'],
             'send_knock' => ['participants.owner.devices', 'participants.owner.messenger'],
             'initiate_call' => ['participants.owner', 'activeCall'],
-            'join_call' => ['participants.owner', 'activeCall']
+            'join_call' => ['participants.owner', 'activeCall.participants'],
         ];
         $authorize = $auth ? $this->authorize(null, (isset($type_loads[$type]) ? $type_loads[$type] : null)) : ['state' => true];
         if($authorize['state']) {
@@ -243,7 +268,7 @@ class MessengerService
                     $message = MessageService::StoreNewMessage($this->request, $this->thread, $this->participant);
                     if($message['state']){
                         ParticipantService::MarkRead($this->participant);
-                        $data = MessengerRepo::MakeMessage($this->thread, $message['data']);
+                        $data = MessengerRepo::MakeMessage($this->thread, $message['data'], $this->request->input('temp_id'));
                     }
                     else $error = $message['error'];
                 break;
@@ -296,7 +321,6 @@ class MessengerService
                     }
                     else $error = $call['error'];
                 break;
-
                 case 'join_call':
                     $call = CallService::JoinCall($this->thread);
                     if($call['state']){
@@ -326,10 +350,10 @@ class MessengerService
             'leave_group' => ['participants.owner.devices'],
             'admin_remove_participant' => ['participants.owner.devices'],
             'remove_group_invitation' => ['participants', 'groupInviteLink'],
-            'remove_message' => ['participants', 'messages'],
+            'remove_message' => ['participants'],
             'participant_admin_revoke' => ['participants'],
-            'leave_call' => ['activeCall'],
-            'end_call' => ['participants.owner', 'activeCall']
+            'leave_call' => ['activeCall.participants'],
+            'end_call' => ['participants.owner', 'activeCall.participants']
         ];
         $authorize = $auth ? $this->authorize(null, (isset($type_loads[$type]) ? $type_loads[$type] : null)) : ['state' => true];
         if($authorize['state']) {
@@ -413,6 +437,12 @@ class MessengerService
 
     private static function StoreMessengerAvatar(Request $request)
     {
+        if(!config('messenger.avatar_upload')){
+            return [
+                'state' => false,
+                'error' => 'Avatar upload is currently disabled'
+            ];
+        }
         try{
             $dispatch = new UploadService($request);
             $dispatch = $dispatch->newUpload('messenger_avatar');
@@ -439,6 +469,12 @@ class MessengerService
 
     private static function RemoveMessengerAvatar()
     {
+        if(!config('messenger.avatar_removal')){
+            return [
+                'state' => false,
+                'error' => 'Avatar removal is currently disabled'
+            ];
+        }
         try{
             $old = messenger_profile()->messenger->picture;
             $file_path = storage_path('app/public/profile/'.messenger_alias().'/'.$old);
@@ -467,8 +503,11 @@ class MessengerService
                 'message_popups' => 'required|boolean',
                 'message_sound' => 'required|boolean',
                 'call_ringtone_sound' => 'required|boolean',
+                'notify_sound' => 'required|boolean',
                 'knoks' => 'required|boolean',
                 'calls_outside_networks' => 'required|boolean',
+                'friend_approval' => 'required|boolean',
+                'dark_mode' => 'required|boolean',
                 'online_status' => 'required|between:0,2'
             ]
         );
@@ -482,8 +521,11 @@ class MessengerService
             messenger_profile()->messenger->message_popups = $request->input('message_popups');
             messenger_profile()->messenger->message_sound = $request->input('message_sound');
             messenger_profile()->messenger->call_ringtone_sound = $request->input('call_ringtone_sound');
+            messenger_profile()->messenger->notify_sound = $request->input('notify_sound');
             messenger_profile()->messenger->knoks = $request->input('knoks');
             messenger_profile()->messenger->calls_outside_networks = $request->input('calls_outside_networks');
+            messenger_profile()->messenger->friend_approval = $request->input('friend_approval');
+            messenger_profile()->messenger->dark_mode = $request->input('dark_mode');
             messenger_profile()->messenger->online_status = $request->input('online_status');
             messenger_profile()->messenger->save();
             return [

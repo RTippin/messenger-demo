@@ -7,7 +7,7 @@ use App\Events\FriendDenied;
 use App\Models\Messages\Messenger;
 use App\Models\Networks\Networks;
 use App\Models\Networks\PendingNetworks;
-use App\Services\Messenger\MessengerRepo;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Exception;
 
@@ -19,13 +19,13 @@ class NetworksService
         $this->request = $request;
     }
 
-    public function handleActions()
+    public function handleActions($action)
     {
         $this->partyModel();
         if(!$this->party || $this->party->id === messenger_profile()->id){
             return array("state" => false, "error" => "Unable to locate party");
         }
-        switch($this->request->input('action')){
+        switch($action){
             case 'add':
                 return $this->addToNetwork();
             break;
@@ -45,20 +45,97 @@ class NetworksService
         return array("state" => false, "error" => "Invalid action");
     }
 
-    public static function MakeNetworkRequest()
+    public static function MakeMyFriends()
     {
         $friends = collect([]);
         try{
+            messenger_profile()->networks->load(['party.messenger']);
+            messenger_profile()->networks->reverse()->each(function ($friend) use($friends){
+                $friends->push([
+                    'id' => $friend->id,
+                    'owner_id' => $friend->party->id,
+                    'name' => $friend->party->name,
+                    'slug' => $friend->party->slug(),
+                    'route' => $friend->party->slug(true),
+                    'avatar' => $friend->party->avatar,
+                    'online' => $friend->party->isOnline(),
+                    'type' => get_messenger_alias($friend->party),
+                    'created_at' => $friend->created_at->toDateTimeString(),
+                    'locale_created_at' => format_date_timezone($friend->created_at)->toDateTimeString()
+                ]);
+            });
+        }catch (Exception $e){
+            report($e);
+        }
+        return $friends;
+    }
+
+    public static function MakeFriendsFiltered(Collection $friends_filtered)
+    {
+        $friends = collect([]);
+        try{
+            $friends_filtered->each(function ($friend) use($friends){
+                $friends->push([
+                    'id' => $friend->id,
+                    'owner_id' => $friend->party->id,
+                    'name' => $friend->party->name,
+                    'slug' => $friend->party->slug(),
+                    'route' => $friend->party->slug(true),
+                    'avatar' => $friend->party->avatar,
+                    'online' => $friend->party->isOnline(),
+                    'type' => get_messenger_alias($friend->party),
+                    'created_at' => $friend->created_at->toDateTimeString(),
+                    'locale_created_at' => format_date_timezone($friend->created_at)->toDateTimeString()
+                ]);
+            });
+        }catch (Exception $e){
+            report($e);
+        }
+        return $friends;
+    }
+
+    public static function MakeNetworkPendingRequest()
+    {
+        $friends = collect([]);
+        try{
+            messenger_profile()->pendingReceivedNetworks->load(['sender.messenger.owner']);
             messenger_profile()->pendingReceivedNetworks->reverse()->each(function ($friend) use($friends){
                 $friends->push([
                     'id' => $friend->id,
                     'owner_id' => $friend->sender->id,
                     'name' => $friend->sender->name,
                     'slug' => $friend->sender->slug(),
+                    'route' => $friend->sender->slug(true),
                     'avatar' => $friend->sender->avatar,
+                    'online' => $friend->sender->isOnline(),
                     'type' => get_messenger_alias($friend->sender),
                     'created_at' => $friend->created_at->toDateTimeString(),
-                    'locale_created_at' => MessengerRepo::FormatDateTimezone($friend->created_at)->toDateTimeString()
+                    'locale_created_at' => format_date_timezone($friend->created_at)->toDateTimeString()
+                ]);
+            });
+        }catch (Exception $e){
+            report($e);
+        }
+        return $friends;
+    }
+
+    public static function MakeNetworkSentRequest()
+    {
+        $friends = collect([]);
+        try{
+            messenger_profile()->pendingSentNetworks->load(['recipient.messenger.owner']);
+            messenger_profile()->pendingSentNetworks->reverse()->each(function ($friend) use($friends){
+                $friends->push([
+                    'id' => $friend->id,
+                    'owner_id' => $friend->recipient->id,
+                    'name' => $friend->recipient->name,
+                    'slug' => $friend->recipient->slug(),
+                    'route' => $friend->recipient->slug(true),
+                    'avatar' => $friend->recipient->avatar,
+                    'online' => $friend->recipient->isOnline(),
+                    'type' => get_messenger_alias($friend->recipient),
+                    'created_at' => $friend->created_at->toDateTimeString(),
+                    'locale_created_at' => format_date_timezone($friend->created_at)->toDateTimeString()
                 ]);
             });
         }catch (Exception $e){
@@ -82,6 +159,9 @@ class NetworksService
     {
         if($this->exist() !== 0){
             return array("state" => false, "error" => "Unable to proceed");
+        }
+        if(!$this->party->messenger->friend_approval){
+            return $this->joinNetworks();
         }
         PendingNetworks::firstOrCreate([
             'sender_id' => messenger_profile()->id,

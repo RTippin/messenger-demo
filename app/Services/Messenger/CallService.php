@@ -140,6 +140,9 @@ class CallService
                     case 'call':
                         (new BroadcastService($thread))->broadcastChannels()->broadcastCall($call);
                     break;
+                    case 'other_mode':
+
+                    break;
                 }
                 return true;
             }
@@ -174,13 +177,24 @@ class CallService
 
     public static function PerformCallShutdown(Thread $thread, Calls $call)
     {
+        $finalize = true;
+        $thread_participants = collect([]);
          if(self::CallEnded($call)){
              $active = self::LocateActiveParticipants($call);
              foreach($active as $participant){
                  self::ParticipantLeftCall($participant);
+                 $thread_participant = ParticipantService::LocateParticipant($thread, $participant->owner);
+                 if($thread_participant) $thread_participants->push($thread_participant);
              }
              MessageService::StoreSystemMessage($thread, $call->owner, collect(["call_id" => $call->id]), 90);
              (new BroadcastService($thread))->broadcastChannels(true)->broadcastCallEnded($call);
+             try{
+                 $thread_participants->each(function ($participant){
+                     ParticipantService::MarkRead($participant);
+                 });
+             }catch (Exception $e){
+                 report($e);
+             }
          }
     }
 
@@ -228,6 +242,9 @@ class CallService
         switch ($mode){
             case 'call':
                 $new_call = self::StoreCall($thread);
+            break;
+            case 'other_mode':
+
             break;
         }
         if($new_call){
@@ -325,10 +342,11 @@ class CallService
 
     /**
      * This is run every minute via the scheduler
-     * Locate active calls AND end calls with no active participants,
+     * Locate active calls, end calls with no active participants,
      * and find active participants who are not in redis and mark as left
+     * @param bool $now
      */
-    public static function PerformCallHealthChecks()
+    public static function CallParticipantChecks($now = false)
     {
         $activeCalls = Calls::with('participants')->where('active', 1)->get();
         foreach($activeCalls as $call){
@@ -336,7 +354,7 @@ class CallService
                 continue;
             }
             if(!self::CallActiveCount($call)){
-                EndEmptyCall::dispatch($call->id);
+                $now ? self::PerformCallShutdown($call->thread, $call) : EndEmptyCall::dispatch($call->id);
                 continue;
             }
             foreach(self::LocateActiveParticipants($call) as $participant){
@@ -346,6 +364,12 @@ class CallService
             }
         }
         return;
+    }
+
+    public static function ActiveCallsExist()
+    {
+        if(Calls::where('active', 1)->count()) return true;
+        return false;
     }
 
 }

@@ -5,8 +5,10 @@ namespace App\Services\Messenger;
 use App\GhostUser;
 use App\Models\Messages\Message;
 use App\Models\Messages\Participant;
+use App\Services\Purge\MessagingPurge;
 use App\Services\UploadService;
 use App\Models\Messages\Thread;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use LaravelEmojiOne;
 use Exception;
@@ -15,7 +17,7 @@ class MessageService
 {
     public static function GetMessageFromThread(Thread $thread, $id)
     {
-        return $thread->messages->firstWhere('id', $id);
+        return $thread->messages()->find($id);
     }
 
     public static function LocateGlobalMessageById($id)
@@ -30,10 +32,10 @@ class MessageService
                 case 'history':
                     $message = self::GetMessageFromThread($thread, $arr['message_id']);
                     if(!$message) return null;
-                    return $thread->messages->sortByDesc('created_at')->where('created_at', '<=', $message->created_at)->where('id', '!=', $message->id)->take($limit)->reverse();
+                    return $thread->messages()->latest()->with('owner.messenger')->where('created_at', '<=', $message->created_at)->where('id', '!=', $message->id)->limit($limit)->get()->reverse();
                 break;
                 case 'logs':
-                    return $thread->messages->whereNotIn('mtype', [0,1,2]);
+                    return $thread->messages()->with('owner.messenger')->whereNotIn('mtype', [0,1,2])->get();
                 break;
             }
         }
@@ -71,20 +73,20 @@ class MessageService
             break;
             case 95: //removed admin from participant
                 return 'revoked administrator from '.self::LocateContentModel($data, $thread)->name;
-            break;
+                break;
             case 96: //made participant admin
                 return 'promoted '.self::LocateContentModel($data, $thread)->name.' to administrator';
-            break;
+                break;
             case 98: //removed participant from group
                 return 'removed '.self::LocateContentModel($data, $thread)->name.' from the group';
-            break;
+                break;
             case 99: //added participant to group
                 $names = 'added ';
                 foreach($data as $profile){
                     $names .= self::LocateContentModel($profile, $thread)->name.', ';
                 }
                 return rtrim($names,', ').' to the group';
-            break;
+                break;
             default : return 'system message';
         }
     }
@@ -159,14 +161,17 @@ class MessageService
         }
     }
 
-    private static function StoreMessage($model, $arr = [])
+    private static function StoreMessage($arr = [])
     {
         try{
-            return $model->messages()->create([
-                'thread_id' => $arr['thread_id'],
-                'body' => $arr['body'],
-                'mtype' => $arr['mtype']
-            ]);
+            $message = new Message();
+            $message->thread_id = $arr['thread_id'];
+            $message->body = $arr['body'];
+            $message->owner_id = $arr['owner_id'];
+            $message->owner_type = $arr['owner_type'];
+            $message->mtype = $arr['mtype'];
+            $message->save();
+            return $message;
         }catch (Exception $e){
             report($e);
             return null;
@@ -191,13 +196,13 @@ class MessageService
         switch($contents['type']){
             case 0:
                 $body = self::MessageFormatText($contents['data']);
-            break;
+                break;
             case 1:
                 $body = (new UploadService($request))->newUpload('message_photo');
-            break;
+                break;
             case 2:
-                $body =  (new UploadService($request))->newUpload('message_doc');
-            break;
+                $body = (new UploadService($request))->newUpload('message_doc');
+                break;
             default: $body = ['state' => false, 'error' => 'Invalid type'];
         }
         if(!$body['state']){
@@ -206,13 +211,15 @@ class MessageService
                 'error' => $body['error']
             ];
         }
-        $message = self::StoreMessage(messenger_profile(), [
+        $message = self::StoreMessage([
             'thread_id' => $thread->id,
             'body' => $body['text'],
+            'owner_id' => messenger_profile()->id,
+            'owner_type' => get_class(messenger_profile()),
             'mtype' => $contents['type']
         ]);
         if($message && $message instanceof Message){
-            (new BroadcastService($thread))->broadcastChannels()->broadcastMessage($message->load('owner.messenger'));
+            (new BroadcastService($thread))->broadcastChannels(true)->broadcastMessage($message->load('owner.messenger'), $request->input('temp_id'));
             return [
                 'state' => true,
                 'data' => $message
@@ -227,9 +234,11 @@ class MessageService
     public static function StoreSystemMessage(Thread $thread, $model, $body, $type, $broadcast = true)
     {
         try{
-            $message = self::StoreMessage($model, [
+            $message = self::StoreMessage([
                 'thread_id' => $thread->id,
                 'body' => $body,
+                'owner_id' => $model->id,
+                'owner_type' => get_class($model),
                 'mtype' => $type
             ]);
             if($broadcast){
@@ -264,5 +273,15 @@ class MessageService
             'state' => false,
             'error' => 'Server Error'
         ];
+    }
+
+    public static function PurgeArchivedMessages($days = 90)
+    {
+        $messages = Message::onlyTrashed()->get();
+        foreach($messages as $message){
+            if($message->deleted_at->addDays($days) <= Carbon::now()){
+                (new MessagingPurge($message))->startDelete('message');
+            }
+        }
     }
 }

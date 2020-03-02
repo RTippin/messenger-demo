@@ -235,4 +235,11 @@ class InvitationService
             'error' => 'Server Error'
         ];
     }
+
+    public static function ValidateAllInvites()
+    {
+        GroupInviteLink::all()->each(function ($invite){
+            self::ValidateInviteLink($invite);
+        });
+    }
 }
