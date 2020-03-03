@@ -9,7 +9,7 @@
     <div class="container">
         <div class="jumbotron bg-gradient-dark text-light">
             <div class="float-right d-none d-sm-block pl-2">
-                <img class="pl-2" id="FSlog" height="95" src="{{asset('images/navFS.png')}}">
+                <img class="pl-2" id="FSlog" height="95" src="{{asset('images/tipz.png')}}">
             </div>
             <h1 class="display-4"><i class="fas fa-users"></i> {{$invite->thread->name}}</h1>
             {!! Auth::check() && !$can_join ? '' : '<h3 class="mt-3"><i class="far fa-dot-circle"></i> Join this group on Messenger'.($can_join ? '?' : '!').'</h3>'!!}
