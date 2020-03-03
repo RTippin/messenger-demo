@@ -4,16 +4,9 @@ namespace App\Http\Controllers;
 use App\Models\Messages\Messenger;
 use App\User;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
-    protected $request;
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
     public function search($query)
     {
         $classes = [];
