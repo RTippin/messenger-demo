@@ -1,14 +1,14 @@
 # Tippin's Messenger Demo
-Laravel 6 messenger demo app by Richard Tippin. Working to release this messenger as a package for use with laravel. This is a fully featured stand alone app you can use as a demo or extract my source to fit your needs.
+Laravel 7 messenger demo app by Richard Tippin. Working to release this messenger as a package for use with laravel. This is a fully featured stand alone app you can use as a demo or extract my source to fit your needs.
 
-****Please note that until I ready to extract this further into a package, I will be constantly moving items around, and will soon be redoing the entire database structure to utilize more pivots to avoid duplicated data***
+****Please note that until I ready to extract this further into a package, I will be constantly moving items around***
 
 ### Checkout the [LIVE DEMO](https://tippindev.com)
-*The database and all uploaded files are wiped and reset weekly*
+*The database and all uploaded files are wiped periodically*
 
 ### Prerequisites
-* PHP >= 7.2
-* REDIS
+* PHP >= 7.3
+* REDIS (required to use laravel echo server)
 * Database
 * laravel-echo-server [tlaverdure/laravel-echo-server](https://github.com/tlaverdure/laravel-echo-server)
 
@@ -44,7 +44,7 @@ Laravel 6 messenger demo app by Richard Tippin. Working to release this messenge
   * Priority account emails are (admin@test.com, admin2@test.com, admin3@test.com) that are setup to be friends with everyone, and start message thread with everyone
   * All demo accounts are added to a default messenger group thread
 
-# Installation (Laravel 6.x)
+# Installation (Laravel 7.x)
 
 ***In this demo, I use laravel-echo-server, which you should install globally first if you do not already have it***
 ``` bash
