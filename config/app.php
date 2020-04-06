@@ -178,8 +178,8 @@ return [
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        ChristofferOK\LaravelEmojiOne\LaravelEmojiOneServiceProvider::class,
         App\Providers\AgentServiceProvider::class,
+        andkab\LaravelJoyPixels\LaravelJoyPixelsServiceProvider::class,
 
     ],
 
@@ -231,6 +231,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'GeoIP' => Torann\GeoIP\Facades\GeoIP::class,
+        'LaravelJoyPixels' => andkab\LaravelJoyPixels\LaravelJoyPixelsFacade::class,
     ],
 
 ];

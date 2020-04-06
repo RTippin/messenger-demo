@@ -14,6 +14,18 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\UserLoginLogs newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\UserLoginLogs query()
  * @mixin \Eloquent
+ * @property string $id
+ * @property string $user_id
+ * @property string|null $ip
+ * @property string|null $data
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\UserLoginLogs whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\UserLoginLogs whereData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\UserLoginLogs whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\UserLoginLogs whereIp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\UserLoginLogs whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\UserLoginLogs whereUserId($value)
  */
 class UserLoginLogs extends Model
 {

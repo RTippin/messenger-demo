@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -35,11 +36,11 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param Exception $exception
+     * @param Throwable $exception
      * @return void
      * @throws Exception
      */
-    public function report(Exception $exception)
+    public function report(Throwable $exception)
     {
         parent::report($exception);
     }
@@ -48,11 +49,11 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param Request $request
-     * @param Exception $exception
+     * @param Throwable $exception
      * @return Response|JsonResponse|RedirectResponse|Redirector
-     * @throws Exception
+     * @throws Throwable
      */
-    public function render($request, Exception $exception)
+    public function render($request, Throwable $exception)
     {
         switch(class_basename($exception)){
             case 'TokenMismatchException':
@@ -87,7 +88,7 @@ class Handler extends ExceptionHandler
                 return parent::render($request, $exception);
             break;
         }
-        if (config('app.env') === 'production'){
+        if (app()->isProduction()){
             if ($request->ajax()){
                 return response()->json('Server Error',500);
             }

@@ -10,8 +10,8 @@ use App\Services\UploadService;
 use App\Models\Messages\Thread;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use LaravelEmojiOne;
 use Exception;
+use LaravelJoyPixels;
 
 class MessageService
 {
@@ -145,7 +145,7 @@ class MessageService
         }
         return [
             'state' => true,
-            'text' => LaravelEmojiOne::toShort($body)
+            'text' => LaravelJoyPixels::toShort($body)
         ];
     }
 

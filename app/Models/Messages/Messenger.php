@@ -40,6 +40,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages\Messenger whereTimezone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages\Messenger whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $notify_sound
+ * @property int $friend_approval
+ * @property int $dark_mode
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages\Messenger whereDarkMode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages\Messenger whereFriendApproval($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages\Messenger whereNotifySound($value)
  */
 class Messenger extends Model
 {
