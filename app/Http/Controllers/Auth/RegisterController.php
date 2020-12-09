@@ -88,8 +88,6 @@ class RegisterController extends Controller
                 'password' => Hash::make($data['password']),
             ]);
 
-            info('test', ['user' => $user]);
-
             Messenger::getProviderMessenger($user);
 
             Friend::create([
