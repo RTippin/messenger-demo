@@ -1,14 +1,19 @@
 <?php
+
 namespace App\Traits;
 
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
+use Str;
 
 trait Uuids
 {
+    /**
+     * On model creating, set the primary key to UUID
+     */
     public static function bootUuids()
     {
-        static::creating(function ($model) {
-            $model->{$model->getKeyName()} = Str::orderedUuid();
+        static::creating(function (Model $model) {
+            $model->{$model->getKeyName()} = Str::orderedUuid()->toString();
         });
     }
 }

@@ -1,31 +1,35 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\User;
-use Illuminate\Http\Request;
-use View;
-use Cache;
+
+use App\Models\User;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\JsonResponse;
 
 class HomeController extends Controller
 {
-    protected $request;
-    public function __construct(Request $request)
+    /**
+     * Show the application dashboard.
+     *
+     * @return Renderable
+     */
+    public function index(): Renderable
     {
-        $this->request = $request;
+        return view('home');
     }
 
-    public function splash()
+    /**
+     * @return JsonResponse
+     */
+    public function getDemoAccounts(): JsonResponse
     {
-        return view('splash');
-    }
-
-    public function availableAccounts()
-    {
-        $users = User::query()->oldest()->whereNotIn('email', ['admin@test.com', 'admin2@test.com', 'admin3@test.com'])->limit(15)->get()->shuffle()->reject(function ($user){
-            return Cache::has(get_messenger_alias($user).'_online_'.$user->id) || Cache::has(get_messenger_alias($user).'_away_'.$user->id);
+        $users = User::demo()->get()->shuffle()->filter(function (User $user){
+            return $user->onlineStatus() === 0;
         });
-        return response()->json([
-            'html' => View::make('auth.partials.accounts')->with('users', $users->take(5))->render()
+
+        return new JsonResponse([
+            'html' => view('auth.demoAcc')->with('users', $users->take(5))->render()
         ]);
     }
 }

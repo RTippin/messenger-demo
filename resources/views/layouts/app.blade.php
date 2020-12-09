@@ -3,33 +3,40 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="KCULpGQAVEiYeRxNnbS01EdgWd4MM1hfmt29fFmZLi0" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="manifest" href="{{asset('manifest.json')}}">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Tipz">
-    <meta name="apple-mobile-web-app-title" content="Tipz">
-    <meta name="theme-color" content="#282c30">
-    <meta name="msapplication-navbutton-color" content="#282c30">
+    <meta name="application-name" content="FS">
+    <meta name="apple-mobile-web-app-title" content="FS">
+    <meta name="theme-color" content="#343a40">
+    <meta name="msapplication-navbutton-color" content="#343a40">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="msapplication-starturl" content="/">
-    <link rel="icon" type="image/png" sizes="200x200" href="{{asset('images/tipz.png')}}">
-    <link rel="apple-touch-icon" type="image/png" sizes="200x200" href="{{asset('images/tipz.png')}}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{asset('vendor/messenger/images/android-chrome-192x192.png')}}">
+    <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="{{asset('vendor/messenger/images/apple-touch-icon.png')}}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{asset('vendor/messenger/images/favicon-32x32.png')}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('vendor/messenger/images/favicon-16x16.png')}}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="title" content="@yield('title', 'Tipz Messenger')">
-    @yield('seo')
-    <title>@yield('title', 'Tipz Messenger')</title>
-    @include('layouts.cssMode')
+    <meta name="description" content="Laravel messenger demo app by Richard Tippin. Includes real-time messaging, group messaging, read receipts, video calls with screen sharing, group invitation links, and more!">
+    <meta name="keywords" content="laravel, demo, git, messenger, plugin, package, open, source, message, suite, php, javascript, bootstrap, framework, webrtc, tippin, jquery, MVC, ORM, OOP" />
+    <meta name="title" content="@yield('title', 'Messenger Demo')">
+    <title>@yield('title', 'Tippin\'s Messenger Demo')</title>
+    @auth
+        <link id="main_css" href="{{ asset(mix(messenger()->getProviderMessenger()->dark_mode ? 'dark.css' : 'app.css', 'vendor/messenger')) }}" rel="stylesheet">
+    @else
+        <link id="main_css" href="{{ asset(mix('dark.css', 'vendor/messenger')) }}" rel="stylesheet">
+    @endauth
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css">
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     @stack('css')
 </head>
 <body>
 <wrapper class="d-flex flex-column">
-    <nav id="RT_navbar" class="{{request()->is('messenger/*') && agent()->isMobile() ? 'NS' : ''}} navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+    <nav id="FS_navbar" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="/">
-            <img src="{{ asset('images/tipz.png') }}" width="30" height="30" class="d-inline-block align-top" alt="Tipz">
-            Tipz Messenger
+            <img src="{{ asset('vendor/messenger/images/messenger.png') }}" width="30" height="30" class="d-inline-block align-top" alt="Messenger">
+            {{messenger()->getSiteName()}}
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -37,30 +44,20 @@
         </button>
         <div id="navbarNavDropdown" class="navbar-collapse collapse">
             @auth
-                @include('layouts.nav.user')
+                @include('messenger::nav')
             @else
-                @include('layouts.nav.guest')
-            @endif
+                @include('layouts.guest')
+            @endauth
         </div>
     </nav>
-    <div class="fixed-top mt-5 pt-3">
-        <div class="container">
-            <div id="alert_container"></div>
-        </div>
-    </div>
-@if(agent()->isMobile() && request()->is('messenger/*'))
-    <main id="RT_main_section" class="pt-0 mt-3 flex-fill">
-@else
-    <main id="RT_main_section" class="{{request()->is('messenger*') ? 'pt-5' : 'py-5'}} mt-4 flex-fill">
-@endif
+    <main id="FS_main_section" class="pt-5 mt-4 flex-fill">
         <div id="app">
             @yield('content')
         </div>
     </main>
-    @if(!request()->is('messenger*'))
-        @include('layouts.nav.footer')
-    @endif
 </wrapper>
-@include('layouts.scripts')
+@guest
+    @include('messenger::scripts')
+@endguest
 </body>
 </html>

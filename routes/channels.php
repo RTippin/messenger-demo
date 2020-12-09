@@ -1,8 +1,7 @@
 <?php
 
-use App\Broadcasting\CallChannel;
-use App\Broadcasting\ThreadChannel;
-use App\Broadcasting\ModelChannel;
+use Illuminate\Support\Facades\Broadcast;
+
 /*
 |--------------------------------------------------------------------------
 | Broadcast Channels
@@ -14,8 +13,6 @@ use App\Broadcasting\ModelChannel;
 |
 */
 
-Broadcast::channel('{alias}_notify_{id}', ModelChannel::class);
-
-Broadcast::channel('thread_{thread}', ThreadChannel::class);
-
-Broadcast::channel('call_{thread}_{call}', CallChannel::class);
+//Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
+//    return (int) $user->id === (int) $id;
+//});

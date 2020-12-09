@@ -43,14 +43,19 @@ return [
 
         'socket' => [
             'driver' => 'pusher',
-            'key' => env('MIX_SOCKET_APP_KEY'),
+            'key' => env('SOCKET_APP_KEY'),
             'secret' => null,
-            'app_id' => env('MIX_SOCKET_APP_ID'),
+            'app_id' => env('SOCKET_APP_ID'),
             'options' => [
                 'host' => env('SOCKET_APP_HOST', 'echo'),
                 'port' => env('SOCKET_APP_PORT', '6001'),
                 'scheme' => env('SOCKET_APP_SCHEME', 'http')
             ],
+        ],
+
+        'ably' => [
+            'driver' => 'ably',
+            'key' => env('ABLY_KEY'),
         ],
 
         'redis' => [

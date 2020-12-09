@@ -1,77 +1,131 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Services\LoginLoggerService;
-use App\Services\Messenger\MessengerLocationService;
-use App\Services\RegisterService;
-use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Http\Request;
+use App\Providers\RouteServiceProvider;
+use App\Models\User;
 use Exception;
+use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use RTippin\Messenger\Actions\Threads\StoreManyParticipants;
+use RTippin\Messenger\Facades\Messenger;
+use RTippin\Messenger\Models\Friend;
+use RTippin\Messenger\Models\Thread;
 
 class RegisterController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Register Controller
+    |--------------------------------------------------------------------------
+    |
+    | This controller handles the registration of new users as well as their
+    | validation and creation. By default this controller uses a trait to
+    | provide this functionality without requiring any additional code.
+    |
+    */
+
     use RegistersUsers;
 
     /**
+     * Where to redirect users after registration.
+     *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
-     * @var RegisterService
+     * Create a new controller instance.
+     *
+     * @return void
      */
-    protected $registerService;
-
-    /**
-     * @var Request
-     */
-    protected $request;
-    /**
-     * @var LoginLoggerService
-     */
-    protected $loggerService;
-    /**
-     * @var MessengerLocationService
-     */
-    protected $messengerLocationService;
-
-    /**
-     * RegisterController constructor.
-     * @param Request $request
-     * @param RegisterService $registerService
-     * @param LoginLoggerService $loggerService
-     * @param MessengerLocationService $messengerLocationService
-     */
-    public function __construct(Request $request,
-                                RegisterService $registerService,
-                                LoginLoggerService $loggerService,
-                                MessengerLocationService $messengerLocationService
-    )
+    public function __construct()
     {
-        $this->middleware(['guest', 'Registration']);
-        $this->registerService = $registerService;
-        $this->request = $request;
-        $this->loggerService = $loggerService;
-        $this->messengerLocationService = $messengerLocationService;
+        $this->middleware('guest');
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function register()
+    protected function validator(array $data)
     {
-        $dispatch = $this->registerService->registerPost();
-        if(!$dispatch['state']){
-            return response()->json(['errors' => ['forms' => $dispatch['error']] , 'registered' => false], 400);
-        }
+        return Validator::make($data, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+    }
+
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param array $data
+     * @return \App\Models\User
+     * @throws \Throwable
+     */
+    protected function create(array $data)
+    {
+        //custom stuff so new user auto adds to demo group
+
+        DB::beginTransaction();
+
         try{
-            set_messenger_profile(auth()->user());
-            $this->loggerService->store(messenger_profile());
-            $this->messengerLocationService->update();
+            $admin = User::whereEmail('admin@example.net')->first();
+
+            $group = Thread::group()->oldest()->first();
+
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'demo' => false,
+                'admin' => false,
+                'password' => Hash::make($data['password']),
+            ]);
+
+            info('test', ['user' => $user]);
+
+            Messenger::getProviderMessenger($user);
+
+            Friend::create([
+                'owner_id' => $admin->id,
+                'owner_type' => 'App\Models\User',
+                'party_id' => $user->id,
+                'party_type' => 'App\Models\User'
+            ]);
+
+            Friend::create([
+                'owner_id' => $user->id,
+                'owner_type' => 'App\Models\User',
+                'party_id' => $admin->id,
+                'party_type' => 'App\Models\User'
+            ]);
+
+            Messenger::setProvider($admin);
+            app(StoreManyParticipants::class)->execute($group, [
+                    [
+                        'alias' => 'user',
+                        'id' => $user->id
+                    ]
+
+            ]);
+            Messenger::unsetProvider();
+
+            DB::commit();
+
+            return $user;
+
         }catch (Exception $e){
             report($e);
+
+            DB::rollBack();
         }
-        return response()->json(['registered' => true]);
+
+        abort(500);
     }
 }
