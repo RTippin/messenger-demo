@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use RTippin\Messenger\Actions\Threads\StoreParticipant;
@@ -53,7 +54,13 @@ class DatabaseSeeder extends Seeder
             ->count(15)
             ->create();
 
+        Company::factory()
+            ->count(5)
+            ->create();
+
         $others = User::where('email', '!=', $this->admin->email)->get();
+
+        $companies = Company::all();
 
         $groupThread = Thread::create([
             'type' => 2,
@@ -70,6 +77,10 @@ class DatabaseSeeder extends Seeder
 
         $others->each(
             fn(User $user) => $this->storeParticipant->execute($groupThread, $user, Definitions::DefaultParticipant)
+        );
+
+        $companies->each(
+            fn(Company $company) => $this->storeParticipant->execute($groupThread, $company, Definitions::DefaultParticipant)
         );
 
         for($x = 0; $x < 25; $x++){
