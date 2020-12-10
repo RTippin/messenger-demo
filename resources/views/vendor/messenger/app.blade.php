@@ -30,7 +30,7 @@
 </head>
 <body>
 <wrapper class="d-flex flex-column">
-    <nav id="FS_navbar" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+    <nav id="FS_navbar" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark {{request()->is('messenger/*') && app('agent')->isMobile() ? 'NS' : ''}}">
         <a class="navbar-brand" href="{{url('/')}}">
             <img src="{{ asset('vendor/messenger/images/messenger.png') }}" width="30" height="30" class="d-inline-block align-top" alt="Messenger">
             {{messenger()->getSiteName()}}
@@ -45,11 +45,15 @@
             @endauth
         </div>
     </nav>
-    <main id="FS_main_section" class="pt-5 mt-4 flex-fill">
-        <div id="app">
-            @yield('content')
-        </div>
-    </main>
+    @if(app('agent')->isMobile() && request()->is('messenger/*'))
+        <main id="FS_main_section" class="pt-0 mt-3 flex-fill">
+            @else
+                <main id="FS_main_section" class="{{request()->is('messenger*') ? 'pt-5' : 'py-5'}} mt-4 flex-fill">
+                    @endif
+                    <div id="app">
+                        @yield('content')
+                    </div>
+                </main>
 </wrapper>
 @include('messenger::scripts')
 </body>

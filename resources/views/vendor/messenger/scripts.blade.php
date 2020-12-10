@@ -1,10 +1,10 @@
 <script src="{{ asset(mix('app.js', 'vendor/messenger')) }}"></script>
 @stack('js')
 @if(auth()->check())
-<script src="https://cdn.jsdelivr.net/npm/emojione@4.0.0/lib/js/emojione.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emojione@4.0.0/lib/js/emojione.min.js"></script>
 @endif
 <script>
-@if(auth()->check())
+    @if(auth()->check())
     Messenger.init({
         load : {
             NotifyManager : {
@@ -14,15 +14,15 @@
                 call_ringtone_sound : {{messenger()->getProviderMessenger()->call_ringtone_sound}},
                 src : 'NotifyManager.js'
             },
-@stack('Messenger-load')
+            @stack('Messenger-load')
 
         },
         provider : {
             model : '{{messenger()->getProviderAlias()}}',
             @if(config('messenger.provider_uuids'))
-                id : '{{messenger()->getProviderId()}}',
+            id : '{{messenger()->getProviderId()}}',
             @else
-                id : {{messenger()->getProviderId()}},
+            id : {{messenger()->getProviderId()}},
             @endif
             name : '{{ messenger()->getProvider()->name()}}',
             slug : '{{ messenger()->getProvider()->getAvatarRoute('sm')}}',
@@ -35,17 +35,18 @@
             socket_endpoint : '{{messenger()->getSocketEndpoint()}}',
             base_css : '{{ asset(mix('app.css', 'vendor/messenger')) }}',
             dark_css : '{{ asset(mix('dark.css', 'vendor/messenger')) }}',
+            mobile : {{ app('agent')->isMobile() ? 'true' : 'false' }},
         },
         modules : {
-@stack('Messenger-modules')
+            @stack('Messenger-modules')
 
         },
-@stack('Messenger-call')
-}, '{{config('app.env')}}');
-@else
+        @stack('Messenger-call')
+    }, '{{config('app.env')}}');
+    @else
     Messenger.init({
         load : {
-        @stack('Messenger-load')
+            @stack('Messenger-load')
         },
         common : {
             app_name : '{{messenger()->getSiteName()}}',
@@ -54,12 +55,13 @@
             socket_endpoint : '{{messenger()->getSocketEndpoint()}}',
             base_css : '{{ asset(mix('app.css', 'vendor/messenger')) }}',
             dark_css : '{{ asset(mix('dark.css', 'vendor/messenger')) }}',
+            mobile : {{ app('agent')->isMobile() ? 'true' : 'false' }},
         },
         modules : {
-        @stack('Messenger-modules')
+            @stack('Messenger-modules')
         },
         @stack('Messenger-call')
     }, '{{config('app.env')}}');
-@endif
+    @endif
 </script>
 @stack('special-js')
