@@ -24,19 +24,14 @@ return [
     // janus server should you use it
 
     'main_servers' => [
-        "wss://tippinweb.com/janus-ws",
-        "https://tippinweb.com/janus",
+        //"wss://example.com/janus-ws",
+        //"https://example.com/janus",
     ],
     'ice_servers' => [
-        [
-            'urls' => 'stun:tippindev.com:5349',
-            'username' => 'ajnozari',
-            'credential' => '8BrBQffgdFHoFRQDucvZ'
-        ],
-        [
-            'urls' => 'turn:tippindev.com:5349',
-            'username' => 'ajnozari',
-            'credential' => '8BrBQffgdFHoFRQDucvZ'
-        ],
-    ]
+        //        [
+        //            'urls' => 'stun:example.com:5349',
+        //            'username' => 'user',
+        //            'credential' => 'password'
+        //        ],
+    ],
 ];
