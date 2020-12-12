@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "058615ece1792fee7fc92cfed718058e",
+    "content-hash": "7a6fd2feb84a06cbae9ebf86570f44f5",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2985,16 +2985,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.2-alpha.1",
+            "version": "v0.3-alpha.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "90d68ce5a35570670294886518954f52f4e7c000"
+                "reference": "31bd76cf26e0cf2a02d57bc4552ca0e577329c8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/90d68ce5a35570670294886518954f52f4e7c000",
-                "reference": "90d68ce5a35570670294886518954f52f4e7c000",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/31bd76cf26e0cf2a02d57bc4552ca0e577329c8b",
+                "reference": "31bd76cf26e0cf2a02d57bc4552ca0e577329c8b",
                 "shasum": ""
             },
             "require": {
@@ -3049,9 +3049,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.2-alpha.1"
+                "source": "https://github.com/RTippin/messenger/tree/v0.3-alpha.1"
             },
-            "time": "2020-12-11T03:30:34+00:00"
+            "time": "2020-12-12T06:19:19+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
@@ -6778,16 +6778,16 @@
         },
         {
             "name": "fakerphp/faker",
-            "version": "v1.12.0",
+            "version": "v1.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FakerPHP/Faker.git",
-                "reference": "9aa6c9e289860951e6b4d010c7a841802d015cd8"
+                "reference": "841e8bdde345cc1ea9f98e776959e7531cadea0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/9aa6c9e289860951e6b4d010c7a841802d015cd8",
-                "reference": "9aa6c9e289860951e6b4d010c7a841802d015cd8",
+                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/841e8bdde345cc1ea9f98e776959e7531cadea0e",
+                "reference": "841e8bdde345cc1ea9f98e776959e7531cadea0e",
                 "shasum": ""
             },
             "require": {
@@ -6824,9 +6824,9 @@
             ],
             "support": {
                 "issues": "https://github.com/FakerPHP/Faker/issues",
-                "source": "https://github.com/FakerPHP/Faker/tree/v1.12.0"
+                "source": "https://github.com/FakerPHP/Faker/tree/v1.12.1"
             },
-            "time": "2020-11-23T09:33:08+00:00"
+            "time": "2020-12-11T10:39:41+00:00"
         },
         {
             "name": "filp/whoops",
@@ -9229,7 +9229,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "rtippin/messenger": 15
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

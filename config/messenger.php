@@ -93,7 +93,7 @@ return [
             'model' => App\Models\User::class,
             'searchable' => true,
             'friendable' => true,
-            'mobile_devices' => false,
+            'devices' => false,
             'default_avatar' => public_path('vendor/messenger/images/users.png'),
             'provider_interactions' => [
                 'can_message' => true,
@@ -105,7 +105,7 @@ return [
             'model' => App\Models\Company::class,
             'searchable' => true,
             'friendable' => true,
-            'mobile_devices' => false,
+            'devices' => false,
             'default_avatar' => public_path('vendor/messenger/images/company.png'),
             'provider_interactions' => [
                 'can_message' => true,
