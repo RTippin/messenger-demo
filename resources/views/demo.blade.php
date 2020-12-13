@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container my-5">
     <div class="col-12 col-lg-8 offset-lg-2">
         <div class="card rounded shadow">
             <div class="card-header">
