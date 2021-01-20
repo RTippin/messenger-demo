@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a338ab4f850ef964f91b359be9a0680e",
+    "content-hash": "b412d3426370d4cc1ec29b9f20b05a6e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1219,16 +1219,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.22.1",
+            "version": "v8.23.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "5c70991b96c5722afed541a996479b5112654c8b"
+                "reference": "a813df1b248ca305e5f5ce23ea981ed6c6905504"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/5c70991b96c5722afed541a996479b5112654c8b",
-                "reference": "5c70991b96c5722afed541a996479b5112654c8b",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/a813df1b248ca305e5f5ce23ea981ed6c6905504",
+                "reference": "a813df1b248ca305e5f5ce23ea981ed6c6905504",
                 "shasum": ""
             },
             "require": {
@@ -1382,7 +1382,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-01-13T13:37:56+00:00"
+            "time": "2021-01-19T14:10:48+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -2987,16 +2987,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.6-alpha.4",
+            "version": "v0.7-alpha.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "d9ee7c8bdfd014ec360bc0bca0396c930c4ee735"
+                "reference": "5a1965afcedcb2611e032f5bee9e6e2108cc4226"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/d9ee7c8bdfd014ec360bc0bca0396c930c4ee735",
-                "reference": "d9ee7c8bdfd014ec360bc0bca0396c930c4ee735",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/5a1965afcedcb2611e032f5bee9e6e2108cc4226",
+                "reference": "5a1965afcedcb2611e032f5bee9e6e2108cc4226",
                 "shasum": ""
             },
             "require": {
@@ -3051,9 +3051,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.6-alpha.4"
+                "source": "https://github.com/RTippin/messenger/tree/v0.7-alpha.0"
             },
-            "time": "2021-01-19T06:08:01+00:00"
+            "time": "2021-01-20T10:24:14+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
