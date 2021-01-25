@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b412d3426370d4cc1ec29b9f20b05a6e",
+    "content-hash": "14857572833f3079938657036b8ac0cc",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2991,16 +2991,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.7-alpha.2",
+            "version": "v0.8-alpha.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "ee0334c7afdce0491e15d1845a1be5a39b6a7a66"
+                "reference": "5636799f974736f187aacd613add2d7de82b0af9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/ee0334c7afdce0491e15d1845a1be5a39b6a7a66",
-                "reference": "ee0334c7afdce0491e15d1845a1be5a39b6a7a66",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/5636799f974736f187aacd613add2d7de82b0af9",
+                "reference": "5636799f974736f187aacd613add2d7de82b0af9",
                 "shasum": ""
             },
             "require": {
@@ -3055,9 +3055,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.7-alpha.2"
+                "source": "https://github.com/RTippin/messenger/tree/v0.8-alpha.0"
             },
-            "time": "2021-01-23T09:55:56+00:00"
+            "time": "2021-01-25T06:53:32+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
@@ -6910,16 +6910,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.9.1",
+            "version": "2.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "307fb34a5ab697461ec4c9db865b20ff2fd40771"
+                "reference": "df7933820090489623ce0be5e85c7e693638e536"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/307fb34a5ab697461ec4c9db865b20ff2fd40771",
-                "reference": "307fb34a5ab697461ec4c9db865b20ff2fd40771",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/df7933820090489623ce0be5e85c7e693638e536",
+                "reference": "df7933820090489623ce0be5e85c7e693638e536",
                 "shasum": ""
             },
             "require": {
@@ -6969,9 +6969,15 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.9.1"
+                "source": "https://github.com/filp/whoops/tree/2.9.2"
             },
-            "time": "2020-11-01T12:00:00+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/denis-sokolov",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-01-24T12:00:00+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
