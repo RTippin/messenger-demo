@@ -30,9 +30,9 @@
                 <div class="card">
                     <div class="card-header h3 text-info"><i class="fas fa-server"></i> <pre class="d-inline">Messenger::getConfig();</pre></div>
                     <div class="card-body">
-                        @php
-                            dump(messenger()->getConfig());
-                        @endphp
+                        <code>
+                            {{  collect(messenger()->getConfig())->toJson() }}
+                        </code>
                     </div>
                 </div>
             </div>
@@ -42,9 +42,9 @@
                 <div class="card">
                     <div class="card-header h3 text-info"><i class="fas fa-server"></i> <pre class="d-inline">Messenger::getProvider();</pre></div>
                     <div class="card-body">
-                        @php
-                            dump(messenger()->getProvider());
-                        @endphp
+                        <code>
+                            {{  messenger()->getProvider()->toJson() }}
+                        </code>
                     </div>
                 </div>
             </div>
