@@ -1917,16 +1917,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.43.0",
+            "version": "2.44.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "d32c57d8389113742f4a88725a170236470012e2"
+                "reference": "e6ef33cb1f67a4bed831ed6d0f7e156739a5d8cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/d32c57d8389113742f4a88725a170236470012e2",
-                "reference": "d32c57d8389113742f4a88725a170236470012e2",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/e6ef33cb1f67a4bed831ed6d0f7e156739a5d8cd",
+                "reference": "e6ef33cb1f67a4bed831ed6d0f7e156739a5d8cd",
                 "shasum": ""
             },
             "require": {
@@ -1942,7 +1942,7 @@
                 "phpmd/phpmd": "^2.9",
                 "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^0.12.54",
-                "phpunit/phpunit": "^7.5 || ^8.0",
+                "phpunit/phpunit": "^7.5.20 || ^8.5.14",
                 "squizlabs/php_codesniffer": "^3.4"
             },
             "bin": [
@@ -2006,7 +2006,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-17T20:55:32+00:00"
+            "time": "2021-01-26T20:46:41+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -2992,16 +2992,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.8-alpha.1",
+            "version": "v0.8-alpha.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "e0369deadbb70cb9e071c04f79e759af4e32e957"
+                "reference": "198962443abccad8796cc6b85f1432e392054095"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/e0369deadbb70cb9e071c04f79e759af4e32e957",
-                "reference": "e0369deadbb70cb9e071c04f79e759af4e32e957",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/198962443abccad8796cc6b85f1432e392054095",
+                "reference": "198962443abccad8796cc6b85f1432e392054095",
                 "shasum": ""
             },
             "require": {
@@ -3056,9 +3056,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.8-alpha.1"
+                "source": "https://github.com/RTippin/messenger/tree/v0.8-alpha.2"
             },
-            "time": "2021-01-28T07:29:40+00:00"
+            "time": "2021-02-01T09:54:50+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
