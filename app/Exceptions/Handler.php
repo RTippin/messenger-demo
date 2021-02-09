@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionException;
-use RTippin\Messenger\Exceptions\InvalidMessengerProvider;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -20,7 +19,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        InvalidMessengerProvider::class,
+        // Exceptions not to report
     ];
 
     /**
