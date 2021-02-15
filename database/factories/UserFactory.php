@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use RTippin\Messenger\Facades\Messenger;
 
 class UserFactory extends Factory
@@ -28,7 +27,6 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'demo' => true,
             'password' => '$2y$10$rb4NakT8uw00mOPSUaaxMe4Ogy5ja8PUIgkdMhQQxa.apOO8wTI4a', // messenger
-            'remember_token' => Str::random(10),
         ];
     }
 
