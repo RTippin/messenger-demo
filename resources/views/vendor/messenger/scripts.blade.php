@@ -65,3 +65,17 @@
 @endif
 </script>
 @stack('special-js')
+@if(auth()->check())
+    <script>
+        let pingCheck = function(){
+            Messenger.xhr().payload({
+                route : '/heartbeat',
+                data : {},
+                fail : function(){
+                    window.location.reload();
+                }
+            });
+        };
+        setInterval(pingCheck, 600000);
+    </script>
+@endif

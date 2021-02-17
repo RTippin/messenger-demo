@@ -1,6 +1,8 @@
 # [rtippin/messenger](https://github.com/RTippin/messenger) demo app
 
-## Checkout the [LIVE DEMO](https://tippindev.com) (https://tippindev.com)
+## Addon commands package included [rtippin/messenger-faker](https://github.com/RTippin/messenger-faker)
+
+## Checkout the [LIVE DEMO](https://tippindev.com)
 
 ### Prerequisites
 - PHP >= 7.4

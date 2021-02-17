@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
@@ -30,6 +29,15 @@ class HomeController extends Controller
 
         return new JsonResponse([
             'html' => view('auth.demoAcc')->with('users', $users->take(5))->render()
+        ]);
+    }
+    /**
+     * @return JsonResponse
+     */
+    public function csrfHeartbeat(): JsonResponse
+    {
+        return new JsonResponse([
+            'auth' => true,
         ]);
     }
 }
