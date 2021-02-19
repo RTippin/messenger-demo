@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "77cb2f7c23c93566c104c17738216b50",
+    "content-hash": "e9f0dee1546240dca89fe25695d5f996",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -8130,16 +8130,16 @@
         },
         {
             "name": "rtippin/messenger-faker",
-            "version": "v0.1-alpha.0",
+            "version": "v0.2-alpha.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-faker.git",
-                "reference": "477968a43d19018ebddaf91cf71aec009290fc84"
+                "reference": "0499fe57dfc623227ecd1db48e4b01528bb2add9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/477968a43d19018ebddaf91cf71aec009290fc84",
-                "reference": "477968a43d19018ebddaf91cf71aec009290fc84",
+                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/0499fe57dfc623227ecd1db48e4b01528bb2add9",
+                "reference": "0499fe57dfc623227ecd1db48e4b01528bb2add9",
                 "shasum": ""
             },
             "require": {
@@ -8184,9 +8184,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-faker/issues",
-                "source": "https://github.com/RTippin/messenger-faker/tree/v0.1-alpha.0"
+                "source": "https://github.com/RTippin/messenger-faker/tree/v0.2-alpha.0"
             },
-            "time": "2021-02-17T04:47:42+00:00"
+            "time": "2021-02-19T05:31:40+00:00"
         },
         {
             "name": "sebastian/cli-parser",
