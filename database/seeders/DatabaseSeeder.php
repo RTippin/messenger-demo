@@ -6,11 +6,11 @@ use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use RTippin\Messenger\Actions\Threads\StoreParticipant;
-use RTippin\Messenger\Definitions;
 use RTippin\Messenger\Facades\Messenger;
 use RTippin\Messenger\Models\Friend;
 use RTippin\Messenger\Models\Message;
 use RTippin\Messenger\Models\Thread;
+use RTippin\Messenger\Support\Definitions;
 
 class DatabaseSeeder extends Seeder
 {
