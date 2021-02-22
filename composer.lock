@@ -1765,16 +1765,16 @@
         },
         {
             "name": "mobiledetect/mobiledetectlib",
-            "version": "2.8.36",
+            "version": "2.8.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "e55c155f4d1ab299a0cfca8ec29a0154918c9e3d"
+                "reference": "9841e3c46f5bd0739b53aed8ac677fa712943df7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/e55c155f4d1ab299a0cfca8ec29a0154918c9e3d",
-                "reference": "e55c155f4d1ab299a0cfca8ec29a0154918c9e3d",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/9841e3c46f5bd0739b53aed8ac677fa712943df7",
+                "reference": "9841e3c46f5bd0739b53aed8ac677fa712943df7",
                 "shasum": ""
             },
             "require": {
@@ -1815,9 +1815,15 @@
             ],
             "support": {
                 "issues": "https://github.com/serbanghita/Mobile-Detect/issues",
-                "source": "https://github.com/serbanghita/Mobile-Detect/tree/2.8.36"
+                "source": "https://github.com/serbanghita/Mobile-Detect/tree/2.8.37"
             },
-            "time": "2021-02-13T14:35:52+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/serbanghita",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-02-19T21:22:57+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -2992,16 +2998,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.18-alpha.0",
+            "version": "v0.18-alpha.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "8f43a58ce0c895c709ed3a35bc1b8fd6da6c1c7e"
+                "reference": "8dbc1506feee8ae305c19d6c2d4b2ba14af187df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/8f43a58ce0c895c709ed3a35bc1b8fd6da6c1c7e",
-                "reference": "8f43a58ce0c895c709ed3a35bc1b8fd6da6c1c7e",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/8dbc1506feee8ae305c19d6c2d4b2ba14af187df",
+                "reference": "8dbc1506feee8ae305c19d6c2d4b2ba14af187df",
                 "shasum": ""
             },
             "require": {
@@ -3056,9 +3062,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.18-alpha.0"
+                "source": "https://github.com/RTippin/messenger/tree/v0.18-alpha.1"
             },
-            "time": "2021-02-20T06:25:30+00:00"
+            "time": "2021-02-21T23:39:30+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
