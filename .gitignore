@@ -24,8 +24,6 @@ _ide_helper.php
 
 #\.env\.example
 
-/storage/framework/views
-
 # OSX
 #
 .DS_Store
