@@ -4,7 +4,6 @@
 /public/pma
 /public/js
 /storage/*.key
-/storage
 /vendor
 /.idea
 
