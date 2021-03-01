@@ -1170,16 +1170,16 @@
         },
         {
             "name": "joypixels/emoji-toolkit",
-            "version": "6.0.1",
+            "version": "6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/joypixels/emoji-toolkit.git",
-                "reference": "e74cb16a435aab08f4a26e45e92583b986ce5d77"
+                "reference": "3a13f4d21e4683bdb4323f07658c333014a95876"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/joypixels/emoji-toolkit/zipball/e74cb16a435aab08f4a26e45e92583b986ce5d77",
-                "reference": "e74cb16a435aab08f4a26e45e92583b986ce5d77",
+                "url": "https://api.github.com/repos/joypixels/emoji-toolkit/zipball/3a13f4d21e4683bdb4323f07658c333014a95876",
+                "reference": "3a13f4d21e4683bdb4323f07658c333014a95876",
                 "shasum": ""
             },
             "require": {
@@ -1213,22 +1213,22 @@
             ],
             "support": {
                 "issues": "https://github.com/joypixels/emoji-toolkit/issues",
-                "source": "https://github.com/joypixels/emoji-toolkit/tree/master"
+                "source": "https://github.com/joypixels/emoji-toolkit/tree/6.5"
             },
-            "time": "2020-08-11T20:49:03+00:00"
+            "time": "2021-02-23T00:49:39+00:00"
         },
         {
             "name": "laravel/framework",
-            "version": "v8.28.1",
+            "version": "v8.29.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "73dd43d92fcde6c6abc00658ae33391397ca119d"
+                "reference": "d2eba352b3b3a3c515b18c5726b373fe5026733e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/73dd43d92fcde6c6abc00658ae33391397ca119d",
-                "reference": "73dd43d92fcde6c6abc00658ae33391397ca119d",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/d2eba352b3b3a3c515b18c5726b373fe5026733e",
+                "reference": "d2eba352b3b3a3c515b18c5726b373fe5026733e",
                 "shasum": ""
             },
             "require": {
@@ -1336,7 +1336,7 @@
                 "phpunit/phpunit": "Required to use assertions and run tests (^8.5.8|^9.3.3).",
                 "predis/predis": "Required to use the predis connector (^1.1.2).",
                 "psr/http-message": "Required to allow Storage::put to accept a StreamInterface (^1.0).",
-                "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (^4.0).",
+                "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (^4.0|^5.0).",
                 "symfony/cache": "Required to PSR-6 cache bridge (^5.1.4).",
                 "symfony/filesystem": "Required to enable support for relative symbolic links (^5.1.4).",
                 "symfony/psr-http-message-bridge": "Required to use PSR-7 bridging features (^2.0).",
@@ -1383,7 +1383,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-02-16T18:07:44+00:00"
+            "time": "2021-02-23T14:27:41+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -2998,16 +2998,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.18-alpha.1",
+            "version": "v0.19-alpha.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "8dbc1506feee8ae305c19d6c2d4b2ba14af187df"
+                "reference": "91c1550023090ccffc1237bb6dc148d6a25e8399"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/8dbc1506feee8ae305c19d6c2d4b2ba14af187df",
-                "reference": "8dbc1506feee8ae305c19d6c2d4b2ba14af187df",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/91c1550023090ccffc1237bb6dc148d6a25e8399",
+                "reference": "91c1550023090ccffc1237bb6dc148d6a25e8399",
                 "shasum": ""
             },
             "require": {
@@ -3062,9 +3062,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.18-alpha.1"
+                "source": "https://github.com/RTippin/messenger/tree/v0.19-alpha.0"
             },
-            "time": "2021-02-21T23:39:30+00:00"
+            "time": "2021-03-01T03:16:50+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
@@ -5905,16 +5905,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.0.9",
+            "version": "2.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "591c2c155cac0d2d7f34af41d3b1e29bcbfc685e"
+                "reference": "a5a5632da0b1c2d6fa9a3b65f1f4e90d1f04abb9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/591c2c155cac0d2d7f34af41d3b1e29bcbfc685e",
-                "reference": "591c2c155cac0d2d7f34af41d3b1e29bcbfc685e",
+                "url": "https://api.github.com/repos/composer/composer/zipball/a5a5632da0b1c2d6fa9a3b65f1f4e90d1f04abb9",
+                "reference": "a5a5632da0b1c2d6fa9a3b65f1f4e90d1f04abb9",
                 "shasum": ""
             },
             "require": {
@@ -5982,7 +5982,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/composer/issues",
-                "source": "https://github.com/composer/composer/tree/2.0.9"
+                "source": "https://github.com/composer/composer/tree/2.0.11"
             },
             "funding": [
                 {
@@ -5998,7 +5998,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-27T15:09:27+00:00"
+            "time": "2021-02-24T13:57:23+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
@@ -7111,16 +7111,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.4.2",
+            "version": "1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "20cab678faed06fac225193be281ea0fddb43b93"
+                "reference": "d1339f64479af1bee0e82a0413813fe5345a54ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/20cab678faed06fac225193be281ea0fddb43b93",
-                "reference": "20cab678faed06fac225193be281ea0fddb43b93",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/d1339f64479af1bee0e82a0413813fe5345a54ea",
+                "reference": "d1339f64479af1bee0e82a0413813fe5345a54ea",
                 "shasum": ""
             },
             "require": {
@@ -7177,9 +7177,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mockery/mockery/issues",
-                "source": "https://github.com/mockery/mockery/tree/master"
+                "source": "https://github.com/mockery/mockery/tree/1.4.3"
             },
-            "time": "2020-08-11T18:10:13+00:00"
+            "time": "2021-02-24T09:51:49+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -7389,16 +7389,16 @@
         },
         {
             "name": "phar-io/version",
-            "version": "3.0.4",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phar-io/version.git",
-                "reference": "e4782611070e50613683d2b9a57730e9a3ba5451"
+                "reference": "bae7c545bef187884426f042434e561ab1ddb182"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phar-io/version/zipball/e4782611070e50613683d2b9a57730e9a3ba5451",
-                "reference": "e4782611070e50613683d2b9a57730e9a3ba5451",
+                "url": "https://api.github.com/repos/phar-io/version/zipball/bae7c545bef187884426f042434e561ab1ddb182",
+                "reference": "bae7c545bef187884426f042434e561ab1ddb182",
                 "shasum": ""
             },
             "require": {
@@ -7434,9 +7434,9 @@
             "description": "Library for handling version information and constraints",
             "support": {
                 "issues": "https://github.com/phar-io/version/issues",
-                "source": "https://github.com/phar-io/version/tree/3.0.4"
+                "source": "https://github.com/phar-io/version/tree/3.1.0"
             },
-            "time": "2020-12-13T23:18:30+00:00"
+            "time": "2021-02-23T14:00:09+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
