@@ -5,15 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
-use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use RTippin\Messenger\Actions\Threads\StoreManyParticipants;
 use RTippin\Messenger\Facades\Messenger;
-use RTippin\Messenger\Models\Friend;
-use RTippin\Messenger\Models\Thread;
 
 class RegisterController extends Controller
 {
@@ -66,64 +61,20 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param array $data
-     * @return \App\Models\User
-     * @throws \Throwable
+     * @return User
      */
     protected function create(array $data)
     {
-        //custom stuff so new user auto adds to demo group
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'demo' => false,
+            'admin' => false,
+            'password' => Hash::make($data['password']),
+        ]);
 
-        DB::beginTransaction();
+        Messenger::getProviderMessenger($user);
 
-        try{
-            $admin = User::whereEmail('admin@example.net')->first();
-
-            $group = Thread::group()->oldest()->first();
-
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'demo' => false,
-                'admin' => false,
-                'password' => Hash::make($data['password']),
-            ]);
-
-            Messenger::getProviderMessenger($user);
-
-            Friend::create([
-                'owner_id' => $admin->id,
-                'owner_type' => 'App\Models\User',
-                'party_id' => $user->id,
-                'party_type' => 'App\Models\User'
-            ]);
-
-            Friend::create([
-                'owner_id' => $user->id,
-                'owner_type' => 'App\Models\User',
-                'party_id' => $admin->id,
-                'party_type' => 'App\Models\User'
-            ]);
-
-            Messenger::setProvider($admin);
-            app(StoreManyParticipants::class)->execute($group, [
-                    [
-                        'alias' => 'user',
-                        'id' => $user->id
-                    ]
-
-            ]);
-            Messenger::unsetProvider();
-
-            DB::commit();
-
-            return $user;
-
-        }catch (Exception $e){
-            report($e);
-
-            DB::rollBack();
-        }
-
-        abort(500);
+        return $user;
     }
 }
