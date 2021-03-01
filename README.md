@@ -39,7 +39,6 @@ $  npm install -g laravel-echo-server
 ***Run in project folder:***
 ```bash
 $  php artisan key:generate
-$  npm install
 ```
 ---
 
@@ -110,6 +109,16 @@ $  php artisan serve
 $  php artisan queue:work --queue=messenger,default
 $  laravel-echo-server start
 ```
+---
+
+## Default admin account:
+
+### Email `admin@example.net`
+
+### Password: `messenger`
+
+### All other seeded accounts use `messenger` password as well
+
 ---
 
 # Pictures:
