@@ -764,16 +764,16 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "60d379c243457e073cff02bc323a2a86cb355631"
+                "reference": "8e7d04f1f6450fef59366c399cfad4b9383aa30d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/60d379c243457e073cff02bc323a2a86cb355631",
-                "reference": "60d379c243457e073cff02bc323a2a86cb355631",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/8e7d04f1f6450fef59366c399cfad4b9383aa30d",
+                "reference": "8e7d04f1f6450fef59366c399cfad4b9383aa30d",
                 "shasum": ""
             },
             "require": {
@@ -813,9 +813,9 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/promises/issues",
-                "source": "https://github.com/guzzle/promises/tree/1.4.0"
+                "source": "https://github.com/guzzle/promises/tree/1.4.1"
             },
-            "time": "2020-09-30T07:37:28+00:00"
+            "time": "2021-03-07T09:25:29+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -2993,16 +2993,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.19-alpha.4",
+            "version": "v0.19-alpha.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "d566d75f0c95595371e2cc27165cc975aeb633f7"
+                "reference": "7cea3c487f015453a9c59a523a0bea0d6c63bafb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/d566d75f0c95595371e2cc27165cc975aeb633f7",
-                "reference": "d566d75f0c95595371e2cc27165cc975aeb633f7",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/7cea3c487f015453a9c59a523a0bea0d6c63bafb",
+                "reference": "7cea3c487f015453a9c59a523a0bea0d6c63bafb",
                 "shasum": ""
             },
             "require": {
@@ -3057,9 +3057,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.19-alpha.4"
+                "source": "https://github.com/RTippin/messenger/tree/v0.19-alpha.5"
             },
-            "time": "2021-03-06T19:12:11+00:00"
+            "time": "2021-03-08T00:19:31+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
