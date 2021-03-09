@@ -1923,16 +1923,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.45.1",
+            "version": "2.46.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "528783b188bdb853eb21239b1722831e0f000a8d"
+                "reference": "2fd2c4a77d58a4e95234c8a61c5df1f157a91bf4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/528783b188bdb853eb21239b1722831e0f000a8d",
-                "reference": "528783b188bdb853eb21239b1722831e0f000a8d",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/2fd2c4a77d58a4e95234c8a61c5df1f157a91bf4",
+                "reference": "2fd2c4a77d58a4e95234c8a61c5df1f157a91bf4",
                 "shasum": ""
             },
             "require": {
@@ -2012,7 +2012,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-11T18:30:17+00:00"
+            "time": "2021-02-24T17:30:44+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -2993,16 +2993,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.19-alpha.6",
+            "version": "v0.20-alpha.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "b6a863a9766ab6deb0e8924d7190b6bf444701fb"
+                "reference": "54ce0d4d0cd54e0343f7bee0552fa2954816fefd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/b6a863a9766ab6deb0e8924d7190b6bf444701fb",
-                "reference": "b6a863a9766ab6deb0e8924d7190b6bf444701fb",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/54ce0d4d0cd54e0343f7bee0552fa2954816fefd",
+                "reference": "54ce0d4d0cd54e0343f7bee0552fa2954816fefd",
                 "shasum": ""
             },
             "require": {
@@ -3045,7 +3045,7 @@
             "authors": [
                 {
                     "name": "Richard Tippin",
-                    "email": "richard.tippin@gmail.com",
+                    "email": "tippindev@gmail.com",
                     "homepage": "https://tippindev.com"
                 }
             ],
@@ -3057,9 +3057,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.19-alpha.6"
+                "source": "https://github.com/RTippin/messenger/tree/v0.20-alpha.1"
             },
-            "time": "2021-03-08T04:40:02+00:00"
+            "time": "2021-03-09T10:08:01+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
