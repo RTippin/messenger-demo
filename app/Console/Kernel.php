@@ -41,6 +41,9 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('messenger:purge:documents')
             ->dailyAt('4:00');
+
+        $schedule->command('messenger:purge:audio')
+            ->dailyAt('5:00');
     }
 
     /**
