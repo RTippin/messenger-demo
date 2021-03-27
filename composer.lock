@@ -8143,16 +8143,16 @@
         },
         {
             "name": "rtippin/messenger-faker",
-            "version": "v0.4-alpha.0",
+            "version": "v0.5-alpha.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-faker.git",
-                "reference": "dd8905192de3c7a721521f2531b59dd04dabbf89"
+                "reference": "f72cb6f60ef22d6a200459ce7dea14525c247d10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/dd8905192de3c7a721521f2531b59dd04dabbf89",
-                "reference": "dd8905192de3c7a721521f2531b59dd04dabbf89",
+                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/f72cb6f60ef22d6a200459ce7dea14525c247d10",
+                "reference": "f72cb6f60ef22d6a200459ce7dea14525c247d10",
                 "shasum": ""
             },
             "require": {
@@ -8197,9 +8197,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-faker/issues",
-                "source": "https://github.com/RTippin/messenger-faker/tree/v0.4-alpha.0"
+                "source": "https://github.com/RTippin/messenger-faker/tree/v0.5-alpha.0"
             },
-            "time": "2021-03-24T22:03:00+00:00"
+            "time": "2021-03-27T07:43:48+00:00"
         },
         {
             "name": "sebastian/cli-parser",
