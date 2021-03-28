@@ -30,21 +30,7 @@
                 <div class="card">
                     <div class="card-header h3 text-info"><i class="fas fa-server"></i> <pre class="d-inline">Messenger::getConfig();</pre></div>
                     <div class="card-body">
-                        <code class="text-primary">
-                            {{  collect(messenger()->getConfig())->toJson() }}
-                        </code>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center mt-3">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header h3 text-info"><i class="fas fa-server"></i> <pre class="d-inline">Messenger::getProvider();</pre></div>
-                    <div class="card-body">
-                        <code class="text-primary">
-                            {{  messenger()->getProvider()->toJson() }}
-                        </code>
+                        @dump(messenger()->getConfig())
                     </div>
                 </div>
             </div>

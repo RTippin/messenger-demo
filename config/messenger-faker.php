@@ -17,4 +17,11 @@ return [
         'documents' => storage_path('faker/documents'),
         'audio' => storage_path('faker/audio'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default URL to download faker image messages.
+    |--------------------------------------------------------------------------
+    */
+    'default_image_url' => 'https://source.unsplash.com/random',
 ];
