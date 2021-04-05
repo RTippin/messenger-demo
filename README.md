@@ -9,6 +9,7 @@
 - Laravel >= 8.x
 - Database
 - laravel-echo-server [tlaverdure/laravel-echo-server](https://github.com/tlaverdure/laravel-echo-server) 
+- [PHPREDIS](https://github.com/phpredis/phpredis/blob/develop/INSTALL.markdown)
 
 # Installation (Laravel 8.x)
 

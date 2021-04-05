@@ -38,4 +38,5 @@
         @push('Messenger-modules')
             ThreadTemplates : {src : 'ThreadTemplates.js'},
             MessengerSettings : {src : 'MessengerSettings.js'},
+            EmojiPicker : {src : 'EmojiPicker.js'},
         @endpush
