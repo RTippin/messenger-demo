@@ -2994,16 +2994,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.24-alpha.2",
+            "version": "v0.24-alpha.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "41de09db2c2217e5495466fb5cbade69ad3d8363"
+                "reference": "2bf42198ab08642528c3c6deb4504df5752e7bbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/41de09db2c2217e5495466fb5cbade69ad3d8363",
-                "reference": "41de09db2c2217e5495466fb5cbade69ad3d8363",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/2bf42198ab08642528c3c6deb4504df5752e7bbe",
+                "reference": "2bf42198ab08642528c3c6deb4504df5752e7bbe",
                 "shasum": ""
             },
             "require": {
@@ -3058,9 +3058,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.24-alpha.2"
+                "source": "https://github.com/RTippin/messenger/tree/v0.24-alpha.3"
             },
-            "time": "2021-04-05T10:52:40+00:00"
+            "time": "2021-04-05T21:22:41+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
