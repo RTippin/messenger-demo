@@ -42,6 +42,8 @@
         <div id="navbarNavDropdown" class="navbar-collapse collapse">
             @auth
                 @include('messenger::nav')
+            @else
+                @include('layouts.guest')
             @endauth
         </div>
     </nav>

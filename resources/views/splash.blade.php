@@ -8,11 +8,12 @@
                         <h3 class="card-header"><i class="fas fa-comments"></i> Messenger Demo</h3>
                         <div class="card-body">
                             <h4>
-                                Welcome to Tippin's Laravel Messenger demo! This is a simple  base laravel 8 installation using
-                                <strong><span class="text-info">rtippin/messenger</span></strong> package to provide us with a full featured messenger system!
-                                You may sign up anytime and test out our features currently provided, such as real time messaging/video
-                                calling/screen sharing/group messaging, etc. We also provide a list of pre-populated users to choose
-                                from so you can login right away. We will periodically reset this demo app.
+                                Welcome to Tippin's Laravel Messenger demo! This is a  base laravel 8 installation using
+                                <strong><span class="text-info">rtippin/messenger</span></strong> package to provide us
+                                with a full featured messenger system! You may sign up anytime or use a demo account
+                                listed below to test out our features currently provided, such as real time messaging |
+                                video calling | screen sharing | group messaging, and more. We will periodically reset
+                                this demo app.
                             </h4>
                             <hr>
                             <div class="col-12 mt-2 text-center h5">
@@ -33,11 +34,11 @@
                     <a class="alert-link" rel="nofollow" target="_blank" href="https://www.enable-javascript.com/"> enable javascript</a></div>
             </noscript>
             <div class="col-12 text-center">
-                <button onclick="window.location.href='{{ route('login') }}'" type="button" class="d-none d-sm-inline shadow-lg btn btn-circle btn-circle-xl btn-dark">Log In <i class="fas fa-sign-in-alt"></i></button>
-                <a class="d-block d-sm-none btn btn-lg btn-dark" href="{{ route('login') }}">Log In <i class="fas fa-sign-in-alt"></i></a>
+                <button onclick="window.location.href='{{ route('login') }}'" type="button" class="d-none d-sm-inline shadow-lg btn btn-circle btn-circle-xl btn-info">Log In <i class="fas fa-sign-in-alt"></i></button>
+                <a class="d-block d-sm-none btn btn-lg btn-info" href="{{ route('login') }}">Log In <i class="fas fa-sign-in-alt"></i></a>
                 <div class="mx-2 mt-2 d-block d-sm-inline h5"><span class="badge badge-dark"><i class="fas fa-angle-left"></i> <i class="fas fa-angle-right"></i></span></div>
-                <button onclick="window.location.href='{{ route('register') }}'" type="button" class="d-none d-sm-inline shadow-lg btn btn-circle btn-circle-xl btn-dark">New? <i class="fas fa-user-check"></i></button>
-                <a class="d-block d-sm-none btn btn-lg btn-dark" href="{{ route('register') }}">Sign Up <i class="fas fa-user-plus"></i></a>
+                <button onclick="window.location.href='{{ route('register') }}'" type="button" class="d-none d-sm-inline shadow-lg btn btn-circle btn-circle-xl btn-info">New? <i class="fas fa-user-check"></i></button>
+                <a class="d-block d-sm-none btn btn-lg btn-info" href="{{ route('register') }}">Sign Up <i class="fas fa-user-plus"></i></a>
             </div>
         </div>
     </div>

@@ -9,13 +9,13 @@ use Illuminate\Http\JsonResponse;
 class HomeController extends Controller
 {
     /**
-     * Show the application dashboard.
+     * Show the application config.
      *
      * @return Renderable
      */
-    public function index(): Renderable
+    public function config(): Renderable
     {
-        return view('home');
+        return view('config');
     }
 
     /**

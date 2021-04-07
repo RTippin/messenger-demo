@@ -1,5 +1,10 @@
 <ul class="navbar-nav mr-auto">
-
+    <li class="nav-item" >
+        <a class="nav-link" target="_blank" href="https://github.com/RTippin/messenger">Github <i class="fab fa-github"></i></a>
+    </li>
+    <li class="nav-item {{request()->is('config') ? 'active' : ''}}" >
+        <a class="nav-link" href="{{route('config')}}">Config <i class="fas fa-server"></i></a>
+    </li>
 </ul>
 <ul class="navbar-nav">
     <li class="nav-item {{request()->route() && request()->route()->getName() === 'register' ? 'active' : ''}}">
