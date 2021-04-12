@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f9d23d245a730cb74e506f6f78784b72",
+    "content-hash": "a92e118e5fca059b32cccce3d39e4765",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2685,31 +2685,33 @@
         },
         {
             "name": "pusher/pusher-php-server",
-            "version": "v4.1.5",
+            "version": "6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pusher/pusher-http-php.git",
-                "reference": "251f22602320c1b1aff84798fe74f3f7ee0504a9"
+                "reference": "8673f60458ceedb9531fad7a5747eb49de619a8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/251f22602320c1b1aff84798fe74f3f7ee0504a9",
-                "reference": "251f22602320c1b1aff84798fe74f3f7ee0504a9",
+                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/8673f60458ceedb9531fad7a5747eb49de619a8a",
+                "reference": "8673f60458ceedb9531fad7a5747eb49de619a8a",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
+                "guzzlehttp/guzzle": "^7.2",
                 "paragonie/sodium_compat": "^1.6",
-                "php": "^7.1|^8.0",
+                "php": "^7.2.5|^8.0",
                 "psr/log": "^1.0"
             },
             "require-dev": {
+                "overtrue/phplint": "^2.3",
                 "phpunit/phpunit": "^7.2|^8.5|^9.3"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.4-dev"
+                    "dev-master": "5.0-dev"
                 }
             },
             "autoload": {
@@ -2737,9 +2739,9 @@
             ],
             "support": {
                 "issues": "https://github.com/pusher/pusher-http-php/issues",
-                "source": "https://github.com/pusher/pusher-http-php/tree/v4.1.5"
+                "source": "https://github.com/pusher/pusher-http-php/tree/6.1.0"
             },
-            "time": "2020-12-09T09:38:19+00:00"
+            "time": "2021-03-24T08:23:36+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -2956,16 +2958,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.26-alpha.0",
+            "version": "v0.26-alpha.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "e827deba0cddd319e978b72a11a9729f7fa10b2a"
+                "reference": "865072f96aaa3ea7e557f0f0eeb71dd5aad0acb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/e827deba0cddd319e978b72a11a9729f7fa10b2a",
-                "reference": "e827deba0cddd319e978b72a11a9729f7fa10b2a",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/865072f96aaa3ea7e557f0f0eeb71dd5aad0acb5",
+                "reference": "865072f96aaa3ea7e557f0f0eeb71dd5aad0acb5",
                 "shasum": ""
             },
             "require": {
@@ -3020,9 +3022,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.26-alpha.0"
+                "source": "https://github.com/RTippin/messenger/tree/v0.26-alpha.1"
             },
-            "time": "2021-04-12T04:14:22+00:00"
+            "time": "2021-04-12T07:07:23+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
