@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use RTippin\Messenger\Facades\Messenger;
+use RTippin\Messenger\Models\Messenger;
 
 class CompanyFactory extends Factory
 {
@@ -37,10 +37,8 @@ class CompanyFactory extends Factory
      */
     public function configure()
     {
-        return $this->afterMaking(function (Company $company) {
-            //
-        })->afterCreating(function (Company $company) {
-            Messenger::getProviderMessenger($company);
+        return $this->afterCreating(function (Company $company) {
+            Messenger::factory()->owner($company)->create();
         });
     }
 }

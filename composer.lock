@@ -2958,16 +2958,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.26-alpha.1",
+            "version": "v0.26-alpha.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "865072f96aaa3ea7e557f0f0eeb71dd5aad0acb5"
+                "reference": "f6b4ab600284c060f9963d78b3955bbef5c2175e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/865072f96aaa3ea7e557f0f0eeb71dd5aad0acb5",
-                "reference": "865072f96aaa3ea7e557f0f0eeb71dd5aad0acb5",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/f6b4ab600284c060f9963d78b3955bbef5c2175e",
+                "reference": "f6b4ab600284c060f9963d78b3955bbef5c2175e",
                 "shasum": ""
             },
             "require": {
@@ -3022,9 +3022,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.26-alpha.1"
+                "source": "https://github.com/RTippin/messenger/tree/v0.26-alpha.2"
             },
-            "time": "2021-04-12T07:07:23+00:00"
+            "time": "2021-04-13T05:30:50+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
@@ -6643,16 +6643,16 @@
         },
         {
             "name": "facade/flare-client-php",
-            "version": "1.6.1",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facade/flare-client-php.git",
-                "reference": "f2b0969f2d9594704be74dbeb25b201570a98098"
+                "reference": "6bf380035890cb0a09b9628c491ae3866b858522"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facade/flare-client-php/zipball/f2b0969f2d9594704be74dbeb25b201570a98098",
-                "reference": "f2b0969f2d9594704be74dbeb25b201570a98098",
+                "url": "https://api.github.com/repos/facade/flare-client-php/zipball/6bf380035890cb0a09b9628c491ae3866b858522",
+                "reference": "6bf380035890cb0a09b9628c491ae3866b858522",
                 "shasum": ""
             },
             "require": {
@@ -6696,7 +6696,7 @@
             ],
             "support": {
                 "issues": "https://github.com/facade/flare-client-php/issues",
-                "source": "https://github.com/facade/flare-client-php/tree/1.6.1"
+                "source": "https://github.com/facade/flare-client-php/tree/1.7.0"
             },
             "funding": [
                 {
@@ -6704,7 +6704,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-04-08T08:50:01+00:00"
+            "time": "2021-04-12T09:30:36+00:00"
         },
         {
             "name": "facade/ignition",
