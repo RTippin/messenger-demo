@@ -2151,16 +2151,16 @@
         },
         {
             "name": "paragonie/sodium_compat",
-            "version": "v1.14.0",
+            "version": "v1.15.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/sodium_compat.git",
-                "reference": "a1cfe0b21faf9c0b61ac0c6188c4af7fd6fd0db3"
+                "reference": "69ac8357b0b5916e997226143a401ce2c09f5585"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/a1cfe0b21faf9c0b61ac0c6188c4af7fd6fd0db3",
-                "reference": "a1cfe0b21faf9c0b61ac0c6188c4af7fd6fd0db3",
+                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/69ac8357b0b5916e997226143a401ce2c09f5585",
+                "reference": "69ac8357b0b5916e997226143a401ce2c09f5585",
                 "shasum": ""
             },
             "require": {
@@ -2231,9 +2231,9 @@
             ],
             "support": {
                 "issues": "https://github.com/paragonie/sodium_compat/issues",
-                "source": "https://github.com/paragonie/sodium_compat/tree/v1.14.0"
+                "source": "https://github.com/paragonie/sodium_compat/tree/v1.15.3"
             },
-            "time": "2020-12-03T16:26:19+00:00"
+            "time": "2021-04-14T21:40:16+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -2958,16 +2958,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.26-alpha.3",
+            "version": "v0.26-alpha.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "d6a65dc2fa0e0940aca25bdc9d525375518bedb2"
+                "reference": "51855479709df3f86fff95f5cbec9c065f527181"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/d6a65dc2fa0e0940aca25bdc9d525375518bedb2",
-                "reference": "d6a65dc2fa0e0940aca25bdc9d525375518bedb2",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/51855479709df3f86fff95f5cbec9c065f527181",
+                "reference": "51855479709df3f86fff95f5cbec9c065f527181",
                 "shasum": ""
             },
             "require": {
@@ -3022,9 +3022,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.26-alpha.3"
+                "source": "https://github.com/RTippin/messenger/tree/v0.26-alpha.5"
             },
-            "time": "2021-04-14T03:18:42+00:00"
+            "time": "2021-04-15T00:01:57+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
@@ -8120,16 +8120,16 @@
         },
         {
             "name": "rtippin/messenger-faker",
-            "version": "v0.6-alpha.0",
+            "version": "v0.7-alpha.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-faker.git",
-                "reference": "bbd720b1304ee1fa118b3ce664822023186ac119"
+                "reference": "d90421c0be0640cbaf71406a49afc50137e65619"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/bbd720b1304ee1fa118b3ce664822023186ac119",
-                "reference": "bbd720b1304ee1fa118b3ce664822023186ac119",
+                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/d90421c0be0640cbaf71406a49afc50137e65619",
+                "reference": "d90421c0be0640cbaf71406a49afc50137e65619",
                 "shasum": ""
             },
             "require": {
@@ -8174,9 +8174,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-faker/issues",
-                "source": "https://github.com/RTippin/messenger-faker/tree/v0.6-alpha.0"
+                "source": "https://github.com/RTippin/messenger-faker/tree/v0.7-alpha.0"
             },
-            "time": "2021-03-28T03:19:12+00:00"
+            "time": "2021-04-15T03:06:44+00:00"
         },
         {
             "name": "sebastian/cli-parser",
