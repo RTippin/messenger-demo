@@ -2958,16 +2958,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.26-alpha.5",
+            "version": "v0.26-alpha.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "51855479709df3f86fff95f5cbec9c065f527181"
+                "reference": "3ac8c39401b31821adbfcf2aaeb4c4098ddac894"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/51855479709df3f86fff95f5cbec9c065f527181",
-                "reference": "51855479709df3f86fff95f5cbec9c065f527181",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/3ac8c39401b31821adbfcf2aaeb4c4098ddac894",
+                "reference": "3ac8c39401b31821adbfcf2aaeb4c4098ddac894",
                 "shasum": ""
             },
             "require": {
@@ -3022,9 +3022,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.26-alpha.5"
+                "source": "https://github.com/RTippin/messenger/tree/v0.26-alpha.6"
             },
-            "time": "2021-04-15T00:01:57+00:00"
+            "time": "2021-04-17T02:06:49+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
@@ -8120,16 +8120,16 @@
         },
         {
             "name": "rtippin/messenger-faker",
-            "version": "v0.7-alpha.0",
+            "version": "v0.7-alpha.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-faker.git",
-                "reference": "d90421c0be0640cbaf71406a49afc50137e65619"
+                "reference": "85c1552e48ca4c9f7fe7f33d352918fb21f92862"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/d90421c0be0640cbaf71406a49afc50137e65619",
-                "reference": "d90421c0be0640cbaf71406a49afc50137e65619",
+                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/85c1552e48ca4c9f7fe7f33d352918fb21f92862",
+                "reference": "85c1552e48ca4c9f7fe7f33d352918fb21f92862",
                 "shasum": ""
             },
             "require": {
@@ -8174,9 +8174,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-faker/issues",
-                "source": "https://github.com/RTippin/messenger-faker/tree/v0.7-alpha.0"
+                "source": "https://github.com/RTippin/messenger-faker/tree/v0.7-alpha.2"
             },
-            "time": "2021-04-15T03:06:44+00:00"
+            "time": "2021-04-17T02:22:35+00:00"
         },
         {
             "name": "sebastian/cli-parser",
