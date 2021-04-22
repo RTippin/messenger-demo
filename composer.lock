@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a92e118e5fca059b32cccce3d39e4765",
+    "content-hash": "f41688773336324c6dd426379f9c8aa7",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2958,16 +2958,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.26-alpha.8",
+            "version": "v0.27-alpha.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "fd68704c0ae239dd57059a45649d2fefc0f7fa03"
+                "reference": "3f1f0e01bd84ac2661961bd98a16efcd7893476f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/fd68704c0ae239dd57059a45649d2fefc0f7fa03",
-                "reference": "fd68704c0ae239dd57059a45649d2fefc0f7fa03",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/3f1f0e01bd84ac2661961bd98a16efcd7893476f",
+                "reference": "3f1f0e01bd84ac2661961bd98a16efcd7893476f",
                 "shasum": ""
             },
             "require": {
@@ -3022,9 +3022,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.26-alpha.8"
+                "source": "https://github.com/RTippin/messenger/tree/v0.27-alpha.1"
             },
-            "time": "2021-04-21T03:01:38+00:00"
+            "time": "2021-04-22T04:12:51+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
