@@ -17,7 +17,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.1",
         "pusher/pusher-php-server": "^6.1.0",
-        "rtippin/messenger": "^0.27"
+        "rtippin/messenger": "^0.28"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
