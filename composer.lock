@@ -2957,16 +2957,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.29-alpha.2",
+            "version": "v0.29-alpha.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "d974efb591897b17a2fb488e197e1cdcaea7b381"
+                "reference": "f4579c804d40eea3e44e7af3e2ddaafc3e64b926"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/d974efb591897b17a2fb488e197e1cdcaea7b381",
-                "reference": "d974efb591897b17a2fb488e197e1cdcaea7b381",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/f4579c804d40eea3e44e7af3e2ddaafc3e64b926",
+                "reference": "f4579c804d40eea3e44e7af3e2ddaafc3e64b926",
                 "shasum": ""
             },
             "require": {
@@ -3021,9 +3021,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.29-alpha.2"
+                "source": "https://github.com/RTippin/messenger/tree/v0.29-alpha.3"
             },
-            "time": "2021-05-05T02:04:05+00:00"
+            "time": "2021-05-06T01:38:35+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",
@@ -6814,16 +6814,16 @@
         },
         {
             "name": "facade/ignition",
-            "version": "2.8.4",
+            "version": "2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facade/ignition.git",
-                "reference": "87fb348dab0ae1a7c206c3e902a5a44ba541742f"
+                "reference": "e7db3b601ce742568b92648818ef903904d20164"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facade/ignition/zipball/87fb348dab0ae1a7c206c3e902a5a44ba541742f",
-                "reference": "87fb348dab0ae1a7c206c3e902a5a44ba541742f",
+                "url": "https://api.github.com/repos/facade/ignition/zipball/e7db3b601ce742568b92648818ef903904d20164",
+                "reference": "e7db3b601ce742568b92648818ef903904d20164",
                 "shasum": ""
             },
             "require": {
@@ -6887,7 +6887,7 @@
                 "issues": "https://github.com/facade/ignition/issues",
                 "source": "https://github.com/facade/ignition"
             },
-            "time": "2021-04-29T13:55:26+00:00"
+            "time": "2021-05-05T06:45:12+00:00"
         },
         {
             "name": "facade/ignition-contracts",
