@@ -7,8 +7,8 @@
                     <td>
                         <div class="table_links">
                             <div class="nowrap">
-                                <img class="rounded group-image" src="{{asset($item->getAvatarRoute())}}"/>
-                                <span class="h5"><span class="badge badge-light">{{$item->name()}}</span></span>
+                                <img class="rounded group-image" src="{{asset($item->getProviderAvatarRoute())}}"/>
+                                <span class="h5"><span class="badge badge-light">{{$item->getProviderName()}}</span></span>
                             </div>
                         </div>
                     </td>

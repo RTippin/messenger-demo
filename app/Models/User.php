@@ -81,7 +81,7 @@ class User extends Authenticatable implements MessengerProvider, Searchable
      *
      * @return string
      */
-    public function getAvatarColumn(): string
+    public function getProviderAvatarColumn(): string
     {
         return 'avatar';
     }

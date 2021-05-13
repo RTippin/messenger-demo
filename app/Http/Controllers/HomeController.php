@@ -24,7 +24,7 @@ class HomeController extends Controller
     public function getDemoAccounts(): JsonResponse
     {
         $users = User::demo()->get()->shuffle()->filter(function (User $user){
-            return $user->onlineStatus() === 0;
+            return $user->getProviderOnlineStatus() === 0;
         });
 
         return new JsonResponse([

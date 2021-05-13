@@ -80,7 +80,7 @@ class Company extends Authenticatable implements MessengerProvider, Searchable
      *
      * @return string
      */
-    public function name(): string
+    public function getProviderName(): string
     {
         return strip_tags(ucwords($this->company_name));
     }
@@ -90,7 +90,7 @@ class Company extends Authenticatable implements MessengerProvider, Searchable
      *
      * @return string
      */
-    public function getAvatarColumn(): string
+    public function getProviderAvatarColumn(): string
     {
         return 'avatar';
     }
