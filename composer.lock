@@ -2150,16 +2150,16 @@
         },
         {
             "name": "paragonie/sodium_compat",
-            "version": "v1.15.4",
+            "version": "v1.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/sodium_compat.git",
-                "reference": "8a93bfe047c7f699f819459de8ddda144cd636a4"
+                "reference": "928e0565c9fe4f60b8f09119656c1aa418fc84ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/8a93bfe047c7f699f819459de8ddda144cd636a4",
-                "reference": "8a93bfe047c7f699f819459de8ddda144cd636a4",
+                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/928e0565c9fe4f60b8f09119656c1aa418fc84ab",
+                "reference": "928e0565c9fe4f60b8f09119656c1aa418fc84ab",
                 "shasum": ""
             },
             "require": {
@@ -2230,9 +2230,9 @@
             ],
             "support": {
                 "issues": "https://github.com/paragonie/sodium_compat/issues",
-                "source": "https://github.com/paragonie/sodium_compat/tree/v1.15.4"
+                "source": "https://github.com/paragonie/sodium_compat/tree/v1.16.0"
             },
-            "time": "2021-04-17T09:00:05+00:00"
+            "time": "2021-05-14T03:03:19+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -2957,16 +2957,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.31-alpha.1",
+            "version": "v0.31-alpha.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "969a8874902542494b7c30192e250f8895276d34"
+                "reference": "4c29ccd70cb0a40599f487aeb0d1c2969b1b4cee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/969a8874902542494b7c30192e250f8895276d34",
-                "reference": "969a8874902542494b7c30192e250f8895276d34",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/4c29ccd70cb0a40599f487aeb0d1c2969b1b4cee",
+                "reference": "4c29ccd70cb0a40599f487aeb0d1c2969b1b4cee",
                 "shasum": ""
             },
             "require": {
@@ -3021,9 +3021,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.31-alpha.1"
+                "source": "https://github.com/RTippin/messenger/tree/v0.31-alpha.2"
             },
-            "time": "2021-05-13T05:23:39+00:00"
+            "time": "2021-05-15T05:05:41+00:00"
         },
         {
             "name": "staudenmeir/eloquent-eager-limit",

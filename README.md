@@ -7,7 +7,7 @@
 ### Prerequisites
 - PHP >= 7.4
 - Laravel >= 8.x
-- Database
+- MySQL >= 8.x
 - laravel-echo-server [tlaverdure/laravel-echo-server](https://github.com/tlaverdure/laravel-echo-server) 
 - [PHPREDIS](https://github.com/phpredis/phpredis/blob/develop/INSTALL.markdown)
 
