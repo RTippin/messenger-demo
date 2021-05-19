@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "88e9b1f13e334f1830970e8fc5a8929b",
+    "content-hash": "a9b67238fb76d2d0a8f9a4c5ff7f032c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1183,16 +1183,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.41.0",
+            "version": "v8.42.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "05417155d886df8710e55c84e12622b52d83c47c"
+                "reference": "55b886683e0a019bcad0d9d70bb781a3de1a6755"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/05417155d886df8710e55c84e12622b52d83c47c",
-                "reference": "05417155d886df8710e55c84e12622b52d83c47c",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/55b886683e0a019bcad0d9d70bb781a3de1a6755",
+                "reference": "55b886683e0a019bcad0d9d70bb781a3de1a6755",
                 "shasum": ""
             },
             "require": {
@@ -1347,7 +1347,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-05-11T14:00:02+00:00"
+            "time": "2021-05-18T15:37:44+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -2957,16 +2957,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.31-alpha.3",
+            "version": "v0.32-alpha.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "40ae898c1af38b64802bfdaa4d734fa24e41c323"
+                "reference": "4e3ed78f9a4f40dea993ba5abc7f28e6552391ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/40ae898c1af38b64802bfdaa4d734fa24e41c323",
-                "reference": "40ae898c1af38b64802bfdaa4d734fa24e41c323",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/4e3ed78f9a4f40dea993ba5abc7f28e6552391ba",
+                "reference": "4e3ed78f9a4f40dea993ba5abc7f28e6552391ba",
                 "shasum": ""
             },
             "require": {
@@ -2974,9 +2974,8 @@
                 "intervention/image": "^2.5",
                 "intervention/imagecache": "^2.5",
                 "joypixels/emoji-toolkit": "^6.0",
-                "laravel/framework": "^8.0",
-                "php": "^7.4||^8.0",
-                "staudenmeir/eloquent-eager-limit": "^1.6"
+                "laravel/framework": "^8.42",
+                "php": "^7.4||^8.0"
             },
             "require-dev": {
                 "orchestra/testbench": "~5|~6",
@@ -3021,59 +3020,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.31-alpha.3"
+                "source": "https://github.com/RTippin/messenger/tree/v0.32-alpha.0"
             },
-            "time": "2021-05-18T05:50:05+00:00"
-        },
-        {
-            "name": "staudenmeir/eloquent-eager-limit",
-            "version": "v1.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/staudenmeir/eloquent-eager-limit.git",
-                "reference": "439135c4b3361a313c2e7102d68bf807518d1bf9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/staudenmeir/eloquent-eager-limit/zipball/439135c4b3361a313c2e7102d68bf807518d1bf9",
-                "reference": "439135c4b3361a313c2e7102d68bf807518d1bf9",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/database": "^8.0",
-                "php": "^7.3|^8.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Staudenmeir\\EloquentEagerLimit\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jonas Staudenmeir",
-                    "email": "mail@jonas-staudenmeir.de"
-                }
-            ],
-            "description": "Laravel Eloquent eager loading with limit",
-            "support": {
-                "issues": "https://github.com/staudenmeir/eloquent-eager-limit/issues",
-                "source": "https://github.com/staudenmeir/eloquent-eager-limit/tree/v1.6.1"
-            },
-            "funding": [
-                {
-                    "url": "https://paypal.me/JonasStaudenmeir",
-                    "type": "custom"
-                }
-            ],
-            "time": "2020-11-22T18:13:55+00:00"
+            "time": "2021-05-19T03:27:49+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -8226,22 +8175,22 @@
         },
         {
             "name": "rtippin/messenger-faker",
-            "version": "v0.9-alpha.1",
+            "version": "v0.10-alpha.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-faker.git",
-                "reference": "91c97fc6df99649d4c0e849d158a75d3a6eb6ed4"
+                "reference": "a5060bf5c9b9d60c32ccaca27a37fd406db28030"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/91c97fc6df99649d4c0e849d158a75d3a6eb6ed4",
-                "reference": "91c97fc6df99649d4c0e849d158a75d3a6eb6ed4",
+                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/a5060bf5c9b9d60c32ccaca27a37fd406db28030",
+                "reference": "a5060bf5c9b9d60c32ccaca27a37fd406db28030",
                 "shasum": ""
             },
             "require": {
                 "fakerphp/faker": "^1.13",
                 "php": "^7.4||^8.0",
-                "rtippin/messenger": "^0.31"
+                "rtippin/messenger": "^0.32"
             },
             "require-dev": {
                 "orchestra/testbench": "~5|~6",
@@ -8280,9 +8229,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-faker/issues",
-                "source": "https://github.com/RTippin/messenger-faker/tree/v0.9-alpha.1"
+                "source": "https://github.com/RTippin/messenger-faker/tree/v0.10-alpha.0"
             },
-            "time": "2021-05-13T04:36:55+00:00"
+            "time": "2021-05-19T03:35:30+00:00"
         },
         {
             "name": "sebastian/cli-parser",
