@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9b67238fb76d2d0a8f9a4c5ff7f032c",
+    "content-hash": "46a7622d9feb9f8643eedafb532197fe",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2957,16 +2957,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.32-alpha.2",
+            "version": "v0.33-alpha.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "6e976cc784bba1ff4075367ba777c18fa9bd57f1"
+                "reference": "46ea4027306a43d35eef0f2059bfb7a6c781a5dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/6e976cc784bba1ff4075367ba777c18fa9bd57f1",
-                "reference": "6e976cc784bba1ff4075367ba777c18fa9bd57f1",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/46ea4027306a43d35eef0f2059bfb7a6c781a5dd",
+                "reference": "46ea4027306a43d35eef0f2059bfb7a6c781a5dd",
                 "shasum": ""
             },
             "require": {
@@ -3020,9 +3020,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.32-alpha.2"
+                "source": "https://github.com/RTippin/messenger/tree/v0.33-alpha.0"
             },
-            "time": "2021-05-23T00:17:57+00:00"
+            "time": "2021-05-24T20:08:08+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -5988,16 +5988,16 @@
         },
         {
             "name": "composer/package-versions-deprecated",
-            "version": "1.11.99.1",
+            "version": "1.11.99.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/package-versions-deprecated.git",
-                "reference": "7413f0b55a051e89485c5cb9f765fe24bb02a7b6"
+                "reference": "c6522afe5540d5fc46675043d3ed5a45a740b27c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/package-versions-deprecated/zipball/7413f0b55a051e89485c5cb9f765fe24bb02a7b6",
-                "reference": "7413f0b55a051e89485c5cb9f765fe24bb02a7b6",
+                "url": "https://api.github.com/repos/composer/package-versions-deprecated/zipball/c6522afe5540d5fc46675043d3ed5a45a740b27c",
+                "reference": "c6522afe5540d5fc46675043d3ed5a45a740b27c",
                 "shasum": ""
             },
             "require": {
@@ -6041,7 +6041,7 @@
             "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
             "support": {
                 "issues": "https://github.com/composer/package-versions-deprecated/issues",
-                "source": "https://github.com/composer/package-versions-deprecated/tree/1.11.99.1"
+                "source": "https://github.com/composer/package-versions-deprecated/tree/1.11.99.2"
             },
             "funding": [
                 {
@@ -6057,20 +6057,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-11T10:22:58+00:00"
+            "time": "2021-05-24T07:46:03+00:00"
         },
         {
             "name": "composer/semver",
-            "version": "3.2.4",
+            "version": "3.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "a02fdf930a3c1c3ed3a49b5f63859c0c20e10464"
+                "reference": "31f3ea725711245195f62e54ffa402d8ef2fdba9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/a02fdf930a3c1c3ed3a49b5f63859c0c20e10464",
-                "reference": "a02fdf930a3c1c3ed3a49b5f63859c0c20e10464",
+                "url": "https://api.github.com/repos/composer/semver/zipball/31f3ea725711245195f62e54ffa402d8ef2fdba9",
+                "reference": "31f3ea725711245195f62e54ffa402d8ef2fdba9",
                 "shasum": ""
             },
             "require": {
@@ -6122,7 +6122,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/semver/issues",
-                "source": "https://github.com/composer/semver/tree/3.2.4"
+                "source": "https://github.com/composer/semver/tree/3.2.5"
             },
             "funding": [
                 {
@@ -6138,7 +6138,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-13T08:59:24+00:00"
+            "time": "2021-05-24T12:41:47+00:00"
         },
         {
             "name": "composer/spdx-licenses",
@@ -8175,22 +8175,22 @@
         },
         {
             "name": "rtippin/messenger-faker",
-            "version": "v0.10-alpha.1",
+            "version": "v0.10-alpha.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-faker.git",
-                "reference": "109852106e0d6e937c93892abf27c200141283de"
+                "reference": "60957260cef0283ec060af0054afe5758c6dd194"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/109852106e0d6e937c93892abf27c200141283de",
-                "reference": "109852106e0d6e937c93892abf27c200141283de",
+                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/60957260cef0283ec060af0054afe5758c6dd194",
+                "reference": "60957260cef0283ec060af0054afe5758c6dd194",
                 "shasum": ""
             },
             "require": {
                 "fakerphp/faker": "^1.13",
                 "php": "^7.4||^8.0",
-                "rtippin/messenger": "^0.32"
+                "rtippin/messenger": "~0.32"
             },
             "require-dev": {
                 "orchestra/testbench": "~5|~6",
@@ -8229,9 +8229,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-faker/issues",
-                "source": "https://github.com/RTippin/messenger-faker/tree/v0.10-alpha.1"
+                "source": "https://github.com/RTippin/messenger-faker/tree/v0.10-alpha.2"
             },
-            "time": "2021-05-20T12:16:45+00:00"
+            "time": "2021-05-24T20:14:19+00:00"
         },
         {
             "name": "sebastian/cli-parser",
