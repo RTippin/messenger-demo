@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use RTippin\Messenger\Models\Friend;
@@ -16,14 +15,18 @@ class FriendsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = User::where('email', '=', 'admin@example.net')->first();
-        User::where('admin', '=', false)->get()->each(function(User $user) use ($admin) {
-            Friend::factory()->providers($admin, $user)->create();
-            Friend::factory()->providers($user, $admin)->create();
-        });
-        Company::all()->each(function(Company $company) use ($admin) {
-            Friend::factory()->providers($admin, $company)->create();
-            Friend::factory()->providers($company, $admin)->create();
-        });
+        $users = User::all();
+
+        // Make ALL users friends with one another
+        foreach ($users as $user) {
+            $others = $users->where('email', '!=', $user->email)->all();
+
+            foreach ($others as $other) {
+                if (Friend::forProvider($user)->forProvider($other, 'party')->doesntExist()) {
+                    Friend::factory()->providers($user, $other)->create();
+                    Friend::factory()->providers($other, $user)->create();
+                }
+            }
+        }
     }
 }

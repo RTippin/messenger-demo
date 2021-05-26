@@ -14,11 +14,13 @@ class UsersTableSeeder extends Seeder
      */
     public function run(): void
     {
+        // Main admin account
         User::factory()->admin()->create([
-            'name' => 'John Doe',
-            'email' => 'admin@example.net',
+            'name' => DatabaseSeeder::Admin['name'],
+            'email' => DatabaseSeeder::Admin['email'],
         ]);
 
+        // Random accounts
         User::factory()->count(15)->create();
     }
 }

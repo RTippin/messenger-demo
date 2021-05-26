@@ -15,8 +15,9 @@ class MessagesTableSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seed ALL threads with messages
         Thread::with('participants.owner')->get()->each(function(Thread $thread) {
-            for ($x = 0; $x < rand(15, 30); $x++) {
+            for ($x = 0; $x < rand(5, 20); $x++) {
                 Message::factory()
                     ->for($thread)
                     ->owner($thread->participants->random()->owner)

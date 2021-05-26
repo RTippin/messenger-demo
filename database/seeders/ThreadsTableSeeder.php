@@ -2,30 +2,15 @@
 
 namespace Database\Seeders;
 
-use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
+use RTippin\Messenger\Facades\Messenger;
 use RTippin\Messenger\Models\Participant;
 use RTippin\Messenger\Models\Thread;
 
 class ThreadsTableSeeder extends Seeder
 {
-    /**
-     * @var Collection
-     */
-    private Collection $users;
-
-    /**
-     * @var Collection
-     */
-    private Collection $companies;
-
-    /**
-     * @var User
-     */
-    private User $admin;
-
     /**
      * Run the database seeds.
      *
@@ -33,37 +18,55 @@ class ThreadsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->admin = User::where('email', '=', 'admin@example.net')->first();
-        $this->users = User::where('admin', '=', false)->get();
-        $this->companies = Company::all();
-        $this->makeGroupThread();
-        $this->makePrivateThreadsWithAdmin();
+        $users = User::all();
+
+        $this->makePrivates($users);
+
+        $this->makeGroupThread($users);
+    }
+
+    /**
+     * Make private threads between ALL users.
+     *
+     * @param Collection $users
+     */
+    private function makePrivates(Collection $users): void
+    {
+        foreach ($users as $user) {
+            Messenger::setProvider($user);
+            $others = $users->where('email', '!=', $user->email)->all();
+
+            foreach ($others as $other) {
+                if (Thread::private()
+                    ->hasProvider('participants', $user)
+                    ->hasProvider('participants', $other)
+                    ->doesntExist()) {
+                    $private = Thread::factory()->create();
+                    Participant::factory()->for($private)->owner($user)->read()->create();
+                    Participant::factory()->for($private)->owner($other)->read()->create();
+                }
+            }
+        }
     }
 
     /**
      * Make initial group thread all users are in.
+     *
+     * @param Collection $users
      */
-    private function makeGroupThread(): void
+    private function makeGroupThread(Collection $users): void
     {
         $group = Thread::factory()->group()->create(['subject' => 'Messenger Party']);
-        Participant::factory()->for($group)->owner($this->admin)->admin()->create();
-        $this->users->each(function(User $user) use ($group) {
-            Participant::factory()->for($group)->owner($user)->create();
-        });
-        $this->companies->each(function(Company $company) use ($group) {
-            Participant::factory()->for($group)->owner($company)->create();
-        });
-    }
+        $admin = $users->firstWhere('email', '=', DatabaseSeeder::Admin['email']);
+        $others = $users->where('email', '!=', DatabaseSeeder::Admin['email'])->all();
 
-    /**
-     * Make private thread with admin and all other users.
-     */
-    private function makePrivateThreadsWithAdmin(): void
-    {
-        $this->users->each(function(User $user) {
-            $private = Thread::factory()->create();
-            Participant::factory()->for($private)->owner($this->admin)->create();
-            Participant::factory()->for($private)->owner($user)->create();
-        });
+        // Make admin user the group admin
+        Participant::factory()->for($group)->owner($admin)->admin()->create();
+
+        foreach ($others as $other) {
+            Participant::factory()->for($group)->owner($other)->create([
+                'start_calls' => true,
+            ]);
+        }
     }
 }

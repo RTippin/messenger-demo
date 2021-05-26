@@ -99,18 +99,6 @@ return [
                 'can_friend' => true,
             ]
         ],
-        'company' => [
-            'model' => App\Models\Company::class,
-            'searchable' => true,
-            'friendable' => true,
-            'devices' => false,
-            'default_avatar' => public_path('vendor/messenger/images/company.png'),
-            'provider_interactions' => [
-                'can_message' => true,
-                'can_search' => true,
-                'can_friend' => true,
-            ]
-        ],
     ],
 
     /*

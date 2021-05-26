@@ -20,7 +20,7 @@ class UserFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         return [
             'name' => $this->faker->name,
@@ -51,7 +51,7 @@ class UserFactory extends Factory
      *
      * @return $this
      */
-    public function configure()
+    public function configure(): self
     {
         return $this->afterCreating(function (User $user) {
             Messenger::factory()->owner($user)->create();

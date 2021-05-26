@@ -7,6 +7,14 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
+     * The main admin account we create.
+     */
+    const Admin = [
+        'name' => 'John Doe',
+        'email' => 'admin@example.net',
+    ];
+
+    /**
      * Seed the application's database.
      *
      * @return void
@@ -15,7 +23,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UsersTableSeeder::class,
-            CompaniesTableSeeder::class,
             ThreadsTableSeeder::class,
             MessagesTableSeeder::class,
             FriendsTableSeeder::class,
