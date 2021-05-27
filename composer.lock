@@ -1887,16 +1887,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.48.0",
+            "version": "2.48.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "d3c447f21072766cddec3522f9468a5849a76147"
+                "reference": "8d1f50f1436fb4b05e7127360483dd9c6e73da16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/d3c447f21072766cddec3522f9468a5849a76147",
-                "reference": "d3c447f21072766cddec3522f9468a5849a76147",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/8d1f50f1436fb4b05e7127360483dd9c6e73da16",
+                "reference": "8d1f50f1436fb4b05e7127360483dd9c6e73da16",
                 "shasum": ""
             },
             "require": {
@@ -1976,7 +1976,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-07T10:08:30+00:00"
+            "time": "2021-05-26T22:08:38+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -2958,16 +2958,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.33-alpha.0",
+            "version": "v0.33-alpha.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "46ea4027306a43d35eef0f2059bfb7a6c781a5dd"
+                "reference": "5922ef9b89c5b8f8f7c1e91c203a44e4e28e640e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/46ea4027306a43d35eef0f2059bfb7a6c781a5dd",
-                "reference": "46ea4027306a43d35eef0f2059bfb7a6c781a5dd",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/5922ef9b89c5b8f8f7c1e91c203a44e4e28e640e",
+                "reference": "5922ef9b89c5b8f8f7c1e91c203a44e4e28e640e",
                 "shasum": ""
             },
             "require": {
@@ -3021,9 +3021,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.33-alpha.0"
+                "source": "https://github.com/RTippin/messenger/tree/v0.33-alpha.1"
             },
-            "time": "2021-05-24T20:08:08+00:00"
+            "time": "2021-05-27T04:15:48+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

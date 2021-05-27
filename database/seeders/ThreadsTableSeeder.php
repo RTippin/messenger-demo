@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
-use RTippin\Messenger\Facades\Messenger;
 use RTippin\Messenger\Models\Participant;
 use RTippin\Messenger\Models\Thread;
 
@@ -33,7 +32,6 @@ class ThreadsTableSeeder extends Seeder
     private function makePrivates(Collection $users): void
     {
         foreach ($users as $user) {
-            Messenger::setProvider($user);
             $others = $users->where('email', '!=', $user->email)->all();
 
             foreach ($others as $other) {
