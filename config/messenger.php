@@ -1,12 +1,5 @@
 <?php
 
-/** @noinspection SpellCheckingInspection */
-
-use RTippin\Messenger\Brokers\BroadcastBroker;
-use RTippin\Messenger\Brokers\JanusBroker;
-use RTippin\Messenger\Brokers\NullBroadcastBroker;
-use RTippin\Messenger\Brokers\NullVideoBroker;
-
 return [
     /*
     |--------------------------------------------------------------------------
@@ -28,20 +21,6 @@ return [
     |
     */
     'provider_uuids' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Included Queued Event Listeners
-    |--------------------------------------------------------------------------
-    |
-    | This package includes several event listeners out of the box, to handle
-    | system messages to setting up a call. All listeners are queued on the
-    | 'messenger' channel, so you will need to setup a queue worker to monitor
-    | that channel. You may also disable out listeners and setup your own! Feel
-    | free to check ours out to see how we do things :)
-    |
-    */
-    'queued_event_listeners' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -97,7 +76,7 @@ return [
                 'can_message' => true,
                 'can_search' => true,
                 'can_friend' => true,
-            ]
+            ],
         ],
     ],
 
@@ -122,6 +101,7 @@ return [
     | **Avatar - {disk}/{directory}/{threadID}/avatar
     | **Images - {disk}/{directory}/{threadID}/images
     | **Documents - {disk}/{directory}/{threadID}/documents
+    | **Audio - {disk}/{directory}/{threadID}/audio
     |
     */
     'storage' => [
@@ -140,15 +120,13 @@ return [
     | Messenger routing config
     |--------------------------------------------------------------------------
     |
-    | You may choose to load our built in routes, or disable to setup your own.
-    | The built in routing has all policy mappings and controllers already
-    | setup. Our built in middleware 'messenger.provider' simply takes the
-    | authenticated user via the request and sets them as the current
-    | messenger provider. You are free to use your own custom middleware
-    | to set your provider, and add any other middleware you may want,
-    | such as 'auth:api' etc. We also include an extension of laravels
-    | 'auth' middleware that lets it be optional for routes we want
-    | both guest and auth to see, 'auth.optional|auth.optional:api'
+    | Our API is the core of this package, and are the only routes that cannot
+    | be disabled. The api routes also bootstrap all of our policies and
+    | controllers for you. Our built in middleware 'messenger.provider'
+    | simply takes the authenticated user via the request and sets them
+    | as the current messenger provider. You are free to use your own
+    | custom middleware to set your provider, as well as  any other
+    | middleware you may want, such as 'auth:api' etc.
     |
     | All API routes return json, and are best used stateless through
     | auth:api such as passport or sanctum.
@@ -212,51 +190,8 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Feature/Service drivers
-    |--------------------------------------------------------------------------
-    |
-    | Below are the service drivers we use for features within this messenger
-    | system. You are free to create your own service drivers as long as they
-    | implement the corresponding contract. See each Drivers contract for
-    | more information.
-    |
-    | If push notifications are enabled, every event that fires a broadcast will
-    | dispatch our PushNotificationEvent, which will contain a collection of
-    | (owner_id, owner_type) for all providers that you enabled devices on.
-    | It is up to you to hook into that event and use the data injected to
-    | dispatch your own push notification, such as FCM.
-    |
-    | * NULL drivers are a simple way to disable a service,
-    |  especially useful in testing.
-    |
-    */
-    'drivers' => [
-        'broadcasting' => [
-            'default' => BroadcastBroker::class,
-            'null' => NullBroadcastBroker::class,
-        ],
-        'calling' => [
-            'janus' => JanusBroker::class,
-            'null' => NullVideoBroker::class,
-        ],
-    ],
-
-    'broadcasting' => [
-        'driver' => env('MESSENGER_BROADCASTING_DRIVER', 'default'),
-    ],
-
-    'calling' => [
-        'enabled' => env('MESSENGER_CALLING_ENABLED', false),
-        'driver' => env('MESSENGER_CALLING_DRIVER', 'null'),
-    ],
-
-    'push_notifications' => [
-        'enabled' => env('MESSENGER_PUSH_NOTIFICATIONS_ENABLED', false),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | File toggles to enable / disable features and default image paths
+    | File toggles to enable / disable features and default image paths.
+    | Size limits are the max upload size in kilobytes.
     |--------------------------------------------------------------------------
     |
     | *Default thread avatars can be any file type, but the
@@ -277,7 +212,7 @@ return [
         'message_audio' => [
             'upload' => env('MESSENGER_MESSAGE_AUDIO_UPLOAD', true),
             'size_limit' => env('MESSENGER_MESSAGE_AUDIO_SIZE_LIMIT', 10240),
-            'mime_types' => env('MESSENGER_MESSAGE_AUDIO_MIME_TYPES', 'aac,mp3,oga,wav,weba,webm'),
+            'mime_types' => env('MESSENGER_MESSAGE_AUDIO_MIME_TYPES', 'aac,mp3,oga,ogg,wav,weba,webm'),
         ],
         'thread_avatars' => [
             'upload' => env('MESSENGER_THREAD_AVATAR_UPLOAD', true),
@@ -299,6 +234,79 @@ return [
         ],
         'default_not_found_image' => public_path('vendor/messenger/images/image404.png'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Calling
+    |--------------------------------------------------------------------------
+    | Enable or disable the calling feature. If enabled, you must also declare
+    | the driver we will use within a boot method from one of your service
+    | providers. You may use our messenger facade to set the driver.
+    |
+    | Messenger::setVideoDriver(JanusBroker::class);
+    |
+    | We provide an event subscriber to listen and react to calling events. You
+    | may choose to enable it, whether it puts jobs on the queue or not, and
+    | which queue channel its jobs are dispatched on.
+    */
+    'calling' => [
+        'enabled' => env('MESSENGER_CALLING_ENABLED', false),
+        'subscriber' => [
+            'enabled' => true,
+            'queued' => true,
+            'channel' => 'messenger',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | System Messages
+    |--------------------------------------------------------------------------
+    |
+    | Enable or disable system messages. These are messages generated by actions
+    | to give feedback in the thread history. Actions such as: call ended, left
+    | group, promoted admin, etc.
+    |
+    | We provide an event subscriber to listen and react to events that will
+    | generate the system messages. You may choose to enable it, whether it
+    | puts jobs on the queue or not, and which queue channel its jobs are
+    | dispatched on.
+    */
+    'system_messages' => [
+        'enabled' => env('MESSENGER_SYSTEM_MESSAGES_ENABLED', true),
+        'subscriber' => [
+            'enabled' => true,
+            'queued' => true,
+            'channel' => 'messenger',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Bots
+    |--------------------------------------------------------------------------
+    |
+    | TODO
+    */
+    'bots' => [
+        'enabled' => env('MESSENGER_BOTS_ENABLED', false),
+        'subscriber' => [
+            'enabled' => true,
+            'queued' => true,
+            'channel' => 'messenger',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Push Notification Events
+    |--------------------------------------------------------------------------
+    |
+    | Enable or disable firing our push notification event for every broadcast
+    | that is not sent over presence. This system only works if you are using
+    | our default BroadcastBroker for our broadcast driver.
+    */
+    'push_notifications' => env('MESSENGER_PUSH_NOTIFICATIONS_ENABLED', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -350,7 +358,8 @@ return [
     | Knock knock!! 👊
     |--------------------------------------------------------------------------
     |
-    | Enable or disable knocks, and set the timeout limit (in minutes)
+    | Enable or disable knocks, and set the timeout limit (in minutes).
+    | Set to 0 for no timeout.
     |
     */
     'knocks' => [
