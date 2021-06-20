@@ -7,6 +7,20 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 use RTippin\Messenger\Brokers\JanusBroker;
 use RTippin\Messenger\Facades\Messenger;
+use RTippin\Messenger\Facades\MessengerBots;
+use RTippin\MessengerBots\Bots\ChuckNorrisBot;
+use RTippin\MessengerBots\Bots\CommandsBot;
+use RTippin\MessengerBots\Bots\DadJokeBot;
+use RTippin\MessengerBots\Bots\InsultBot;
+use RTippin\MessengerBots\Bots\JokeBot;
+use RTippin\MessengerBots\Bots\KanyeBot;
+use RTippin\MessengerBots\Bots\RandomImageBot;
+use RTippin\MessengerBots\Bots\ReactionBot;
+use RTippin\MessengerBots\Bots\ReplyBot;
+use RTippin\MessengerBots\Bots\RockPaperScissorsBot;
+use RTippin\MessengerBots\Bots\RollBot;
+use RTippin\MessengerBots\Bots\WeatherBot;
+use RTippin\MessengerBots\Bots\YoMommaBot;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,5 +46,21 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         //Messenger::setVideoDriver(JanusBroker::class);
+
+        MessengerBots::setHandlers([
+            ChuckNorrisBot::class,
+            CommandsBot::class,
+            DadJokeBot::class,
+            InsultBot::class,
+            JokeBot::class,
+            KanyeBot::class,
+            RandomImageBot::class,
+            ReactionBot::class,
+            ReplyBot::class,
+            RockPaperScissorsBot::class,
+            RollBot::class,
+            WeatherBot::class,
+            YoMommaBot::class,
+        ]);
     }
 }

@@ -1,6 +1,10 @@
-# [rtippin/messenger](https://github.com/RTippin/messenger) demo app
+# [rtippin/messenger](https://github.com/RTippin/messenger) Demo App
 
-## Addon commands package included [rtippin/messenger-faker](https://github.com/RTippin/messenger-faker)
+---
+
+### Ready-made bots package included [rtippin/messenger-bots](https://github.com/RTippin/messenger-bots)
+
+### Addon commands package included [rtippin/messenger-faker](https://github.com/RTippin/messenger-faker)
 
 ## Checkout the [LIVE DEMO](https://tippindev.com)
 
@@ -10,6 +14,8 @@
 - MySQL >= 8.x
 - laravel-echo-server [tlaverdure/laravel-echo-server](https://github.com/tlaverdure/laravel-echo-server) 
 - [PHPREDIS](https://github.com/phpredis/phpredis/blob/develop/INSTALL.markdown)
+
+---
 
 # Installation (Laravel 8.x)
 
@@ -107,7 +113,7 @@ $  php artisan migrate:fresh --seed
 **To run locally, run 3 terminals for the following commands in your project folder:**
 ```bash
 $  php artisan serve
-$  php artisan queue:work --queue=messenger,default
+$  php artisan queue:work --queue=messenger,messenger-bots,default
 $  laravel-echo-server start
 ```
 ---

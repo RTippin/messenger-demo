@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             ThreadsTableSeeder::class,
             MessagesTableSeeder::class,
             FriendsTableSeeder::class,
+            BotSeeder::class,
         ]);
     }
 }
