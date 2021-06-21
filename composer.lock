@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe9cc1628ad48be46647e4b9bc112297",
+    "content-hash": "2cf828e51c62f139ef8ff1fa9faecd3c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2958,16 +2958,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.35-alpha.0",
+            "version": "v0.35-alpha.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "89da1067bd9ae4832c35c5aeafde69d1314014c8"
+                "reference": "e48b928e87f2ed094aecfe7fa2425ce5c2227b25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/89da1067bd9ae4832c35c5aeafde69d1314014c8",
-                "reference": "89da1067bd9ae4832c35c5aeafde69d1314014c8",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/e48b928e87f2ed094aecfe7fa2425ce5c2227b25",
+                "reference": "e48b928e87f2ed094aecfe7fa2425ce5c2227b25",
                 "shasum": ""
             },
             "require": {
@@ -3021,22 +3021,22 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.35-alpha.0"
+                "source": "https://github.com/RTippin/messenger/tree/v0.35-alpha.1"
             },
-            "time": "2021-06-20T10:27:35+00:00"
+            "time": "2021-06-21T05:45:07+00:00"
         },
         {
             "name": "rtippin/messenger-bots",
-            "version": "v0.1-alpha.2",
+            "version": "v0.1-alpha.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-bots.git",
-                "reference": "94507e9ca80f2b4031910ff4436b613a64331039"
+                "reference": "92f0a0482ff3bba9bf44aa8eb4bad954ab5f96bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-bots/zipball/94507e9ca80f2b4031910ff4436b613a64331039",
-                "reference": "94507e9ca80f2b4031910ff4436b613a64331039",
+                "url": "https://api.github.com/repos/RTippin/messenger-bots/zipball/92f0a0482ff3bba9bf44aa8eb4bad954ab5f96bb",
+                "reference": "92f0a0482ff3bba9bf44aa8eb4bad954ab5f96bb",
                 "shasum": ""
             },
             "require": {
@@ -3081,9 +3081,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-bots/issues",
-                "source": "https://github.com/RTippin/messenger-bots/tree/v0.1-alpha.2"
+                "source": "https://github.com/RTippin/messenger-bots/tree/v0.1-alpha.3"
             },
-            "time": "2021-06-20T14:39:05+00:00"
+            "time": "2021-06-21T06:45:51+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -9493,7 +9493,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.4|^8.0"
+        "php": "^7.4|^8.0",
+        "ext-json": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
