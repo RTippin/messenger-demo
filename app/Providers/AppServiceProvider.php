@@ -14,12 +14,14 @@ use RTippin\MessengerBots\Bots\DadJokeBot;
 use RTippin\MessengerBots\Bots\InsultBot;
 use RTippin\MessengerBots\Bots\JokeBot;
 use RTippin\MessengerBots\Bots\KanyeBot;
+use RTippin\MessengerBots\Bots\KnockBot;
 use RTippin\MessengerBots\Bots\RandomImageBot;
 use RTippin\MessengerBots\Bots\ReactionBot;
 use RTippin\MessengerBots\Bots\ReplyBot;
 use RTippin\MessengerBots\Bots\RockPaperScissorsBot;
 use RTippin\MessengerBots\Bots\RollBot;
 use RTippin\MessengerBots\Bots\WeatherBot;
+use RTippin\MessengerBots\Bots\WikiBot;
 use RTippin\MessengerBots\Bots\YoMommaBot;
 
 class AppServiceProvider extends ServiceProvider
@@ -54,12 +56,14 @@ class AppServiceProvider extends ServiceProvider
             InsultBot::class,
             JokeBot::class,
             KanyeBot::class,
+            KnockBot::class,
             RandomImageBot::class,
             ReactionBot::class,
             ReplyBot::class,
             RockPaperScissorsBot::class,
             RollBot::class,
             WeatherBot::class,
+            WikiBot::class,
             YoMommaBot::class,
         ]);
     }

@@ -14,12 +14,14 @@ use RTippin\MessengerBots\Bots\DadJokeBot;
 use RTippin\MessengerBots\Bots\InsultBot;
 use RTippin\MessengerBots\Bots\JokeBot;
 use RTippin\MessengerBots\Bots\KanyeBot;
+use RTippin\MessengerBots\Bots\KnockBot;
 use RTippin\MessengerBots\Bots\RandomImageBot;
 use RTippin\MessengerBots\Bots\ReactionBot;
 use RTippin\MessengerBots\Bots\ReplyBot;
 use RTippin\MessengerBots\Bots\RockPaperScissorsBot;
 use RTippin\MessengerBots\Bots\RollBot;
 use RTippin\MessengerBots\Bots\WeatherBot;
+use RTippin\MessengerBots\Bots\WikiBot;
 use RTippin\MessengerBots\Bots\YoMommaBot;
 
 class BotSeeder extends Seeder
@@ -35,11 +37,16 @@ class BotSeeder extends Seeder
         $group = Thread::group()->first();
         $bot = Bot::factory()->for($group)->owner($admin)->create([
             'name' => 'Messenger Bot',
-            'cooldown' => 5,
         ]);
         Messenger::setProvider($bot);
-        $react = [
+        $awesome = [
             'reaction' => ':100:',
+        ];
+        $thumbUp = [
+            'reaction' => ':thumbsup:',
+        ];
+        $rofl = [
+            'reaction' => ':rofl:',
         ];
         $about = [
             'quote_original' => true,
@@ -59,18 +66,22 @@ class BotSeeder extends Seeder
         ];
 
         BotAction::factory()->for($bot)->owner($admin)->handler(ChuckNorrisBot::class)->match('exact')->triggers('!chuck')->create();
-        BotAction::factory()->for($bot)->owner($admin)->handler(CommandsBot::class)->match('exact')->triggers('!commands')->create();
-        BotAction::factory()->for($bot)->owner($admin)->handler(DadJokeBot::class)->match('exact')->triggers('!dadjoke')->create();
-        BotAction::factory()->for($bot)->owner($admin)->handler(InsultBot::class)->match('exact')->triggers('!insult')->create();
-        BotAction::factory()->for($bot)->owner($admin)->handler(JokeBot::class)->match('exact')->triggers('!joke')->create();
-        BotAction::factory()->for($bot)->owner($admin)->handler(KanyeBot::class)->match('exact')->triggers('!kanye')->create();
-        BotAction::factory()->for($bot)->owner($admin)->handler(RandomImageBot::class)->match('exact')->triggers('!image')->create();
-        BotAction::factory()->for($bot)->owner($admin)->handler(ReactionBot::class)->match('contains')->triggers('100|nice')->payload(json_encode($react))->create();
-        BotAction::factory()->for($bot)->owner($admin)->handler(ReplyBot::class)->match('contains')->triggers('help|about|git')->payload(json_encode($about))->create();
-        BotAction::factory()->for($bot)->owner($admin)->handler(ReplyBot::class)->match('contains')->triggers('hi|hello|test|hallo')->payload(json_encode($hello))->create();
-        BotAction::factory()->for($bot)->owner($admin)->handler(RockPaperScissorsBot::class)->match('starts:with')->triggers('!rps')->create();
-        BotAction::factory()->for($bot)->owner($admin)->handler(RollBot::class)->match('starts:with')->triggers('!r|!roll')->create();
-//        BotAction::factory()->for($bot)->owner($admin)->handler(WeatherBot::class)->match('starts:with')->triggers('!w|!weather')->create();
-        BotAction::factory()->for($bot)->owner($admin)->handler(YoMommaBot::class)->match('contains')->triggers('!yomomma|mom|mother')->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(CommandsBot::class)->match('exact:caseless')->triggers('!commands|!c')->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(DadJokeBot::class)->match('contains:caseless')->triggers('!dadjoke|daddy|dad|father')->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(InsultBot::class)->match('contains:any:caseless')->triggers('!insult|fuck|asshole|bitch')->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(JokeBot::class)->match('exact:caseless')->triggers('!joke')->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(KanyeBot::class)->match('exact:caseless')->triggers('!kanye')->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(KnockBot::class)->match('contains:caseless')->triggers('!knock|knock|ding|dong|alert')->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(RandomImageBot::class)->match('exact:caseless')->triggers('!image')->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(ReactionBot::class)->match('contains:caseless')->triggers('100|nice|cool|wow|awesome')->payload(json_encode($awesome))->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(ReactionBot::class)->match('contains:caseless')->triggers('100|nice|cool|wow|awesome')->payload(json_encode($thumbUp))->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(ReactionBot::class)->match('contains:caseless')->triggers('lmao|lol|ha|lmfao|rofl')->payload(json_encode($rofl))->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(ReplyBot::class)->match('contains:caseless')->triggers('help|about|git|package|error')->payload(json_encode($about))->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(ReplyBot::class)->match('contains:caseless')->triggers('hi|hello|test|hallo')->payload(json_encode($hello))->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(RockPaperScissorsBot::class)->match('starts:with:caseless')->triggers('!rps')->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(RollBot::class)->match('starts:with:caseless')->triggers('!r|!roll')->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(WeatherBot::class)->match('starts:with:caseless')->triggers('!w|!weather')->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(WikiBot::class)->match('starts:with:caseless')->triggers('!wiki')->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(YoMommaBot::class)->match('contains:caseless')->triggers('!yomomma|mom|mother|mommy')->create();
     }
 }
