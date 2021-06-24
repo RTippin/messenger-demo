@@ -10,8 +10,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{asset('vendor/messenger/images/favicon-32x32.png')}}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{asset('vendor/messenger/images/favicon-16x16.png')}}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="title" content="@yield('title', messenger()->getSiteName())">
-    <title>@yield('title', messenger()->getSiteName())</title>
+    <meta name="title" content="@yield('title', config('messenger-ui.site_name'))">
+    <title>@yield('title', config('messenger-ui.site_name'))</title>
     @auth
         <link id="main_css" href="{{ asset(mix(messenger()->getProviderMessenger()->dark_mode ? 'dark.css' : 'app.css', 'vendor/messenger')) }}" rel="stylesheet">
     @else

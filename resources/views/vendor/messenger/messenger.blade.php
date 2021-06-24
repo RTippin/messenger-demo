@@ -1,5 +1,5 @@
 @extends('messenger::app')
-@section('title'){{messenger()->getProvider()->getProviderName()}} - {{messenger()->getSiteName()}} @endsection
+@section('title'){{messenger()->getProvider()->getProviderName()}} - {{config('messenger-ui.site_name')}} @endsection
 @section('content')
     <div class="container-fluid mt-n3">
         <div id="messenger_container" class="row inbox main-inbox d-flex">

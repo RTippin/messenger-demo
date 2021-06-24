@@ -29,10 +29,10 @@
             avatar_md : '{{ messenger()->getProvider()->getProviderAvatarRoute('md')}}',
         },
         common : {
-            app_name : '{{messenger()->getSiteName()}}',
+            app_name : '{{config('messenger-ui.site_name')}}',
             api_endpoint : '{{messenger()->getApiEndpoint()}}',
-            web_endpoint : '{{messenger()->getWebEndpoint()}}',
-            socket_endpoint : '{{messenger()->getSocketEndpoint()}}',
+            web_endpoint : '{{'/'.config('messenger-ui.routing.prefix')}}',
+            socket_endpoint : '{{config('messenger-ui.socket_endpoint')}}',
             base_css : '{{ asset(mix('app.css', 'vendor/messenger')) }}',
             dark_css : '{{ asset(mix('dark.css', 'vendor/messenger')) }}',
             dark_mode : {{messenger()->getProviderMessenger()->dark_mode ? 'true' :  'false'}},
@@ -50,10 +50,10 @@
         @stack('Messenger-load')
         },
         common : {
-            app_name : '{{messenger()->getSiteName()}}',
+            app_name : '{{config('messenger-ui.site_name')}}',
             api_endpoint : '{{messenger()->getApiEndpoint()}}',
-            web_endpoint : '{{messenger()->getWebEndpoint()}}',
-            socket_endpoint : '{{messenger()->getSocketEndpoint()}}',
+            web_endpoint : '{{'/'.config('messenger-ui.routing.prefix')}}',
+            socket_endpoint : '{{config('messenger-ui.socket_endpoint')}}',
             base_css : '{{ asset(mix('app.css', 'vendor/messenger')) }}',
             dark_css : '{{ asset(mix('dark.css', 'vendor/messenger')) }}',
             dark_mode : true,

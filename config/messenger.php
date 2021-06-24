@@ -3,27 +3,6 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | The name of your application
-    |--------------------------------------------------------------------------
-    |
-    */
-    'site_name' => env('MESSENGER_SITE_NAME', 'Messenger'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Provider UUIDs
-    |--------------------------------------------------------------------------
-    |
-    | All of our tables that have relations to one of your providers will use
-    | a morphTo. If your providers use UUIDs (char 36) as their primary keys,
-    | then set this to true. Please note that if you use multiple providers,
-    | they all must have matching primary key types (int / char / etc).
-    |
-    */
-    'provider_uuids' => true,
-
-    /*
-    |--------------------------------------------------------------------------
     | Messenger Providers Configuration
     |--------------------------------------------------------------------------
     |
@@ -82,6 +61,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Provider UUIDs
+    |--------------------------------------------------------------------------
+    |
+    | All of our tables that have relations to one of your providers will use
+    | a morphTo. If your providers use UUIDs (char 36) as their primary keys,
+    | then set this to true. Please note that if you use multiple providers,
+    | they all must have matching primary key types (int / char / etc).
+    |
+    */
+    'provider_uuids' => true,
+
+    /*
+    |--------------------------------------------------------------------------
     | Filesystem settings for provider avatars and thread files
     |--------------------------------------------------------------------------
     |
@@ -120,9 +112,8 @@ return [
     | Messenger routing config
     |--------------------------------------------------------------------------
     |
-    | Our API is the core of this package, and are the only routes that cannot
-    | be disabled. The api routes also bootstrap all of our policies and
-    | controllers for you. Our built in middleware 'messenger.provider'
+    | Our API is the core of this package, and bootstrap all of our policies
+    | and controllers for you. Our built in middleware 'messenger.provider'
     | simply takes the authenticated user via the request and sets them
     | as the current messenger provider. You are free to use your own
     | custom middleware to set your provider, as well as  any other
@@ -131,9 +122,8 @@ return [
     | All API routes return json, and are best used stateless through
     | auth:api such as passport or sanctum.
     |
-    | Invite view / redemption routes for both web and api have individual
-    | middleware control so you may allow both guest or authed users to
-    | access.
+    | Invite api has individual middleware control so you may allow
+    | both guest or authed users to access.
     |
     | *For the broadcasting channels to register, you must have already
     | setup/defined your laravel apps broadcast driver.
@@ -146,17 +136,9 @@ return [
             'middleware' => ['web', 'auth', 'messenger.provider:required'],
             'invite_api_middleware' => ['web', 'auth.optional', 'messenger.provider'],
         ],
-        'web' => [
-            'enabled' => true,
+        'assets' => [
             'domain' => null,
-            'prefix' => 'messenger',
-            'middleware' => ['web', 'auth', 'messenger.provider'],
-            'invite_web_middleware' => ['web', 'auth.optional', 'messenger.provider'],
-        ],
-        'provider_avatar' => [
-            'enabled' => true,
-            'domain' => null,
-            'prefix' => 'images',
+            'prefix' => 'messenger/assets',
             'middleware' => ['web', 'cache.headers:public, max-age=86400;'],
         ],
         'channels' => [
@@ -179,14 +161,6 @@ return [
         'message' => 60,    // Applies to sending messages per thread
         'attachment' => 15, // Applies to uploading images/documents per thread
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Endpoint our javascript will use for socket.io
-    |--------------------------------------------------------------------------
-    |
-    */
-    'socket_endpoint' => env('MESSENGER_SOCKET_ENDPOINT', config('app.url')),
 
     /*
     |--------------------------------------------------------------------------
