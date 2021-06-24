@@ -2,9 +2,11 @@
 
 ---
 
-### Ready-made bots package included [rtippin/messenger-bots](https://github.com/RTippin/messenger-bots)
+### UI / Web routes included [rtippin/messenger-ui](https://github.com/RTippin/messenger-ui)
 
-### Addon commands package included [rtippin/messenger-faker](https://github.com/RTippin/messenger-faker)
+### Ready-made bots included [rtippin/messenger-bots](https://github.com/RTippin/messenger-bots)
+
+### Addon commands included [rtippin/messenger-faker](https://github.com/RTippin/messenger-faker)
 
 ## Checkout the [LIVE DEMO](https://tippindev.com)
 
