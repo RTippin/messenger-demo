@@ -139,7 +139,7 @@ return [
         'assets' => [
             'domain' => null,
             'prefix' => 'messenger/assets',
-            'middleware' => ['web', 'cache.headers:public, max-age=86400;'],
+            'middleware' => ['bindings', 'cache.headers:public, max-age=86400;'],
         ],
         'channels' => [
             'enabled' => true,

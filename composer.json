@@ -19,8 +19,8 @@
         "laravel/ui": "^3.1",
         "pusher/pusher-php-server": "^6.1.0",
         "rtippin/messenger": "^0.36",
-        "rtippin/messenger-bots": "^0.1",
-        "rtippin/messenger-ui": "^0.1.0@alpha"
+        "rtippin/messenger-bots": "^0.2",
+        "rtippin/messenger-ui": "^0.1"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",

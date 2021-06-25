@@ -15,6 +15,7 @@ use RTippin\MessengerBots\Bots\InsultBot;
 use RTippin\MessengerBots\Bots\JokeBot;
 use RTippin\MessengerBots\Bots\KanyeBot;
 use RTippin\MessengerBots\Bots\KnockBot;
+use RTippin\MessengerBots\Bots\LocationBot;
 use RTippin\MessengerBots\Bots\RandomImageBot;
 use RTippin\MessengerBots\Bots\ReactionBot;
 use RTippin\MessengerBots\Bots\ReplyBot;
@@ -83,5 +84,6 @@ class BotSeeder extends Seeder
         BotAction::factory()->for($bot)->owner($admin)->handler(WeatherBot::class)->match('starts:with:caseless')->triggers('!w|!weather')->create();
         BotAction::factory()->for($bot)->owner($admin)->handler(WikiBot::class)->match('starts:with:caseless')->triggers('!wiki')->create();
         BotAction::factory()->for($bot)->owner($admin)->handler(YoMommaBot::class)->match('contains:caseless')->triggers('!yomomma|mom|mother|mommy')->create();
+        BotAction::factory()->for($bot)->owner($admin)->handler(LocationBot::class)->match('exact:caseless')->triggers('!location|!findMe|!whereAmI')->create();
     }
 }

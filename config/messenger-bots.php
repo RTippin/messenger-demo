@@ -13,6 +13,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | IP-PI key
+    |--------------------------------------------------------------------------
+    |
+    | When registering the location bot, you can opt to use the paid (pro)
+    | endpoint from ip-api. To obtain a key, visit:
+    | https://ip-api.com/
+    */
+    'ip_api_key' => env('BOT_LOCATION_API_KEY'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Random image endpoint
     |--------------------------------------------------------------------------
     |
