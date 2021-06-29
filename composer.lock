@@ -1183,16 +1183,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.48.2",
+            "version": "v8.49.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "4c50ebbb7d1a66c5f3511261413cd499d30ba4cd"
+                "reference": "855a919d08b45f93cb3cf709736528c3d1531884"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/4c50ebbb7d1a66c5f3511261413cd499d30ba4cd",
-                "reference": "4c50ebbb7d1a66c5f3511261413cd499d30ba4cd",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/855a919d08b45f93cb3cf709736528c3d1531884",
+                "reference": "855a919d08b45f93cb3cf709736528c3d1531884",
                 "shasum": ""
             },
             "require": {
@@ -1347,7 +1347,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-06-25T23:57:38+00:00"
+            "time": "2021-06-29T13:50:21+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -2957,16 +2957,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.37-alpha.0",
+            "version": "v0.37-alpha.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "61cf4bc02d8ef5e0bb4e536f5fadd1d6b59c3c04"
+                "reference": "664b991b05aa40bb0cdf24c8cea5a2171aef80c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/61cf4bc02d8ef5e0bb4e536f5fadd1d6b59c3c04",
-                "reference": "61cf4bc02d8ef5e0bb4e536f5fadd1d6b59c3c04",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/664b991b05aa40bb0cdf24c8cea5a2171aef80c9",
+                "reference": "664b991b05aa40bb0cdf24c8cea5a2171aef80c9",
                 "shasum": ""
             },
             "require": {
@@ -3020,9 +3020,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.37-alpha.0"
+                "source": "https://github.com/RTippin/messenger/tree/v0.37-alpha.1"
             },
-            "time": "2021-06-29T12:41:59+00:00"
+            "time": "2021-06-29T14:40:18+00:00"
         },
         {
             "name": "rtippin/messenger-bots",
