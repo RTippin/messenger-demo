@@ -3086,16 +3086,16 @@
         },
         {
             "name": "rtippin/messenger-ui",
-            "version": "v0.2-alpha.0",
+            "version": "v0.2-alpha.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-ui.git",
-                "reference": "116199d07010b35bbdb3c5b263b8c22775b2de5c"
+                "reference": "c797930ac746572af354a65aa2dbab3677a573d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-ui/zipball/116199d07010b35bbdb3c5b263b8c22775b2de5c",
-                "reference": "116199d07010b35bbdb3c5b263b8c22775b2de5c",
+                "url": "https://api.github.com/repos/RTippin/messenger-ui/zipball/c797930ac746572af354a65aa2dbab3677a573d2",
+                "reference": "c797930ac746572af354a65aa2dbab3677a573d2",
                 "shasum": ""
             },
             "require": {
@@ -3133,9 +3133,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-ui/issues",
-                "source": "https://github.com/RTippin/messenger-ui/tree/v0.2-alpha.0"
+                "source": "https://github.com/RTippin/messenger-ui/tree/v0.2-alpha.1"
             },
-            "time": "2021-06-29T12:17:22+00:00"
+            "time": "2021-06-29T13:26:22+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
