@@ -7,12 +7,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use RTippin\Messenger\Models\Participant;
 use RTippin\Messenger\Models\Thread;
-use RTippin\Messenger\Traits\ScopesProvider;
 
 class ThreadsTableSeeder extends Seeder
 {
-    use ScopesProvider;
-
     /**
      * Run the database seeds.
      *
@@ -38,10 +35,10 @@ class ThreadsTableSeeder extends Seeder
             $others = $users->where('email', '!=', $user->email)->all();
 
             foreach ($others as $other) {
-                if (Thread::private()
-                    ->hasProvider($user)
+                if (Thread::hasProvider($user)
                     ->join('participants as recipients', 'recipients.thread_id', '=', 'threads.id')
-                    ->where($this->concatBuilder('owner', 'recipients'), '=', $other->getMorphClass().$other->getKey())
+                    ->where('recipients.owner_id', '=', $other->getKey())
+                    ->where('recipients.owner_type', '=', $other->getMorphClass())
                     ->whereNull('recipients.deleted_at')
                     ->private()
                     ->doesntExist()) {

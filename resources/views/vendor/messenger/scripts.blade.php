@@ -18,12 +18,13 @@
 
         },
         provider : {
-            model : '{{messenger()->getProviderAlias()}}',
             @if(config('messenger.provider_uuids'))
                 id : '{{messenger()->getProvider()->getKey()}}',
             @else
                 id : {{messenger()->getProvider()->getKey()}},
             @endif
+            model : '{{messenger()->getProvider()->getMorphClass()}}',
+            alias : '{{messenger()->getProviderAlias()}}',
             name : '{{ messenger()->getProvider()->getProviderName()}}',
             slug : '{{ messenger()->getProvider()->getProviderAvatarRoute('sm')}}',
             avatar_md : '{{ messenger()->getProvider()->getProviderAvatarRoute('md')}}',
