@@ -2957,16 +2957,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.38-alpha.0",
+            "version": "v0.38-alpha.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "3b2f092842bbd06e7fa8b69f254380ad570e2457"
+                "reference": "d09c64f84c31d006e2b433e2b5c1956cd79431b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/3b2f092842bbd06e7fa8b69f254380ad570e2457",
-                "reference": "3b2f092842bbd06e7fa8b69f254380ad570e2457",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/d09c64f84c31d006e2b433e2b5c1956cd79431b6",
+                "reference": "d09c64f84c31d006e2b433e2b5c1956cd79431b6",
                 "shasum": ""
             },
             "require": {
@@ -3020,9 +3020,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.38-alpha.0"
+                "source": "https://github.com/RTippin/messenger/tree/v0.38-alpha.1"
             },
-            "time": "2021-07-01T05:07:33+00:00"
+            "time": "2021-07-01T19:19:09+00:00"
         },
         {
             "name": "rtippin/messenger-bots",
