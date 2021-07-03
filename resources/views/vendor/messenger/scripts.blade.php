@@ -28,6 +28,7 @@
             name : '{{ messenger()->getProvider()->getProviderName()}}',
             slug : '{{ messenger()->getProvider()->getProviderAvatarRoute('sm')}}',
             avatar_md : '{{ messenger()->getProvider()->getProviderAvatarRoute('md')}}',
+            avatar_sm : '{{ messenger()->getProvider()->getProviderAvatarRoute('sm')}}',
         },
         common : {
             app_name : '{{config('messenger-ui.site_name')}}',
