@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0f2f4fd4d06cc83045bfb215ecc6ae5e",
+    "content-hash": "5d26194a75bb62bdf154d0ae4d4050c8",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1979,16 +1979,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.10.5",
+            "version": "v4.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "4432ba399e47c66624bc73c8c0f811e5c109576f"
+                "reference": "fe14cf3672a149364fb66dfe11bf6549af899f94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/4432ba399e47c66624bc73c8c0f811e5c109576f",
-                "reference": "4432ba399e47c66624bc73c8c0f811e5c109576f",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/fe14cf3672a149364fb66dfe11bf6549af899f94",
+                "reference": "fe14cf3672a149364fb66dfe11bf6549af899f94",
                 "shasum": ""
             },
             "require": {
@@ -2029,9 +2029,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v4.10.5"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v4.11.0"
             },
-            "time": "2021-05-03T19:11:20+00:00"
+            "time": "2021-07-03T13:36:55+00:00"
         },
         {
             "name": "opis/closure",
@@ -2957,16 +2957,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.39-alpha.0",
+            "version": "v0.40-alpha.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "39efe553a373cdc15919bf4e7a8cbbbad8c3a702"
+                "reference": "7e4d0a44f1db128a630b7fddb73700a485c54049"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/39efe553a373cdc15919bf4e7a8cbbbad8c3a702",
-                "reference": "39efe553a373cdc15919bf4e7a8cbbbad8c3a702",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/7e4d0a44f1db128a630b7fddb73700a485c54049",
+                "reference": "7e4d0a44f1db128a630b7fddb73700a485c54049",
                 "shasum": ""
             },
             "require": {
@@ -3020,9 +3020,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.39-alpha.0"
+                "source": "https://github.com/RTippin/messenger/tree/v0.40-alpha.0"
             },
-            "time": "2021-07-03T07:39:46+00:00"
+            "time": "2021-07-05T04:42:41+00:00"
         },
         {
             "name": "rtippin/messenger-bots",

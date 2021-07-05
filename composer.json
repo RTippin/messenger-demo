@@ -18,7 +18,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.1",
         "pusher/pusher-php-server": "^6.1.0",
-        "rtippin/messenger": "^0.39",
+        "rtippin/messenger": "^0.40",
         "rtippin/messenger-bots": "^0.3",
         "rtippin/messenger-ui": "^0.3"
     },
