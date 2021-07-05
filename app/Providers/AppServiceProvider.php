@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Bots\RecursionBot;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
@@ -61,6 +62,7 @@ class AppServiceProvider extends ServiceProvider
             LocationBot::class,
             RandomImageBot::class,
             ReactionBot::class,
+            RecursionBot::class,
             ReplyBot::class,
             RockPaperScissorsBot::class,
             RollBot::class,
