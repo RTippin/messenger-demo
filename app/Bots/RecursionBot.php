@@ -29,7 +29,7 @@ class RecursionBot extends BotActionHandler
      */
     public function handle(): void
     {
-        $first = $this->composer()->message('!recursion !recursion', $this->message->id)->getMessage();
+        $first = $this->composer()->emitTyping()->message('!recursion !recursion', $this->message->id)->getMessage();
 
         $second = $this->composer()->message('!recursion !recursion !recursion', $first->id)->getMessage();
 
@@ -39,7 +39,7 @@ class RecursionBot extends BotActionHandler
 
         sleep(2);
 
-        $this->composer()->message('FATAL ERROR 500: max_execution_time exceeded');
+        $this->composer()->emitTyping()->message('FATAL ERROR 500: max_execution_time exceeded');
 
         $this->composer()->message('Oh no! :open_mouth:');
     }
