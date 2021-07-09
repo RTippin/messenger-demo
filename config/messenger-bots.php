@@ -7,7 +7,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | When registering the weather bot, you must obtain an API key from:
-    | https://www.weatherapi.com/
+    | https://www.weatherapi.com
     */
     'weather_api_key' => env('BOT_WEATHER_API_KEY'),
 
@@ -18,7 +18,7 @@ return [
     |
     | When registering the location bot, you can opt to use the paid (pro)
     | endpoint from ip-api. To obtain a key, visit:
-    | https://ip-api.com/
+    | https://ip-api.com
     */
     'ip_api_key' => env('BOT_LOCATION_API_KEY'),
 
@@ -31,4 +31,15 @@ return [
     | the specified URL. Unsplash is used as default.
     */
     'random_image_url' => env('BOT_RANDOM_IMAGE_URL', 'https://source.unsplash.com/random'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Youtube key
+    |--------------------------------------------------------------------------
+    |
+    | When registering the youtube bot, you must have a valid Youtube API key.
+    | To obtain a key, please visit
+    | https://console.developers.google.com
+    */
+    'youtube_api_key' => env('BOT_YOUTUBE_API_KEY'),
 ];

@@ -25,6 +25,7 @@ use RTippin\MessengerBots\Bots\RollBot;
 use RTippin\MessengerBots\Bots\WeatherBot;
 use RTippin\MessengerBots\Bots\WikiBot;
 use RTippin\MessengerBots\Bots\YoMommaBot;
+use RTippin\MessengerBots\Bots\YoutubeBot;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -69,6 +70,7 @@ class AppServiceProvider extends ServiceProvider
             WeatherBot::class,
             WikiBot::class,
             YoMommaBot::class,
+            YoutubeBot::class,
         ]);
     }
 }
