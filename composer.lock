@@ -3026,16 +3026,16 @@
         },
         {
             "name": "rtippin/messenger-bots",
-            "version": "v0.4-alpha.4",
+            "version": "v0.4-alpha.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-bots.git",
-                "reference": "b9a11cd16277f5e57f8c754fd295b3ce53c703e0"
+                "reference": "96acd8a3b7854d1b2daf73967425e60f978bc2a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-bots/zipball/b9a11cd16277f5e57f8c754fd295b3ce53c703e0",
-                "reference": "b9a11cd16277f5e57f8c754fd295b3ce53c703e0",
+                "url": "https://api.github.com/repos/RTippin/messenger-bots/zipball/96acd8a3b7854d1b2daf73967425e60f978bc2a6",
+                "reference": "96acd8a3b7854d1b2daf73967425e60f978bc2a6",
                 "shasum": ""
             },
             "require": {
@@ -3081,9 +3081,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-bots/issues",
-                "source": "https://github.com/RTippin/messenger-bots/tree/v0.4-alpha.4"
+                "source": "https://github.com/RTippin/messenger-bots/tree/v0.4-alpha.5"
             },
-            "time": "2021-07-10T02:32:41+00:00"
+            "time": "2021-07-11T04:45:30+00:00"
         },
         {
             "name": "rtippin/messenger-ui",

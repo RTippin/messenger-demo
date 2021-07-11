@@ -17,6 +17,7 @@ use RTippin\MessengerBots\Bots\JokeBot;
 use RTippin\MessengerBots\Bots\KanyeBot;
 use RTippin\MessengerBots\Bots\KnockBot;
 use RTippin\MessengerBots\Bots\LocationBot;
+use RTippin\MessengerBots\Bots\QuotableBot;
 use RTippin\MessengerBots\Bots\RandomImageBot;
 use RTippin\MessengerBots\Bots\ReactionBot;
 use RTippin\MessengerBots\Bots\ReplyBot;
@@ -61,6 +62,7 @@ class AppServiceProvider extends ServiceProvider
             KanyeBot::class,
             KnockBot::class,
             LocationBot::class,
+            QuotableBot::class,
             RandomImageBot::class,
             ReactionBot::class,
             RecursionBot::class,

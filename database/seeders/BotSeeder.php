@@ -17,6 +17,7 @@ use RTippin\MessengerBots\Bots\JokeBot;
 use RTippin\MessengerBots\Bots\KanyeBot;
 use RTippin\MessengerBots\Bots\KnockBot;
 use RTippin\MessengerBots\Bots\LocationBot;
+use RTippin\MessengerBots\Bots\QuotableBot;
 use RTippin\MessengerBots\Bots\RandomImageBot;
 use RTippin\MessengerBots\Bots\ReactionBot;
 use RTippin\MessengerBots\Bots\ReplyBot;
@@ -101,6 +102,7 @@ class BotSeeder extends Seeder
             [ReplyBot::class, 'contains:caseless', 'help|about|git|package|error', $about],
             [ReplyBot::class, 'contains:caseless', 'hi|hello|test|testing|hallo', $hello],
             [RecursionBot::class, 'exact:caseless', '!recursion'],
+            [QuotableBot::class, 'exact:caseless', '!quote|!inspire|!quotable'],
         ];
     }
 }
