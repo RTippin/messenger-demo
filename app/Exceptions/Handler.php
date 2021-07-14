@@ -7,8 +7,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use ReflectionClass;
-use ReflectionException;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -19,7 +18,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        // Exceptions not to report
+        // Things not to report
     ];
 
     /**
@@ -39,54 +38,39 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        //
     }
 
     /**
      * Render an exception into an HTTP response.
      *
      * @param Request $request
-     * @param Throwable $exception
-     * @return JsonResponse
+     * @param Throwable $e
+     * @return Response
+     *
      * @throws Throwable
-     * @noinspection PhpMissingParamTypeInspection
      */
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e)
     {
-        if($exception instanceof ModelNotFoundException){
+        if ($e instanceof ModelNotFoundException) {
             return new JsonResponse([
-                'message' => "Unable to locate the {$this->prettyModelNotFound($exception)} you requested."
+                'message' => "Unable to locate the {$this->prettyModelNotFound($e)} you requested."
             ], 404);
         }
 
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 
     /**
-     * @param Throwable $exception
+     * @param ModelNotFoundException $exception
      * @return string
-     * @noinspection PhpPossiblePolymorphicInvocationInspection
      */
-    private function prettyModelNotFound(Throwable $exception): string
+    private function prettyModelNotFound(ModelNotFoundException $exception): string
     {
-        try {
-            if( ! is_null($exception->getModel()))
-            {
-                return Str::lower(
-                    ltrim(
-                        preg_replace(
-                            '/[A-Z]/',
-                            ' $0',
-                            (new ReflectionClass($exception->getModel()))->getShortName()
-                        )
-                    )
-                );
-            }
-        } catch (ReflectionException $e) {
-            report($e);
+        if (! is_null($exception->getModel())) {
+            return Str::lower(ltrim(preg_replace('/[A-Z]/', ' $0', class_basename($exception->getModel()))));
         }
+
         return 'resource';
     }
 }

@@ -18,8 +18,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{asset('vendor/messenger/images/favicon-32x32.png')}}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{asset('vendor/messenger/images/favicon-16x16.png')}}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="Laravel messenger demo app by Richard Tippin. Includes real-time messaging, group messaging, read receipts, video calls with screen sharing, group invitation links, and more!">
-    <meta name="keywords" content="laravel, demo, git, messenger, plugin, package, open, source, message, suite, php, javascript, bootstrap, framework, webrtc, tippin, jquery, MVC, ORM, OOP" />
+    <meta name="description" content="Laravel messenger demo app by Richard Tippin. A full messenger suite for your new / existing laravel app! Private and group threads between multiple models, with real-time messaging, reactions, attachments, calling, chat bots, and more!">
+    <meta name="keywords" content="laravel, demo, git, messenger, plugin, package, open, source, message, suite, php, javascript, bootstrap, framework, webrtc, tippin, jquery, MVC, ORM, OOP, discord, bots, calls, reactions" />
     <meta name="title" content="@yield('title', 'Messenger Demo')">
     <title>@yield('title', 'Tippin\'s Messenger Demo')</title>
     @auth

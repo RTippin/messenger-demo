@@ -8,18 +8,17 @@
                         <h3 class="card-header"><i class="fas fa-comments"></i> Messenger Demo</h3>
                         <div class="card-body">
                             <h4>
-                                Welcome to Tippin's Laravel Messenger demo! This is a  base laravel 8 installation using
-                                <strong><span class="text-info">rtippin/messenger</span></strong> package to provide us
+                                Welcome to Tippin's Laravel Messenger demo! This is a base laravel 8 installation using
+                                <strong><span class="text-info">rtippin/messenger</span></strong> core to provide us
                                 with a full featured messenger system! You may sign up anytime or use a demo account
-                                listed below to test out our features currently provided, such as real time messaging |
-                                video calling | screen sharing | group messaging, and more. We will periodically reset
-                                this demo app.
+                                listed below to test out our features currently provided. Private and group threads
+                                between multiple models, with real-time messaging, reactions, attachments, calling,
+                                chat bots, and more! We will periodically reset this demo app.
                             </h4>
                             <hr>
                             <div class="col-12 mt-2 text-center h5">
                                 <div class="h5 font-weight-bold mb-4">The source code for this demo project and it's installation docs can be found on my github @RTippin</div>
-                                <a class="btn btn-lg btn-primary" target="_blank" href="https://github.com/RTippin/messenger"><i class="fab fa-github"></i> Package</a> |
-                                <a class="btn btn-lg btn-primary" target="_blank" href="https://github.com/RTippin/messenger-demo"><i class="fab fa-github"></i> Demo</a>
+                                <a class="btn btn-lg btn-primary" target="_blank" href="https://github.com/RTippin"><i class="fab fa-github"></i> RTippin</a>
                             </div>
                         </div>
                     </div>

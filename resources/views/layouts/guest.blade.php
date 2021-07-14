@@ -5,6 +5,9 @@
     <li class="nav-item {{request()->is('config') ? 'active' : ''}}" >
         <a class="nav-link" href="{{route('config')}}">Config <i class="fas fa-server"></i></a>
     </li>
+    <li class="nav-item {{Request::is('api-explorer') ? 'active' : ''}}" >
+        <a class="nav-link" href="{{route('api-explorer.index')}}">API Explorer <i class="fas fa-laptop-code"></i></a>
+    </li>
 </ul>
 <ul class="navbar-nav">
     <li class="nav-item {{request()->route() && request()->route()->getName() === 'register' ? 'active' : ''}}">

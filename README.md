@@ -112,6 +112,10 @@ $  php artisan migrate:fresh --seed
 ---
 
 ## Final Steps:
+**To view the API Explorer, you must download our generated responses:**
+```bash
+$  php artisan messenger:get:api
+```
 **To run locally, run 3 terminals for the following commands in your project folder:**
 ```bash
 $  php artisan serve

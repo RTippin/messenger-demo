@@ -6,7 +6,7 @@
 /storage/*.key
 /vendor
 /.idea
-
+/storage/messenger-responses.json
 
 /public/css
 /public/mix-manifest.json

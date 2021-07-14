@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiExplorerController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
@@ -18,10 +19,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'splash')->middleware('guest');
 Route::get('demo-logins', [HomeController::class, 'getDemoAccounts'])->middleware('guest');
-Route::get('config', [HomeController::class, 'config'])->name('config');
+Route::view('config', 'config')->name('config');
 Route::post('heartbeat', [HomeController::class, 'csrfHeartbeat'])->middleware('auth');
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register']);
+Route::prefix('api-explorer')->name('api-explorer.')->group(function () {
+    Route::view('/', 'explorer.index')->name('index');
+    Route::get('routes', [ApiExplorerController::class, 'getRoutes'])->name('routes');
+    Route::get('routes/{route}', [ApiExplorerController::class, 'getRouteResponses'])->name('routes.show');
+});

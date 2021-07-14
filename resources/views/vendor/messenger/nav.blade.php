@@ -5,6 +5,9 @@
     <li class="nav-item {{Request::is('config') ? 'active' : ''}}" >
         <a class="nav-link" href="{{route('config')}}">Config <i class="fas fa-server"></i></a>
     </li>
+    <li class="nav-item {{Request::is('api-explorer') ? 'active' : ''}}" >
+        <a class="nav-link" href="{{route('api-explorer.index')}}">API Explorer <i class="fas fa-laptop-code"></i></a>
+    </li>
 </ul>
 <ul class="navbar-nav mb-1">
     <li id="active_calls_nav" class="nav-item dropdown mx-1 my-2 my-lg-0">

@@ -3,34 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 
 class HomeController extends Controller
 {
     /**
-     * Show the application config.
-     *
-     * @return Renderable
-     */
-    public function config(): Renderable
-    {
-        return view('config');
-    }
-
-    /**
      * @return JsonResponse
      */
     public function getDemoAccounts(): JsonResponse
     {
-        $users = User::demo()->get()->shuffle()->filter(function (User $user){
-            return $user->getProviderOnlineStatus() === 0;
-        });
+        $users = User::demo()
+            ->get()
+            ->shuffle()
+            ->filter(fn (User $user) => $user->getProviderOnlineStatus() === 0)
+            ->take(5);
 
         return new JsonResponse([
-            'html' => view('auth.demoAcc')->with('users', $users->take(5))->render()
+            'html' => view('auth.demoAcc')->with('users', $users)->render()
         ]);
     }
+
     /**
      * @return JsonResponse
      */
