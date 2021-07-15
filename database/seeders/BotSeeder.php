@@ -10,6 +10,7 @@ use RTippin\Messenger\Models\Bot;
 use RTippin\Messenger\Models\BotAction;
 use RTippin\Messenger\Models\Thread;
 use RTippin\MessengerBots\Bots\ChuckNorrisBot;
+use RTippin\MessengerBots\Bots\CoinTossBot;
 use RTippin\MessengerBots\Bots\CommandsBot;
 use RTippin\MessengerBots\Bots\DadJokeBot;
 use RTippin\MessengerBots\Bots\InsultBot;
@@ -103,6 +104,7 @@ class BotSeeder extends Seeder
             [ReplyBot::class, 'contains:caseless', 'hi|hello|test|testing|hallo', $hello],
             [RecursionBot::class, 'exact:caseless', '!recursion'],
             [QuotableBot::class, 'exact:caseless', '!quote|!inspire|!quotable'],
+            [CoinTossBot::class, 'starts:with:caseless', '!toss|!headsOrTails|!coinToss'],
         ];
     }
 }

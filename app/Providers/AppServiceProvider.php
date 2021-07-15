@@ -10,6 +10,7 @@ use RTippin\Messenger\Brokers\JanusBroker;
 use RTippin\Messenger\Facades\Messenger;
 use RTippin\Messenger\Facades\MessengerBots;
 use RTippin\MessengerBots\Bots\ChuckNorrisBot;
+use RTippin\MessengerBots\Bots\CoinTossBot;
 use RTippin\MessengerBots\Bots\CommandsBot;
 use RTippin\MessengerBots\Bots\DadJokeBot;
 use RTippin\MessengerBots\Bots\InsultBot;
@@ -55,6 +56,7 @@ class AppServiceProvider extends ServiceProvider
 
         MessengerBots::setHandlers([
             ChuckNorrisBot::class,
+            CoinTossBot::class,
             CommandsBot::class,
             DadJokeBot::class,
             InsultBot::class,
