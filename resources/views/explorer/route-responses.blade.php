@@ -1,5 +1,5 @@
 @foreach($data as $status => $response)
-<div class="col-12 mt-3">
+<div class="col-12 col-xl-8 offset-xl-2 mt-3">
     <div class="card">
         <div class="card-header h3 text-info"><i class="fas fa-network-wired"></i> <pre class="d-inline">{{ $verb }} {{$status}}: </pre></div>
         <div class="card-body py-0 my-0">
