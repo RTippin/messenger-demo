@@ -18,7 +18,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.1",
         "pusher/pusher-php-server": "^6.1.0",
-        "rtippin/messenger": "^0.42",
+        "rtippin/messenger": "^0.43",
         "rtippin/messenger-bots": "^0.5",
         "rtippin/messenger-ui": "^0.3"
     },
@@ -30,7 +30,7 @@
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
         "phpunit/phpunit": "^9.3.3",
-        "rtippin/messenger-faker": "^0.13"
+        "rtippin/messenger-faker": "^0.14"
     },
     "config": {
         "optimize-autoloader": true,

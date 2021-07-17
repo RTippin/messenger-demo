@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use RTippin\Messenger\Contracts\MessengerProvider;
-use RTippin\Messenger\Contracts\Searchable;
 use RTippin\Messenger\Traits\Messageable;
 use RTippin\Messenger\Traits\Search;
 
@@ -38,7 +37,7 @@ use RTippin\Messenger\Traits\Search;
  * @method static Builder|User demo()
  * @mixin \Eloquent
  */
-class User extends Authenticatable implements MessengerProvider, Searchable
+class User extends Authenticatable implements MessengerProvider
 {
     use Uuids;
 
@@ -75,6 +74,25 @@ class User extends Authenticatable implements MessengerProvider, Searchable
      * @var string
      */
     public $keyType = 'string';
+
+    /**
+     * Get the provider settings and alias override, if set.
+     *
+     * @return array
+     */
+    public static function getProviderSettings(): array
+    {
+        return [
+            'alias' => 'user',
+            'searchable' => true,
+            'friendable' => true,
+            'devices' => false,
+            'default_avatar' => public_path('vendor/messenger/images/users.png'),
+            'cant_message_first' => [],
+            'cant_search' => [],
+            'cant_friend' => [],
+        ];
+    }
 
     /**
      * The column name your providers avatar is stored in the database as.
