@@ -32,6 +32,6 @@ class RefreshApiResponsesCommand extends Command
     {
         file_put_contents(storage_path('messenger-responses.json'), file_get_contents(self::GIT_ENDPOINT));
 
-        $this->info("messenger-responses.json stored in public!");
+        $this->info("messenger-responses.json stored in storage!");
     }
 }
