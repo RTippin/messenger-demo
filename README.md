@@ -17,6 +17,10 @@
 - laravel-echo-server [tlaverdure/laravel-echo-server](https://github.com/tlaverdure/laravel-echo-server) 
 - [PHPREDIS](https://github.com/phpredis/phpredis/blob/develop/INSTALL.markdown)
 
+### Notes
+- Calling will be disabled by default. Even though we have our [janus-client](https://github.com/RTippin/janus-client) installed, you are responsible for setting up your own `Janus Server`.
+- Please see [Janus official docs](https://janus.conf.meetecho.com/docs/index.html) for more information.
+
 ---
 
 # Installation (Laravel 8.x)
