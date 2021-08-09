@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use App\Bots\RecursionBot;
+use App\Brokers\JanusBroker;
 use App\Models\User;
 use Illuminate\Support\ServiceProvider;
-use RTippin\Messenger\Brokers\JanusBroker;
 use RTippin\Messenger\Facades\Messenger;
 use RTippin\Messenger\Facades\MessengerBots;
 use RTippin\MessengerBots\Bots\ChuckNorrisBot;
@@ -49,7 +49,7 @@ class MessengerServiceProvider extends ServiceProvider
             User::class,
         ]);
 
-        // Enable calling and set the video driver of your choosing. Janus is included.
+        // Enable calling and set the video driver of your choosing. Janus client is included in this demo.
 //        Messenger::setCalling(true);
 //        Messenger::setVideoDriver(JanusBroker::class);
 
