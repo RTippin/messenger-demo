@@ -45,6 +45,9 @@
                             <div class="col-12 col-md-6">
                                 <h4>&bull; <a href="https://github.com/RTippin/messenger-ui" target="_blank">Messenger UI</a></h4>
                             </div>
+                            <div class="col-12 col-md-6">
+                                <h4>&bull; <a href="https://github.com/RTippin/janus-client" target="_blank">Janus client</a></h4>
+                            </div>
                         </div>
                     </div>
                 </div>
