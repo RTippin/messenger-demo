@@ -19,7 +19,7 @@
         "laravel/ui": "^3.1",
         "pusher/pusher-php-server": "^6.1.0",
         "rtippin/janus-client": "^0.2",
-        "rtippin/messenger": "^0.46",
+        "rtippin/messenger": "^0.47",
         "rtippin/messenger-bots": "^0.5",
         "rtippin/messenger-ui": "^0.3"
     },

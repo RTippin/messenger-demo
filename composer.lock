@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0708d19c6dd00a80a9466bf3a1badb40",
+    "content-hash": "ed49f99d49782f1f0fd79bab590c6ff5",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1273,16 +1273,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.53.1",
+            "version": "v8.54.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "5df423c2790f32b26baee90518bb659572aa404f"
+                "reference": "7b88554cd1aeb52b7f82689bf244182e7a81894b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/5df423c2790f32b26baee90518bb659572aa404f",
-                "reference": "5df423c2790f32b26baee90518bb659572aa404f",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/7b88554cd1aeb52b7f82689bf244182e7a81894b",
+                "reference": "7b88554cd1aeb52b7f82689bf244182e7a81894b",
                 "shasum": ""
             },
             "require": {
@@ -1437,7 +1437,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-08-05T14:04:08+00:00"
+            "time": "2021-08-10T14:25:51+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -2480,16 +2480,16 @@
         },
         {
             "name": "paragonie/sodium_compat",
-            "version": "v1.16.1",
+            "version": "v1.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/sodium_compat.git",
-                "reference": "2e856afe80bfc968b47da1f4a7e1ea8f03d06b38"
+                "reference": "c59cac21abbcc0df06a3dd18076450ea4797b321"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/2e856afe80bfc968b47da1f4a7e1ea8f03d06b38",
-                "reference": "2e856afe80bfc968b47da1f4a7e1ea8f03d06b38",
+                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/c59cac21abbcc0df06a3dd18076450ea4797b321",
+                "reference": "c59cac21abbcc0df06a3dd18076450ea4797b321",
                 "shasum": ""
             },
             "require": {
@@ -2560,9 +2560,9 @@
             ],
             "support": {
                 "issues": "https://github.com/paragonie/sodium_compat/issues",
-                "source": "https://github.com/paragonie/sodium_compat/tree/v1.16.1"
+                "source": "https://github.com/paragonie/sodium_compat/tree/v1.17.0"
             },
-            "time": "2021-05-25T12:58:14+00:00"
+            "time": "2021-08-10T02:43:50+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -3252,16 +3252,16 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "4.2.0",
+            "version": "4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "7231612a5221f5524d3575bebdce20eeef8547a1"
+                "reference": "fe665a03df4f056aa65af552a96e1976df8c8dae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/7231612a5221f5524d3575bebdce20eeef8547a1",
-                "reference": "7231612a5221f5524d3575bebdce20eeef8547a1",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/fe665a03df4f056aa65af552a96e1976df8c8dae",
+                "reference": "fe665a03df4f056aa65af552a96e1976df8c8dae",
                 "shasum": ""
             },
             "require": {
@@ -3333,7 +3333,7 @@
             ],
             "support": {
                 "issues": "https://github.com/ramsey/uuid/issues",
-                "source": "https://github.com/ramsey/uuid/tree/4.2.0"
+                "source": "https://github.com/ramsey/uuid/tree/4.2.1"
             },
             "funding": [
                 {
@@ -3345,20 +3345,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-08-06T22:30:43+00:00"
+            "time": "2021-08-11T01:06:55+00:00"
         },
         {
             "name": "rtippin/janus-client",
-            "version": "v0.2-alpha.0",
+            "version": "v0.2-alpha.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/janus-client.git",
-                "reference": "fcd7c53d40885ca5d898c6cd9f9087ee49734637"
+                "reference": "59d668545beae99d32d4d498aa9123ec9f489f0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/janus-client/zipball/fcd7c53d40885ca5d898c6cd9f9087ee49734637",
-                "reference": "fcd7c53d40885ca5d898c6cd9f9087ee49734637",
+                "url": "https://api.github.com/repos/RTippin/janus-client/zipball/59d668545beae99d32d4d498aa9123ec9f489f0c",
+                "reference": "59d668545beae99d32d4d498aa9123ec9f489f0c",
                 "shasum": ""
             },
             "require": {
@@ -3404,22 +3404,22 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/janus-client/issues",
-                "source": "https://github.com/RTippin/janus-client/tree/v0.2-alpha.0"
+                "source": "https://github.com/RTippin/janus-client/tree/v0.2-alpha.2"
             },
-            "time": "2021-08-09T03:28:23+00:00"
+            "time": "2021-08-11T07:10:52+00:00"
         },
         {
             "name": "rtippin/messenger",
-            "version": "v0.46-alpha.0",
+            "version": "v0.47-alpha.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "b99a1c0594c1120ff1ffc243523af3fc183cef2c"
+                "reference": "6ac960a1b26edf09f54688b3cff67a27c08a6186"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/b99a1c0594c1120ff1ffc243523af3fc183cef2c",
-                "reference": "b99a1c0594c1120ff1ffc243523af3fc183cef2c",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/6ac960a1b26edf09f54688b3cff67a27c08a6186",
+                "reference": "6ac960a1b26edf09f54688b3cff67a27c08a6186",
                 "shasum": ""
             },
             "require": {
@@ -3473,9 +3473,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v0.46-alpha.0"
+                "source": "https://github.com/RTippin/messenger/tree/v0.47-alpha.0"
             },
-            "time": "2021-08-09T04:04:42+00:00"
+            "time": "2021-08-11T13:50:38+00:00"
         },
         {
             "name": "rtippin/messenger-bots",
@@ -8827,20 +8827,21 @@
         },
         {
             "name": "rtippin/messenger-faker",
-            "version": "v0.14-alpha.0",
+            "version": "v0.14-alpha.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-faker.git",
-                "reference": "4930dd394b2fcff374efe9bceee5319119acc1b8"
+                "reference": "594a8f0751f31665a01c889111b1b48ed2298b5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/4930dd394b2fcff374efe9bceee5319119acc1b8",
-                "reference": "4930dd394b2fcff374efe9bceee5319119acc1b8",
+                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/594a8f0751f31665a01c889111b1b48ed2298b5a",
+                "reference": "594a8f0751f31665a01c889111b1b48ed2298b5a",
                 "shasum": ""
             },
             "require": {
                 "fakerphp/faker": "^1.13",
+                "guzzlehttp/guzzle": "^7.3",
                 "php": "^7.4||^8.0",
                 "rtippin/messenger": "~0.43"
             },
@@ -8881,9 +8882,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-faker/issues",
-                "source": "https://github.com/RTippin/messenger-faker/tree/v0.14-alpha.0"
+                "source": "https://github.com/RTippin/messenger-faker/tree/v0.14-alpha.1"
             },
-            "time": "2021-07-17T00:07:42+00:00"
+            "time": "2021-08-10T05:34:49+00:00"
         },
         {
             "name": "sebastian/cli-parser",
