@@ -1,12 +1,12 @@
-# [rtippin/messenger](https://github.com/RTippin/messenger) Demo App
+# [Messenger Demo App](https://github.com/RTippin/messenger)
 
 ---
 
-### UI / Web routes included [rtippin/messenger-ui](https://github.com/RTippin/messenger-ui)
-
-### Ready-made bots included [rtippin/messenger-bots](https://github.com/RTippin/messenger-bots)
-
-### Addon commands included [rtippin/messenger-faker](https://github.com/RTippin/messenger-faker)
+## Included addon packages:
+- UI / Web routes [messenger-ui](https://github.com/RTippin/messenger-ui)
+- Ready-made bots [messenger-bots](https://github.com/RTippin/messenger-bots)
+- Faker commands [messenger-faker](https://github.com/RTippin/messenger-faker)
+- Janus media server client [janus-client](https://github.com/RTippin/janus-client)
 
 ## Checkout the [LIVE DEMO](https://tippindev.com)
 
@@ -18,52 +18,70 @@
 - [PHPREDIS](https://github.com/phpredis/phpredis/blob/develop/INSTALL.markdown)
 
 ### Notes
+- This demo is meant to be seeded before use. Registration also assumes a pre-seeded database, as we automatically create threads between the admin user and a newly registered user, as well as set friendships.
 - Calling will be disabled by default. Even though we have our [janus-client](https://github.com/RTippin/janus-client) installed, you are responsible for setting up your own `Janus Server`.
 - Please see [Janus official docs](https://janus.conf.meetecho.com/docs/index.html) for more information.
 
 ---
 
-# Installation (Laravel 8.x)
+# Installation
 
-***Clone or download this repository***
+#### Clone or download this repository
 ```bash
 $  git clone git@github.com:RTippin/messenger-demo.git
 ```
----
 
-***Run in project folder:***
+#### Composer install
 ```bash
 $  composer install
 ```
----
 
-**Rename the .env.example to .env**
+#### Rename the .env.example to .env and configure your environment
 
-**Configure your desired environment variables.**
-
----
-
-***In this demo, I use laravel-echo-server, which you should install globally first***
-``` bash
-$  npm install -g laravel-echo-server
-```
----
-
-***Run in project folder:***
+#### Generate your app key
 ```bash
 $  php artisan key:generate
 ```
+
+#### Migrate and seed your database
+```bash
+$  php artisan migrate:fresh --seed
+```
+
+#### To view the API Explorer, you must download our generated responses
+```bash
+$  php artisan messenger:get:api
+```
+
 ---
 
-### Setup laravel-echo-server first. We can then stick all keys we need into the .env
+## Running locally:
 
-***Run in project:***
+#### Run each command in their own terminal inside your project folder
+- You must setup *laravel-echo-server* first before running it!
+```bash
+$  php artisan serve
+$  php artisan queue:work --queue=messenger,messenger-bots,default
+$  laravel-echo-server start
+```
+
+---
+
+## Setting up laravel-echo-server
+- We must globally install laravel-echo-server and initialize it within our project. We can then stick all keys we need into the `.env`
+
+#### Install globally
+``` bash
+$  npm install -g laravel-echo-server
+```
+
+#### Initialize laravel-echo-server in our project
+- Follow console setup guide for laravel-echo-server. You should have it generate the `appId` and `key` for you. When completed, your project directory should contain a *laravel-echo-server.json*.
 ``` bash
 $  laravel-echo-server init
 ```
-Follow console setup guide for laravel-echo-server. You should have it setup the appId and key for you. When completed, your project directory should contain a *laravel-echo-server.json*.
 
-Example:
+#### Example
 ``` json
 {
     "authHost": "http://localhost:8000",
@@ -103,32 +121,12 @@ Example:
     }
 }
 ```
+
+#### Now copy your *laravel-echo-server.json* `appId / key` into the `.env` `SOCKET_APP_ID / SOCKET_APP_KEY`
+
 ---
 
-**Now copy your *laravel-echo-server.json* `appId / key` into the .env `SOCKET_APP_ID / SOCKET_APP_KEY`**
-
-**Migrate and seed your database!**
-
-***Run in project:***
-```bash
-$  php artisan migrate:fresh --seed
-```
----
-
-## Final Steps:
-**To view the API Explorer, you must download our generated responses:**
-```bash
-$  php artisan messenger:get:api
-```
-**To run locally, run 3 terminals for the following commands in your project folder:**
-```bash
-$  php artisan serve
-$  php artisan queue:work --queue=messenger,messenger-bots,default
-$  laravel-echo-server start
-```
----
-
-## Default admin account:
+## Default seeded admin account:
 
 ### Email `admin@example.net`
 
