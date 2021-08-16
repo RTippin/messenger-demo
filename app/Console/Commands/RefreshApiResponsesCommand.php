@@ -9,7 +9,7 @@ class RefreshApiResponsesCommand extends Command
     /**
      * Git endpoint where the most recent generated responses are stored.
      */
-    const GIT_ENDPOINT = 'https://raw.githubusercontent.com/RTippin/messenger/master/docs/generated/responses.json';
+    const GIT_ENDPOINT = 'https://raw.githubusercontent.com/RTippin/messenger/1.x/docs/generated/responses.json';
 
     /**
      * The name and signature of the console command.
