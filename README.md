@@ -48,9 +48,9 @@ $  php artisan key:generate
 $  php artisan migrate:fresh --seed
 ```
 
-#### To view the API Explorer, you must download our generated responses
+#### To view the API Explorer and documentation pages, you must download our files from the git repository.
 ```bash
-$  php artisan messenger:get:api
+$  php artisan messenger:docs:download
 ```
 
 ---

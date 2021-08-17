@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Str;
@@ -24,20 +26,21 @@ class ApiExplorerController extends Controller
             ->toArray();
 
         return new JsonResponse([
-            'html' => view('explorer.routes')->with('routes', $routes)->render(),
+            'html' => view('explorer.partials.routes')->with('routes', $routes)->render(),
         ]);
     }
 
     /**
+     * @param Request $request
      * @param string $route
-     * @return JsonResponse
+     * @return JsonResponse|View
      */
-    public function getRouteResponses(string $route): JsonResponse
+    public function getRouteResponses(Request $request, string $route)
     {
-        $file = storage_path('messenger-responses.json');
+        $file = storage_path('app/messenger-docs/messenger-responses.json');
 
         if (! file_exists($file)) {
-            throw new NotFoundHttpException("The messenger-responses.json file was not found. Please run the command 'php artisan messenger:get:api' to download it.");
+            throw new NotFoundHttpException("The messenger-responses.json file was not found. Please run the command 'php artisan messenger:docs:download' to download it.");
         }
 
         $responses = json_decode(file_get_contents($file), true);
@@ -46,24 +49,45 @@ class ApiExplorerController extends Controller
             throw new NotFoundHttpException("The route name { $route } was not found.");
         }
 
-        $details = view('explorer.route-details')
-            ->with('uri', $responses[$route]['uri'])
-            ->with('methods', $responses[$route]['methods'])
-            ->with('query', $responses[$route]['query'])
-            ->with('name', $route)
-            ->render();
-
         $verb = explode('|', $responses[$route]['methods'])[0];
 
-        $data = view('explorer.route-responses')
-            ->with('data', $responses[$route][$verb])
-            ->with('verb', $verb)
-            ->render();
+        $with = [
+            'uri' => $responses[$route]['uri'],
+            'methods' => $responses[$route]['methods'],
+            'query' => $responses[$route]['query'],
+            'name' => $route,
+            'verb' => $verb,
+            'responses' => $responses[$route][$verb],
+            'standalone' => false,
+        ];
 
+        if ($request->expectsJson()) {
+            return $this->renderResponsesJson($with);
+        }
+
+        return $this->renderResponsesView($with);
+    }
+
+    /**
+     * @param array $with
+     * @return JsonResponse
+     */
+    private function renderResponsesJson(array $with): JsonResponse
+    {
         return new JsonResponse([
-            'details' => $details,
-            'data' => $data,
+            'html' => view('explorer.partials.responses')->with($with)->render(),
         ]);
+    }
+
+    /**
+     * @param array $with
+     * @return View
+     */
+    private function renderResponsesView(array $with): View
+    {
+        $with['standalone'] = true;
+
+        return view('explorer.responses')->with($with);
     }
 
     /**

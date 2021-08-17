@@ -6,7 +6,14 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="row">
+    <div class="row mt-3">
+        <div class="col-xl-8 offset-xl-2">
+            <div class="card">
+                <div class="card-header h3 text-info text-center"><i class="fas fa-hand-point-down"></i> Please select a route below to view responses</div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
         <div class="col-12 col-xl-8 offset-xl-2">
             <div class="card">
                 <div class="card-header h3 text-info"><i class="fas fa-link"></i> <pre class="d-inline">API Routes</pre></div>
@@ -16,17 +23,6 @@
             </div>
         </div>
     </div>
-    <div class="row mt-3">
-        <div class="col-xl-8 offset-xl-2">
-            <div class="card">
-                <div class="card-header h3 text-info"><i class="fas fa-database"></i> <pre class="d-inline">Route Details: </pre></div>
-                <div id="route_info" class="card-body">
-                    <h3 class="text-center"><i class="fas fa-hand-point-up"></i> Please select a route above to view details.</h3>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="responses_container" class="row"></div>
 </div>
 @endsection
 
@@ -38,33 +34,47 @@
 @endpush
 @push('special-js')
     <script>
+        window.routeListContainer = $("#route_list_container");
+
         Messenger.xhr().request({
             route : '{{ route('api-explorer.routes')  }}',
             success : function(data) {
-                $("#route_list_container").html(data.html);
+                routeListContainer.html(data.html);
                 $("#route_list").DataTable({
                     "order": []
                 })
             },
         });
-        window.infoContainer = $("#route_info");
-        window.responsesContainer = $("#responses_container");
 
         window.loadRoute = function(route){
-            infoContainer.html(Messenger.alert().loader(true));
-            responsesContainer.html('');
-            Messenger.xhr().request({
-                route : '/api-explorer/routes/'+route,
-                success : updateCurrentRoute,
+            Messenger.alert().Modal({
+                icon : 'link',
+                backdrop_ctrl : false,
+                theme : 'dark',
+                title : 'Loading Responses...',
+                pre_loader : true,
+                unlock_buttons : false,
+                h4 : false,
+                size : 'fullscreen',
+                onReady : function(){
+                    Messenger.xhr().request({
+                        route : '/api-explorer/routes/'+route,
+                        success : function(data){
+                            updateCurrentRoute(data.html, route)
+                        },
+                    });
+                }
             });
         };
 
-        window.updateCurrentRoute = function(data){
-            infoContainer.html(data.details);
-            responsesContainer.html(data.data);
+        window.updateCurrentRoute = function(html, route){
+            Messenger.alert().fillModal({
+                body : html,
+                title : route
+            });
             document.querySelectorAll('code:not(.hljs)').forEach((block) => {
                 hljs.highlightElement(block)
-            })
+            });
         };
     </script>
 @endpush

@@ -1,5 +1,5 @@
 @if($status === 422)
-    @include('explorer.422', ['data' => $data])
+    @include('explorer.partials.422', ['data' => $data])
 @else
     @foreach($data as $type => $item)
         <h4 class="mt-3 mb-0">{{ ucfirst($type) }}:</h4>

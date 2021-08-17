@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApiExplorerController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,4 +31,15 @@ Route::prefix('api-explorer')->name('api-explorer.')->group(function () {
     Route::view('/', 'explorer.index')->name('index');
     Route::get('routes', [ApiExplorerController::class, 'getRoutes'])->name('routes');
     Route::get('routes/{route}', [ApiExplorerController::class, 'getRouteResponses'])->name('routes.show');
+});
+Route::prefix('docs')->name('docs.')->group(function () {
+    Route::get('/', [DocumentationController::class, 'index'])->name('index');
+    Route::get('Installation.md', [DocumentationController::class, 'install'])->name('install');
+    Route::get('Configuration.md', [DocumentationController::class, 'config'])->name('config');
+    Route::get('Commands.md', [DocumentationController::class, 'commands'])->name('commands');
+    Route::get('Broadcasting.md', [DocumentationController::class, 'broadcasting'])->name('broadcasting');
+    Route::get('ChatBots.md', [DocumentationController::class, 'bots'])->name('bots');
+    Route::get('Calling.md', [DocumentationController::class, 'calling'])->name('calling');
+    Route::get('Composer.md', [DocumentationController::class, 'composer'])->name('composer');
+    Route::get('Helpers.md', [DocumentationController::class, 'helpers'])->name('helpers');
 });
