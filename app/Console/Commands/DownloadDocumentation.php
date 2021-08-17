@@ -48,6 +48,7 @@ class DownloadDocumentation extends Command
         Storage::put('/messenger-docs/Broadcasting.md', file_get_contents(self::Broadcasting));
         Storage::put('/messenger-docs/ChatBots.md', file_get_contents(self::ChatBots));
         Storage::put('/messenger-docs/Calling.md', file_get_contents(self::Calling));
+        Storage::put('/messenger-docs/Composer.md', file_get_contents(self::Composer));
         Storage::put('/messenger-docs/Helpers.md', file_get_contents(self::Helpers));
 
         $this->info('All messenger documentation files have been downloaded and stored in "storage/app/messenger-docs/"');
