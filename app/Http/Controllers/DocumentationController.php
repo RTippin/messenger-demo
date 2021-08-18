@@ -9,112 +9,39 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DocumentationController extends Controller
 {
-    const README = 'README.md';
-    const Installation = 'Installation.md';
-    const Configuration = 'Configuration.md';
-    const Commands = 'Commands.md';
-    const Broadcasting = 'Broadcasting.md';
-    const ChatBots = 'ChatBots.md';
-    const Calling = 'Calling.md';
-    const Composer = 'Composer.md';
-    const Helpers = 'Helpers.md';
+    const Pages = [
+        'README.md' => 'Documentation',
+        'Installation.md' => 'Installation',
+        'Configuration.md' => 'Configurations',
+        'Commands.md' => 'Commands',
+        'Broadcasting.md' => 'Broadcasting',
+        'ChatBots.md' => 'Chat Bots',
+        'Calling.md' => 'Calling',
+        'Composer.md' => 'Messenger Composer',
+        'Helpers.md' => 'Helpers and Facades',
+    ];
 
     /**
      * @return View
      */
     public function index(): View
     {
-        return view('docs.portal')->with([
-            'title' => 'Documentation',
-            'markdown' => $this->parse(self::README),
-        ]);
+        return $this->render('README.md');
     }
 
     /**
+     * @param string $page
      * @return View
      */
-    public function install(): View
+    public function render(string $page): View
     {
-        return view('docs.portal')->with([
-            'title' => 'Installation',
-            'markdown' => $this->parse(self::Installation),
-        ]);
-    }
+        if (! array_key_exists($page, self::Pages)) {
+            throw new NotFoundHttpException('Unable to locate the documentation you requested.');
+        }
 
-    /**
-     * @return View
-     */
-    public function config(): View
-    {
         return view('docs.portal')->with([
-            'title' => 'Configurations',
-            'markdown' => $this->parse(self::Configuration),
-        ]);
-    }
-
-    /**
-     * @return View
-     */
-    public function commands(): View
-    {
-        return view('docs.portal')->with([
-            'title' => 'Commands',
-            'markdown' => $this->parse(self::Commands),
-        ]);
-    }
-
-    /**
-     * @return View
-     */
-    public function broadcasting(): View
-    {
-        return view('docs.portal')->with([
-            'title' => 'Broadcasting',
-            'markdown' => $this->parse(self::Broadcasting),
-        ]);
-    }
-
-    /**
-     * @return View
-     */
-    public function bots(): View
-    {
-        return view('docs.portal')->with([
-            'title' => 'Chat Bots',
-            'markdown' => $this->parse(self::ChatBots),
-        ]);
-    }
-
-    /**
-     * @return View
-     */
-    public function calling(): View
-    {
-        return view('docs.portal')->with([
-            'title' => 'Calling',
-            'markdown' => $this->parse(self::Calling),
-        ]);
-    }
-
-    /**
-     * @return View
-     */
-    public function composer(): View
-    {
-        return view('docs.portal')->with([
-            'title' => 'Messenger Composer',
-            'markdown' => $this->parse(self::Composer),
-        ]);
-    }
-
-    /**
-     * @return View
-     */
-    public function helpers(): View
-    {
-        return view('docs.portal')->with([
-            'title' => 'Helpers and Facades',
-            'markdown' => $this->parse(self::Helpers),
+            'title' => self::Pages[$page],
+            'markdown' => $this->parse($page),
         ]);
     }
 

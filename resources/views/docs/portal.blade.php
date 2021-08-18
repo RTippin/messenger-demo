@@ -19,4 +19,4 @@
     </div>
 @endsection
 
-@include('docs.partials.scripts')
+@include('layouts.highlighting')

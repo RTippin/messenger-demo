@@ -26,12 +26,8 @@
 </div>
 @endsection
 
-@push('css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/styles/monokai.min.css">
-@endpush
-@push('js')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js"></script>
-@endpush
+@include('layouts.highlighting')
+
 @push('special-js')
     <script>
         window.routeListContainer = $("#route_list_container");
