@@ -36,21 +36,21 @@ $  git clone git@github.com:RTippin/messenger-demo.git
 $  composer install
 ```
 
-#### Rename the .env.example to .env and configure your environment
-
-#### Generate your app key
-```bash
-$  php artisan key:generate
+#### Rename the .env.example to .env and configure your environment, adding your database connection details before proceeding
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=1234
+DB_DATABASE=demo
+DB_USERNAME=root
+DB_PASSWORD=password
 ```
 
-#### Migrate and seed your database
+#### Run the Install Command
+- This command will generate your `APP_KEY` for you, as well as migrating fresh and downloading our documentation files.
+  - This will `WIPE` any data in your database as it runs `migrate:fresh` under the hood.
 ```bash
-$  php artisan migrate:fresh --seed
-```
-
-#### To view the API Explorer and documentation pages, you must download our files from the git repository.
-```bash
-$  php artisan messenger:docs:download
+$  php artisan demo:install
 ```
 
 ---
