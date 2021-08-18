@@ -1,5 +1,7 @@
 # [Messenger Demo App](https://github.com/RTippin/messenger)
 
+![Preview](public/examples/image1.png?raw=true)
+
 ---
 
 ## Included addon packages:
@@ -136,19 +138,32 @@ $  laravel-echo-server init
 
 ---
 
-# Pictures:
+# Pictures
 
-
-<img src="https://i.imgur.com/lFw5PZj.png" style="width:100%;"  alt="Demo"/>
-
----
-
-<img src="https://i.imgur.com/JWIzv61.png" style="width:100%;"  alt="Demo"/>
+### Sending images, voice messages, replies, and reactions
+![Preview](public/examples/image1.png?raw=true)
 
 ---
 
-<img src="https://i.imgur.com/f30GeCZ.png" style="width:100%;"  alt="Demo"/>
+### Interacting with a chat-bot using triggers to invoke responses
+![Preview](public/examples/image2.png?raw=true)
 
 ---
 
-<img src="https://i.imgur.com/lnsRJfV.png" style="width:100%;"  alt="Demo"/>
+### Viewing a bots actions and triggers
+![Preview](public/examples/image3.png?raw=true)
+
+---
+
+### Managing a groups participants
+![Preview](public/examples/image4.png?raw=true)
+
+---
+
+### In a video call
+![Preview](public/examples/image5.png?raw=true)
+
+---
+
+### Sending documents and images, hovering over options / reactions
+![Preview](public/examples/image6.png?raw=true)
