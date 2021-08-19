@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
     {
         if ($e instanceof ModelNotFoundException) {
             return new JsonResponse([
-                'message' => "Unable to locate the {$this->prettyModelNotFound($e)} you requested."
+                'message' => "Unable to locate the {$this->prettyModelNotFound($e)} you requested.",
             ], 404);
         }
 

@@ -4,10 +4,10 @@ namespace App\Brokers;
 
 use RTippin\Janus\Exceptions\JanusApiException;
 use RTippin\Janus\Exceptions\JanusPluginException;
+use RTippin\Janus\Plugins\VideoRoom;
 use RTippin\Messenger\Contracts\VideoDriver;
 use RTippin\Messenger\Models\Call;
 use RTippin\Messenger\Models\Thread;
-use RTippin\Janus\Plugins\VideoRoom;
 
 class JanusBroker implements VideoDriver
 {
