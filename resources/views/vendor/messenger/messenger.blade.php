@@ -35,7 +35,7 @@
                             </div>
                             <div id="allThread">
                                 <ul id="messages_ul" class="messages-list">
-                                    <div class="col-12 mt-5 text-center"><div class="spinner-border spinner-border-sm text-primary" role="status"></div></div>
+                                    <div class="col-12 mt-5 text-center"><div class="spinner-grow spinner-grow-sm text-primary" role="status"></div></div>
                                 </ul>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                     <div id="message_container" class="card-body {{app('agent')->isMobile() ? 'px-1' : 'px-0'}} pb-0 pt-3 bg-light">
-                        <div class="col-12 mt-5 text-center"><div class="spinner-border spinner-border-sm text-primary" role="status"></div></div>
+                        <div class="col-12 mt-5 text-center"><div class="spinner-grow spinner-grow-sm text-primary" role="status"></div></div>
                     </div>
                 </div>
             </div>

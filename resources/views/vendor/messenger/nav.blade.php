@@ -24,7 +24,7 @@
                 <hr class="mt-n1 mb-2">
             </div>
             <div id="active_calls_ctnr" class="drop-content list-group">
-                <div class="col-12 text-center"><div class="spinner-border spinner-border-sm text-primary" role="status"></div></div>
+                <div class="col-12 text-center"><div class="spinner-grow spinner-grow-sm text-primary" role="status"></div></div>
             </div>
             <div class="col-12 text-center mt-2">
                 <hr class="mb-1 mt-0">
@@ -54,12 +54,12 @@
             <div class="tab-content">
                 <div id="f_pending" class="tab-pane fade show active">
                     <div id="pending_friends_ctnr" class="drop-content list-group">
-                        <div class="col-12 text-center"><div class="spinner-border spinner-border-sm text-primary" role="status"></div></div>
+                        <div class="col-12 text-center"><div class="spinner-grow spinner-grow-sm text-primary" role="status"></div></div>
                     </div>
                 </div>
                 <div id="f_sent" class="tab-pane fade">
                     <div id="sent_friends_ctnr" class="drop-content list-group">
-                        <div class="col-12 text-center"><div class="spinner-border spinner-border-sm text-primary" role="status"></div></div>
+                        <div class="col-12 text-center"><div class="spinner-grow spinner-grow-sm text-primary" role="status"></div></div>
                     </div>
                 </div>
             </div>

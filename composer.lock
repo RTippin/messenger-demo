@@ -3544,16 +3544,16 @@
         },
         {
             "name": "rtippin/messenger-ui",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-ui.git",
-                "reference": "39f930605865fac8f78d48538665e4bd5bc6af5f"
+                "reference": "9db4619210c228c9ffbb5417d41156969d702e5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-ui/zipball/39f930605865fac8f78d48538665e4bd5bc6af5f",
-                "reference": "39f930605865fac8f78d48538665e4bd5bc6af5f",
+                "url": "https://api.github.com/repos/RTippin/messenger-ui/zipball/9db4619210c228c9ffbb5417d41156969d702e5d",
+                "reference": "9db4619210c228c9ffbb5417d41156969d702e5d",
                 "shasum": ""
             },
             "require": {
@@ -3591,9 +3591,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-ui/issues",
-                "source": "https://github.com/RTippin/messenger-ui/tree/v1.0.0"
+                "source": "https://github.com/RTippin/messenger-ui/tree/v1.0.1"
             },
-            "time": "2021-08-14T02:14:37+00:00"
+            "time": "2021-08-19T00:56:53+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -8831,16 +8831,16 @@
         },
         {
             "name": "rtippin/messenger-faker",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-faker.git",
-                "reference": "35d74a0eefeea18c87e9b028c4844b9ca57a7d22"
+                "reference": "899dd5f170b8120e5a962df3c51d89f42aaaf5b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/35d74a0eefeea18c87e9b028c4844b9ca57a7d22",
-                "reference": "35d74a0eefeea18c87e9b028c4844b9ca57a7d22",
+                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/899dd5f170b8120e5a962df3c51d89f42aaaf5b0",
+                "reference": "899dd5f170b8120e5a962df3c51d89f42aaaf5b0",
                 "shasum": ""
             },
             "require": {
@@ -8886,9 +8886,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-faker/issues",
-                "source": "https://github.com/RTippin/messenger-faker/tree/v1.0.1"
+                "source": "https://github.com/RTippin/messenger-faker/tree/v1.0.2"
             },
-            "time": "2021-08-14T02:03:02+00:00"
+            "time": "2021-08-19T00:31:44+00:00"
         },
         {
             "name": "sebastian/cli-parser",
