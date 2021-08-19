@@ -19,7 +19,7 @@ class HomeController extends Controller
             ->take(5);
 
         return new JsonResponse([
-            'html' => view('auth.demoAcc')->with('users', $users)->render()
+            'html' => view('auth.demoAcc')->with('users', $users)->render(),
         ]);
     }
 

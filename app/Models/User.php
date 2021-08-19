@@ -11,7 +11,7 @@ use RTippin\Messenger\Traits\Messageable;
 use RTippin\Messenger\Traits\Search;
 
 /**
- * App\Models\User
+ * App\Models\User.
  *
  * @property string $id
  * @property string $name
@@ -40,11 +40,8 @@ use RTippin\Messenger\Traits\Search;
 class User extends Authenticatable implements MessengerProvider
 {
     use Uuids;
-
     use Messageable; //comes with messenger package
-
     use Search; //comes with messenger package
-
     use HasFactory;
 
     /**
@@ -62,7 +59,7 @@ class User extends Authenticatable implements MessengerProvider
     protected $hidden = [
         'password',
         'remember_token',
-        'email'
+        'email',
     ];
 
     /**

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Providers\RouteServiceProvider;
 use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\DB;
@@ -78,7 +78,7 @@ class RegisterController extends Controller
 
         DB::beginTransaction();
 
-        try{
+        try {
             $admin = User::whereEmail('admin@example.net')->first();
             $group = Thread::group()->oldest()->first();
             $private = Thread::factory()->create();
@@ -98,10 +98,7 @@ class RegisterController extends Controller
             Message::factory()->for($private)->owner($admin)->create(['body' => 'Welcome to the messenger demo!']);
 
             DB::commit();
-
-
-
-        }catch (Exception $e){
+        } catch (Exception $e) {
             report($e);
 
             DB::rollBack();

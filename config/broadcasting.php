@@ -49,7 +49,7 @@ return [
             'options' => [
                 'host' => env('SOCKET_APP_HOST', 'echo'),
                 'port' => env('SOCKET_APP_PORT', '6001'),
-                'scheme' => env('SOCKET_APP_SCHEME', 'http')
+                'scheme' => env('SOCKET_APP_SCHEME', 'http'),
             ],
         ],
 

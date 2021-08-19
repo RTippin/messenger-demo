@@ -49,8 +49,7 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        if($request->user())
-        {
+        if ($request->user()) {
             Messenger::setProviderToOffline($request->user());
         }
 

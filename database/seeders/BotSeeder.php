@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Bots\RecursionBot;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use RTippin\Messenger\Facades\Messenger;
 use RTippin\Messenger\Models\Bot;
 use RTippin\Messenger\Models\BotAction;
 use RTippin\Messenger\Models\Thread;
