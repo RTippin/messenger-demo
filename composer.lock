@@ -2072,16 +2072,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.51.1",
+            "version": "2.52.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922"
+                "reference": "369c0e2737c56a0f39c946dd261855255a6fccbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922",
-                "reference": "8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/369c0e2737c56a0f39c946dd261855255a6fccbe",
+                "reference": "369c0e2737c56a0f39c946dd261855255a6fccbe",
                 "shasum": ""
             },
             "require": {
@@ -2162,7 +2162,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-28T13:16:28+00:00"
+            "time": "2021-08-14T19:10:52+00:00"
         },
         {
             "name": "nette/schema",
@@ -3414,16 +3414,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v1.0.2",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "81553df5650b307cbbb2c039cb478f2a578ecbeb"
+                "reference": "c8d215870dcc810558889f17df669146124d2f89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/81553df5650b307cbbb2c039cb478f2a578ecbeb",
-                "reference": "81553df5650b307cbbb2c039cb478f2a578ecbeb",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/c8d215870dcc810558889f17df669146124d2f89",
+                "reference": "c8d215870dcc810558889f17df669146124d2f89",
                 "shasum": ""
             },
             "require": {
@@ -3477,9 +3477,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v1.0.2"
+                "source": "https://github.com/RTippin/messenger/tree/v1.1.0"
             },
-            "time": "2021-08-17T06:47:49+00:00"
+            "time": "2021-08-21T07:12:58+00:00"
         },
         {
             "name": "rtippin/messenger-bots",
@@ -6477,16 +6477,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.1.5",
+            "version": "2.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "ac679902e9f66b85a8f9d8c1c88180f609a8745d"
+                "reference": "e5cac5f9d2354d08b67f1d21c664ae70d748c603"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/ac679902e9f66b85a8f9d8c1c88180f609a8745d",
-                "reference": "ac679902e9f66b85a8f9d8c1c88180f609a8745d",
+                "url": "https://api.github.com/repos/composer/composer/zipball/e5cac5f9d2354d08b67f1d21c664ae70d748c603",
+                "reference": "e5cac5f9d2354d08b67f1d21c664ae70d748c603",
                 "shasum": ""
             },
             "require": {
@@ -6553,9 +6553,9 @@
                 "package"
             ],
             "support": {
-                "irc": "irc://irc.freenode.org/composer",
+                "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/composer/issues",
-                "source": "https://github.com/composer/composer/tree/2.1.5"
+                "source": "https://github.com/composer/composer/tree/2.1.6"
             },
             "funding": [
                 {
@@ -6571,7 +6571,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-23T08:35:47+00:00"
+            "time": "2021-08-19T15:11:08+00:00"
         },
         {
             "name": "composer/metadata-minifier",
@@ -9919,16 +9919,16 @@
         },
         {
             "name": "seld/phar-utils",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/phar-utils.git",
-                "reference": "8674b1d84ffb47cc59a101f5d5a3b61e87d23796"
+                "reference": "749042a2315705d2dfbbc59234dd9ceb22bf3ff0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/phar-utils/zipball/8674b1d84ffb47cc59a101f5d5a3b61e87d23796",
-                "reference": "8674b1d84ffb47cc59a101f5d5a3b61e87d23796",
+                "url": "https://api.github.com/repos/Seldaek/phar-utils/zipball/749042a2315705d2dfbbc59234dd9ceb22bf3ff0",
+                "reference": "749042a2315705d2dfbbc59234dd9ceb22bf3ff0",
                 "shasum": ""
             },
             "require": {
@@ -9961,9 +9961,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/phar-utils/issues",
-                "source": "https://github.com/Seldaek/phar-utils/tree/master"
+                "source": "https://github.com/Seldaek/phar-utils/tree/1.1.2"
             },
-            "time": "2020-07-07T18:42:57+00:00"
+            "time": "2021-08-19T21:01:38+00:00"
         },
         {
             "name": "symfony/filesystem",

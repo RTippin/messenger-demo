@@ -49,8 +49,7 @@ class MessengerServiceProvider extends ServiceProvider
             User::class,
         ]);
 
-        // Enable calling and set the video driver of your choosing. Janus client is included in this demo.
-//        Messenger::setCalling(true);
+        // Set the video driver of your choosing.
 //        Messenger::setVideoDriver(JanusBroker::class);
 
         // Register the bot handlers you wish to use.
