@@ -40,7 +40,7 @@ class ApiExplorerController extends Controller
         $file = storage_path('app/messenger-docs/messenger-responses.json');
 
         if (! file_exists($file)) {
-            throw new NotFoundHttpException("The messenger-responses.json file was not found. Please run the command 'php artisan messenger:docs:download' to download it.");
+            throw new NotFoundHttpException("The messenger-responses.json file was not found. Please run the command 'php artisan download:docs' to download it.");
         }
 
         $responses = json_decode(file_get_contents($file), true);

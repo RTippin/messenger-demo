@@ -55,7 +55,7 @@ class DocumentationController extends Controller
         $file = storage_path('app/messenger-docs/'.$markdownFile);
 
         if (! file_exists($file)) {
-            throw new NotFoundHttpException("The { $markdownFile } markdown file was not found. Please run the command 'php artisan messenger:docs:download' to download it.");
+            throw new NotFoundHttpException("The { $markdownFile } markdown file was not found. Please run the command 'php artisan download:docs' to download it.");
         }
 
         return Markdown::parse(file_get_contents($file));
