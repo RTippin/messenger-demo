@@ -13,6 +13,7 @@ class DownloadDocsCommand extends Command
     const BaseUri = 'https://raw.githubusercontent.com/RTippin/messenger/1.x/';
     const BaseStorage = '/messenger-docs/';
     const Responses = 'docs/generated/responses.json';
+    const Broadcast = 'docs/generated/broadcast.json';
     const README = 'README.md';
     const Installation = 'docs/Installation.md';
     const Configuration = 'docs/Configuration.md';
@@ -43,6 +44,7 @@ class DownloadDocsCommand extends Command
     public function handle()
     {
         Storage::put(self::BaseStorage.'messenger-responses.json', file_get_contents(self::BaseUri.self::Responses));
+        Storage::put(self::BaseStorage.'messenger-broadcast.json', file_get_contents(self::BaseUri.self::Broadcast));
         Storage::put(self::BaseStorage.'README.md', file_get_contents(self::BaseUri.self::README));
         Storage::put(self::BaseStorage.'Installation.md', file_get_contents(self::BaseUri.self::Installation));
         Storage::put(self::BaseStorage.'Configuration.md', file_get_contents(self::BaseUri.self::Configuration));

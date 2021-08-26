@@ -31,6 +31,8 @@ Route::prefix('api-explorer')->name('api-explorer.')->group(function () {
     Route::view('/', 'explorer.index')->name('index');
     Route::get('routes', [ApiExplorerController::class, 'getRoutes'])->name('routes');
     Route::get('routes/{route}', [ApiExplorerController::class, 'getRouteResponses'])->name('routes.show');
+    Route::get('broadcasts', [ApiExplorerController::class, 'getBroadcast'])->name('broadcast');
+    Route::get('broadcasts/{broadcast}', [ApiExplorerController::class, 'getBroadcastData'])->name('broadcast.show');
 });
 Route::prefix('docs')->name('docs.')->group(function () {
     Route::get('/', [DocumentationController::class, 'index'])->name('index');

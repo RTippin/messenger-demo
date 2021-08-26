@@ -37,13 +37,7 @@ class ApiExplorerController extends Controller
      */
     public function getRouteResponses(Request $request, string $route)
     {
-        $file = storage_path('app/messenger-docs/messenger-responses.json');
-
-        if (! file_exists($file)) {
-            throw new NotFoundHttpException("The messenger-responses.json file was not found. Please run the command 'php artisan download:docs' to download it.");
-        }
-
-        $responses = json_decode(file_get_contents($file), true);
+        $responses = $this->getResponsesArray();
 
         if (! array_key_exists($route, $responses)) {
             throw new NotFoundHttpException("The route name { $route } was not found.");
@@ -62,32 +56,61 @@ class ApiExplorerController extends Controller
         ];
 
         if ($request->expectsJson()) {
-            return $this->renderResponsesJson($with);
+            return new JsonResponse([
+                'html' => view('explorer.partials.responses')->with($with)->render(),
+            ]);
         }
 
-        return $this->renderResponsesView($with);
+        $with['standalone'] = true;
+
+        return view('explorer.responses')->with($with);
     }
 
     /**
-     * @param array $with
      * @return JsonResponse
      */
-    private function renderResponsesJson(array $with): JsonResponse
+    public function getBroadcast(): JsonResponse
     {
+        $broadcasts = collect($this->getBroadcastArray())
+            ->map(fn ($contents, $broadcast) => $this->getBroadcastInformation($broadcast, $contents))
+            ->sortBy('class')
+            ->values()
+            ->toArray();
+
         return new JsonResponse([
-            'html' => view('explorer.partials.responses')->with($with)->render(),
+            'html' => view('explorer.partials.broadcasts')->with('broadcasts', $broadcasts)->render(),
         ]);
     }
 
     /**
-     * @param array $with
-     * @return View
+     * @param Request $request
+     * @param string $broadcast
+     * @return JsonResponse|View
      */
-    private function renderResponsesView(array $with): View
+    public function getBroadcastData(Request $request, string $broadcast)
     {
+        $broadcasts = $this->getBroadcastArray();
+
+        if (! array_key_exists($broadcast, $broadcasts)) {
+            throw new NotFoundHttpException("The broadcast class { $broadcast } was not found.");
+        }
+
+        $with = [
+            'class' => $broadcast,
+            'name' => $broadcasts[$broadcast]['name'],
+            'broadcast' => $broadcasts[$broadcast]['broadcast'],
+            'standalone' => false,
+        ];
+
+        if ($request->expectsJson()) {
+            return new JsonResponse([
+                'html' => view('explorer.partials.broadcast')->with($with)->render(),
+            ]);
+        }
+
         $with['standalone'] = true;
 
-        return view('explorer.responses')->with($with);
+        return view('explorer.broadcast')->with($with);
     }
 
     /**
@@ -104,11 +127,52 @@ class ApiExplorerController extends Controller
     }
 
     /**
+     * @param string $broadcast
+     * @param array $contents
+     * @return array
+     */
+    private function getBroadcastInformation(string $broadcast, array $contents): array
+    {
+        return [
+            'class' => $broadcast,
+            'name' => $contents['name'],
+        ];
+    }
+
+    /**
      * @param array $route
      * @return bool
      */
     private function routeIsMessenger(array $route): bool
     {
         return Str::contains($route['name'], 'api.messenger');
+    }
+
+    /**
+     * @return array|null
+     */
+    private function getResponsesArray(): ?array
+    {
+        $file = storage_path('app/messenger-docs/messenger-responses.json');
+
+        if (! file_exists($file)) {
+            throw new NotFoundHttpException("The messenger-responses.json file was not found. Please run the command 'php artisan download:docs' to download it.");
+        }
+
+        return json_decode(file_get_contents($file), true);
+    }
+
+    /**
+     * @return array|null
+     */
+    private function getBroadcastArray(): ?array
+    {
+        $file = storage_path('app/messenger-docs/messenger-broadcast.json');
+
+        if (! file_exists($file)) {
+            throw new NotFoundHttpException("The messenger-broadcast.json file was not found. Please run the command 'php artisan download:docs' to download it.");
+        }
+
+        return json_decode(file_get_contents($file), true);
     }
 }
