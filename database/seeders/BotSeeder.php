@@ -27,6 +27,7 @@ use RTippin\MessengerBots\Bots\WeatherBot;
 use RTippin\MessengerBots\Bots\WikiBot;
 use RTippin\MessengerBots\Bots\YoMommaBot;
 use RTippin\MessengerBots\Bots\YoutubeBot;
+use RTippin\MessengerFaker\Bots\FakerBot;
 
 class BotSeeder extends Seeder
 {
@@ -104,6 +105,7 @@ class BotSeeder extends Seeder
             [RecursionBot::class, 'exact:caseless', '!recursion'],
             [QuotableBot::class, 'exact:caseless', '!quote|!inspire|!quotable'],
             [CoinTossBot::class, 'starts:with:caseless', '!toss|!headsOrTails|!coinToss'],
+            [FakerBot::class, 'starts:with:caseless', '!faker'],
         ];
     }
 }
