@@ -21,7 +21,7 @@
         "rtippin/janus-client": "^0.2",
         "rtippin/messenger": "^1.4",
         "rtippin/messenger-bots": "^1.0",
-        "rtippin/messenger-ui": "^1.0"
+        "rtippin/messenger-ui": "^1.1"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
