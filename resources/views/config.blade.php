@@ -28,9 +28,6 @@
                                 <h4>&bull; <a href="https://github.com/phpredis/phpredis/blob/develop/INSTALL.markdown" target="_blank">PHPRedis</a></h4>
                             </div>
                             <div class="col-12 col-md-6">
-                                <h4>&bull; <a href="https://github.com/tlaverdure/laravel-echo-server" target="_blank">Laravel echo server</a></h4>
-                            </div>
-                            <div class="col-12 col-md-6">
                                 <h4>&bull; <a href="https://github.com/RTippin/messenger" target="_blank">Messenger core</a></h4>
                             </div>
                             <div class="col-12 col-md-6">
