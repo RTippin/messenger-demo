@@ -16,13 +16,13 @@
 - PHP >= 7.4
 - Laravel >= 8.42
 - MySQL >= 8.x
-- laravel-echo-server [tlaverdure/laravel-echo-server](https://github.com/tlaverdure/laravel-echo-server) 
-- [PHPREDIS](https://github.com/phpredis/phpredis/blob/develop/INSTALL.markdown)
+- [PHPREDIS](https://github.com/phpredis/phpredis/blob/develop/INSTALL.markdown) if using `redis` for drivers, which our default `.env.example` has set.
 
 ### Notes
 - This demo is meant to be seeded before use. Registration also assumes a pre-seeded database, as we automatically create threads between the admin user and a newly registered user, as well as set friendships.
 - Calling will be disabled by default. Even though we have our [janus-client](https://github.com/RTippin/janus-client) installed, you are responsible for setting up your own `Janus Server`.
 - Please see [Janus official docs](https://janus.conf.meetecho.com/docs/index.html) for more information.
+- We use `pusher.com` by default for our websocket implementation, however you may choose to use the drop-in replacement [laravel-websockets](https://beyondco.de/docs/laravel-websockets/getting-started/introduction)
 
 ---
 
@@ -38,7 +38,7 @@ $  git clone git@github.com:RTippin/messenger-demo.git
 $  composer install
 ```
 
-#### Rename the .env.example to .env and configure your environment, adding your database connection details before proceeding
+#### Rename the `.env.example` to `.env` and configure your environment, including your pusher keys if you use pusher.
 ```dotenv
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -46,6 +46,14 @@ DB_PORT=1234
 DB_DATABASE=demo
 DB_USERNAME=root
 DB_PASSWORD=password
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+PUSHER_APP_CLUSTER=
+MESSENGER_SOCKET_PUSHER=true
+MESSENGER_SOCKET_KEY="${PUSHER_APP_KEY}"
+MESSENGER_SOCKET_CLUSTER="${PUSHER_APP_CLUSTER}"
+#etc
 ```
 
 #### Run the Install Command
@@ -59,72 +67,11 @@ $  php artisan demo:install
 
 ## Running locally:
 
-#### Run each command in their own terminal inside your project folder
-- You must setup *laravel-echo-server* first before running it!
+#### Run these commands in their own terminal inside your project folder
 ```bash
 $  php artisan serve
-$  php artisan queue:work --queue=messenger,messenger-bots,default
-$  laravel-echo-server start
+$  php artisan queue:work --queue=messenger,messenger-bots
 ```
-
----
-
-## Setting up laravel-echo-server
-- We must globally install laravel-echo-server and initialize it within our project. We can then stick all keys we need into the `.env`
-
-#### Install globally
-``` bash
-$  npm install -g laravel-echo-server
-```
-
-#### Initialize laravel-echo-server in our project
-- Follow console setup guide for laravel-echo-server. You should have it generate the `appId` and `key` for you. When completed, your project directory should contain a *laravel-echo-server.json*.
-``` bash
-$  laravel-echo-server init
-```
-
-#### Example
-``` json
-{
-    "authHost": "http://localhost:8000",
-    "authEndpoint": "/api/broadcasting/auth",
-    "clients": [
-        {
-            "appId": "YOUR_APP_ID",
-            "key": "YOUR_APP_KEY"
-        }
-    ],
-    "database": "redis",
-    "databaseConfig": {
-        "redis": {
-            "port": "6379",
-            "server": "127.0.0.1"
-        },
-        "sqlite": {}
-    },
-    "devMode": true,
-    "host": null,
-    "port": "6001",
-    "protocol": "http",
-    "socketio": {},
-    "sslCertPath": "",
-    "sslKeyPath": "",
-    "sslCertChainPath": "",
-    "sslPassphrase": "",
-    "subscribers": {
-        "http": true,
-        "redis": true
-    },
-    "apiOriginAllow": {
-        "allowCors": true,
-        "allowOrigin": "http://localhost:8000",
-        "allowMethods": "GET, POST",
-        "allowHeaders": "Origin, Content-Type, X-Auth-Token, X-Requested-With, Accept, Authorization, X-CSRF-TOKEN, X-Socket-Id"
-    }
-}
-```
-
-#### Now copy your *laravel-echo-server.json* `appId / key` into the `.env` `SOCKET_APP_ID / SOCKET_APP_KEY`
 
 ---
 
@@ -135,6 +82,12 @@ $  laravel-echo-server init
 ### Password: `messenger`
 
 ### All other seeded accounts use `messenger` password as well
+
+---
+
+## UI configurations / Websockets
+- If you plan to use [laravel-websockets](https://beyondco.de/docs/laravel-websockets/getting-started/introduction), or want more information regarding our UI, please visit our documentation:
+  - [Messenger UI README](https://github.com/RTippin/messenger-ui/blob/master/README.md)
 
 ---
 
