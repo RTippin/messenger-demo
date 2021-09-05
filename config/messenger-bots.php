@@ -42,4 +42,11 @@ return [
     | https://console.developers.google.com
     */
     'youtube_api_key' => env('BOT_YOUTUBE_API_KEY'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Automatically register all the bots we provide.
+    |--------------------------------------------------------------------------
+    */
+    'auto_register_all' => env('BOT_AUTO_REGISTER_ALL', false),
 ];

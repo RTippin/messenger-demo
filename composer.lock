@@ -3410,16 +3410,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v1.4.0",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "4bfa6a8f237bb6bcb81641d95ac2c3587988ed2f"
+                "reference": "bf0b0c5e967ee68adaefdeb5dccbd2b88c988b51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/4bfa6a8f237bb6bcb81641d95ac2c3587988ed2f",
-                "reference": "4bfa6a8f237bb6bcb81641d95ac2c3587988ed2f",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/bf0b0c5e967ee68adaefdeb5dccbd2b88c988b51",
+                "reference": "bf0b0c5e967ee68adaefdeb5dccbd2b88c988b51",
                 "shasum": ""
             },
             "require": {
@@ -3473,22 +3473,22 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v1.4.0"
+                "source": "https://github.com/RTippin/messenger/tree/v1.5.0"
             },
-            "time": "2021-08-31T04:44:02+00:00"
+            "time": "2021-09-05T23:04:21+00:00"
         },
         {
             "name": "rtippin/messenger-bots",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-bots.git",
-                "reference": "5611cef3b5c26c35a904d75fa3b6fbeb4bfd9ba3"
+                "reference": "9b57bd9c704192c6f04ba9063f1aaa2a9c4f42a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-bots/zipball/5611cef3b5c26c35a904d75fa3b6fbeb4bfd9ba3",
-                "reference": "5611cef3b5c26c35a904d75fa3b6fbeb4bfd9ba3",
+                "url": "https://api.github.com/repos/RTippin/messenger-bots/zipball/9b57bd9c704192c6f04ba9063f1aaa2a9c4f42a4",
+                "reference": "9b57bd9c704192c6f04ba9063f1aaa2a9c4f42a4",
                 "shasum": ""
             },
             "require": {
@@ -3534,22 +3534,22 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-bots/issues",
-                "source": "https://github.com/RTippin/messenger-bots/tree/v1.1.0"
+                "source": "https://github.com/RTippin/messenger-bots/tree/v1.2.0"
             },
-            "time": "2021-08-27T04:32:47+00:00"
+            "time": "2021-09-05T18:29:22+00:00"
         },
         {
             "name": "rtippin/messenger-ui",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-ui.git",
-                "reference": "878b5d5214473c6a8e841c80dd584e52216bf92c"
+                "reference": "000b5a678e5d6c33589d1c277d381ba97952ad1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-ui/zipball/878b5d5214473c6a8e841c80dd584e52216bf92c",
-                "reference": "878b5d5214473c6a8e841c80dd584e52216bf92c",
+                "url": "https://api.github.com/repos/RTippin/messenger-ui/zipball/000b5a678e5d6c33589d1c277d381ba97952ad1f",
+                "reference": "000b5a678e5d6c33589d1c277d381ba97952ad1f",
                 "shasum": ""
             },
             "require": {
@@ -3587,9 +3587,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-ui/issues",
-                "source": "https://github.com/RTippin/messenger-ui/tree/v2.0.1"
+                "source": "https://github.com/RTippin/messenger-ui/tree/v2.0.2"
             },
-            "time": "2021-09-05T13:56:33+00:00"
+            "time": "2021-09-05T23:20:26+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

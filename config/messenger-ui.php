@@ -43,6 +43,6 @@ return [
         'domain' => null,
         'prefix' => 'messenger',
         'middleware' => ['web', 'auth', 'messenger.provider'],
-        'invite_middleware' => ['web', 'auth.optional', 'messenger.provider'],
+        'invite_middleware' => ['web', 'messenger.provider'],
     ],
 ];
