@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9450e5d958bcf8a05eab6238620ebead",
+    "content-hash": "c9a42a530533d2a7f92dfe4b61f6ab07",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3068,28 +3068,29 @@
         },
         {
             "name": "pusher/pusher-php-server",
-            "version": "6.1.0",
+            "version": "7.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pusher/pusher-http-php.git",
-                "reference": "8673f60458ceedb9531fad7a5747eb49de619a8a"
+                "reference": "7757a09209d20ff95b077ae48dc25f49a6ad94a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/8673f60458ceedb9531fad7a5747eb49de619a8a",
-                "reference": "8673f60458ceedb9531fad7a5747eb49de619a8a",
+                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/7757a09209d20ff95b077ae48dc25f49a6ad94a2",
+                "reference": "7757a09209d20ff95b077ae48dc25f49a6ad94a2",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
+                "ext-json": "*",
                 "guzzlehttp/guzzle": "^7.2",
                 "paragonie/sodium_compat": "^1.6",
-                "php": "^7.2.5|^8.0",
+                "php": "^7.3|^8.0",
                 "psr/log": "^1.0"
             },
             "require-dev": {
                 "overtrue/phplint": "^2.3",
-                "phpunit/phpunit": "^7.2|^8.5|^9.3"
+                "phpunit/phpunit": "^8.5|^9.3"
             },
             "type": "library",
             "extra": {
@@ -3122,9 +3123,9 @@
             ],
             "support": {
                 "issues": "https://github.com/pusher/pusher-http-php/issues",
-                "source": "https://github.com/pusher/pusher-http-php/tree/6.1.0"
+                "source": "https://github.com/pusher/pusher-http-php/tree/7.0.1"
             },
-            "time": "2021-03-24T08:23:36+00:00"
+            "time": "2021-05-26T11:22:28+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -3539,16 +3540,16 @@
         },
         {
             "name": "rtippin/messenger-ui",
-            "version": "v1.1.0",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-ui.git",
-                "reference": "061cc43af6fddfc7d6c307ddfb9621b34b6ddf3d"
+                "reference": "c8ba8da747c45cc42204c35319b7743ff5b722c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-ui/zipball/061cc43af6fddfc7d6c307ddfb9621b34b6ddf3d",
-                "reference": "061cc43af6fddfc7d6c307ddfb9621b34b6ddf3d",
+                "url": "https://api.github.com/repos/RTippin/messenger-ui/zipball/c8ba8da747c45cc42204c35319b7743ff5b722c2",
+                "reference": "c8ba8da747c45cc42204c35319b7743ff5b722c2",
                 "shasum": ""
             },
             "require": {
@@ -3586,9 +3587,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-ui/issues",
-                "source": "https://github.com/RTippin/messenger-ui/tree/v1.1.0"
+                "source": "https://github.com/RTippin/messenger-ui/tree/v2.0.0"
             },
-            "time": "2021-09-02T21:42:26+00:00"
+            "time": "2021-09-05T08:10:54+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -9738,6 +9739,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {

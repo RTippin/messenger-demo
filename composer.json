@@ -17,11 +17,11 @@
         "laravel/framework": "^8.42",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.1",
-        "pusher/pusher-php-server": "^6.1.0",
+        "pusher/pusher-php-server": "^7.0",
         "rtippin/janus-client": "^0.2",
         "rtippin/messenger": "^1.4",
         "rtippin/messenger-bots": "^1.0",
-        "rtippin/messenger-ui": "^1.1"
+        "rtippin/messenger-ui": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
@@ -48,11 +48,6 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
         }
     },
     "minimum-stability": "dev",

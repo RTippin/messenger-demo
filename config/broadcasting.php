@@ -37,19 +37,7 @@ return [
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
-                'useTLS' => true,
-            ],
-        ],
-
-        'socket' => [
-            'driver' => 'pusher',
-            'key' => env('SOCKET_APP_KEY'),
-            'secret' => null,
-            'app_id' => env('SOCKET_APP_ID'),
-            'options' => [
-                'host' => env('SOCKET_APP_HOST', 'echo'),
-                'port' => env('SOCKET_APP_PORT', '6001'),
-                'scheme' => env('SOCKET_APP_SCHEME', 'http'),
+                'useTLS' => false,
             ],
         ],
 

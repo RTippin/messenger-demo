@@ -11,11 +11,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Endpoint our javascript will use for socket.io
+    | Websocket information we inject into our javascript. They should match
+    | your pusher/laravel-websocket configs.
     |--------------------------------------------------------------------------
     |
     */
-    'socket_endpoint' => env('MESSENGER_SOCKET_ENDPOINT', config('app.url')),
+    'websocket' => [
+        'pusher' => env('MESSENGER_SOCKET_PUSHER', false), //Set true if you are using the real pusher.com
+        'host' => env('MESSENGER_SOCKET_HOST', 'localhost'),
+        'auth_endpoint' => env('MESSENGER_SOCKET_AUTH_ENDPOINT', '/api/broadcasting/auth'),
+        'key' => env('MESSENGER_SOCKET_KEY'),
+        'port' => env('MESSENGER_SOCKET_PORT', 6001),
+        'use_tsl' => env('MESSENGER_SOCKET_TLS', false),
+        'cluster' => env('MESSENGER_SOCKET_CLUSTER'), //Only set when connecting to the real pusher.com
+    ],
 
     /*
     |--------------------------------------------------------------------------
