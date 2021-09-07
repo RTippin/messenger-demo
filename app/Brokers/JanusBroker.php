@@ -55,7 +55,7 @@ class JanusBroker implements VideoDriver
             $janus = $this->videoRoom->create(
                 $this->settings($thread)
             );
-        } catch (JanusApiException | JanusPluginException $e) {
+        } catch (JanusApiException|JanusPluginException $e) {
             report($e);
 
             return false;
@@ -78,7 +78,7 @@ class JanusBroker implements VideoDriver
                 $call->room_id,
                 $call->room_secret
             );
-        } catch (JanusApiException | JanusPluginException $e) {
+        } catch (JanusApiException|JanusPluginException $e) {
             report($e);
 
             return false;
