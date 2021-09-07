@@ -41,12 +41,6 @@ return [
             'url' => env('APP_URL').'/storage',
         ],
 
-        'messenger' => [
-            'driver' => 'local',
-            'root' => storage_path('app/messenger'),
-            'url' => env('APP_URL').'/storage',
-        ],
-
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
