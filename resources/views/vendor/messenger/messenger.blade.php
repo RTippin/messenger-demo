@@ -7,7 +7,9 @@
                 <div class="card bg-transparent h-100">
                     <div class="card-header bg-light px-1 d-flex justify-content-between">
                         <div id="my_avatar_status">
-                            <img data-toggle="tooltip" data-placement="right" title="You are {{messenger()->getProvider()->getProviderOnlineStatusVerbose()}}" class="my-global-avatar ml-1 rounded-circle medium-image avatar-is-{{messenger()->getProvider()->getProviderOnlineStatusVerbose()}}" src="{{messenger()->getProvider()->getProviderAvatarRoute()}}" />
+                            <img data-toggle="tooltip" data-placement="right" title="You are {{\Illuminate\Support\Str::lower(\RTippin\Messenger\Contracts\MessengerProvider::ONLINE_STATUS[messenger()->getProvider()->getProviderOnlineStatus()])}}"
+                                 class="my-global-avatar ml-1 rounded-circle medium-image avatar-is-{{\Illuminate\Support\Str::lower(\RTippin\Messenger\Contracts\MessengerProvider::ONLINE_STATUS[messenger()->getProvider()->getProviderOnlineStatus()])}}"
+                                 src="{{messenger()->getProvider()->getProviderAvatarRoute()}}" />
                         </div>
                         <span class="{{app('agent')->isMobile() ? '' : 'd-none d-md-inline'}} h4 font-weight-bold">Messenger</span>
                         <div class="dropdown">
