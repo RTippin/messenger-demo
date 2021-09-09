@@ -44,8 +44,8 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param Request $request
-     * @param Throwable $e
+     * @param  Request  $request
+     * @param  Throwable  $e
      * @return Response
      *
      * @throws Throwable
@@ -62,7 +62,7 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * @param ModelNotFoundException $exception
+     * @param  ModelNotFoundException  $exception
      * @return string
      */
     private function prettyModelNotFound(ModelNotFoundException $exception): string

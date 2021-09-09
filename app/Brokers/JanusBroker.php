@@ -39,7 +39,7 @@ class JanusBroker implements VideoDriver
     /**
      * JanusBroker constructor.
      *
-     * @param VideoRoom $videoRoom
+     * @param  VideoRoom  $videoRoom
      */
     public function __construct(VideoRoom $videoRoom)
     {
@@ -120,7 +120,7 @@ class JanusBroker implements VideoDriver
     }
 
     /**
-     * @param Thread $thread
+     * @param  Thread  $thread
      * @return array
      */
     protected function settings(Thread $thread): array
@@ -133,7 +133,7 @@ class JanusBroker implements VideoDriver
     }
 
     /**
-     * @param Thread $thread
+     * @param  Thread  $thread
      * @return int
      */
     protected function publishersCount(Thread $thread): int
@@ -144,7 +144,7 @@ class JanusBroker implements VideoDriver
     }
 
     /**
-     * @param Thread $thread
+     * @param  Thread  $thread
      * @return int
      */
     protected function bitrate(Thread $thread): int

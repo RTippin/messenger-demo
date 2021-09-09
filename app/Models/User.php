@@ -104,7 +104,7 @@ class User extends Authenticatable implements MessengerProvider
     /**
      * Scope a query for only demo users.
      *
-     * @param Builder $query
+     * @param  Builder  $query
      * @return Builder
      */
     public function scopeDemo(Builder $query): Builder

@@ -27,7 +27,7 @@ class ThreadsTableSeeder extends Seeder
     /**
      * Make private threads between ALL users.
      *
-     * @param Collection $users
+     * @param  Collection  $users
      */
     private function makePrivates(Collection $users): void
     {
@@ -53,7 +53,7 @@ class ThreadsTableSeeder extends Seeder
     /**
      * Make initial group thread all users are in.
      *
-     * @param Collection $users
+     * @param  Collection  $users
      */
     private function makeGroupThread(Collection $users): void
     {

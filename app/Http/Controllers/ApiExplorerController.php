@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ApiExplorerController extends Controller
 {
     /**
-     * @param Router $router
+     * @param  Router  $router
      * @return JsonResponse
      */
     public function getRoutes(Router $router): JsonResponse
@@ -31,8 +31,8 @@ class ApiExplorerController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string $route
+     * @param  Request  $request
+     * @param  string  $route
      * @return JsonResponse|View
      */
     public function getRouteResponses(Request $request, string $route)
@@ -83,8 +83,8 @@ class ApiExplorerController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string $broadcast
+     * @param  Request  $request
+     * @param  string  $broadcast
      * @return JsonResponse|View
      */
     public function getBroadcastData(Request $request, string $broadcast)
@@ -114,7 +114,7 @@ class ApiExplorerController extends Controller
     }
 
     /**
-     * @param Route $route
+     * @param  Route  $route
      * @return array
      */
     private function getRouteInformation(Route $route): array
@@ -127,8 +127,8 @@ class ApiExplorerController extends Controller
     }
 
     /**
-     * @param string $broadcast
-     * @param array $contents
+     * @param  string  $broadcast
+     * @param  array  $contents
      * @return array
      */
     private function getBroadcastInformation(string $broadcast, array $contents): array
@@ -140,7 +140,7 @@ class ApiExplorerController extends Controller
     }
 
     /**
-     * @param array $route
+     * @param  array  $route
      * @return bool
      */
     private function routeIsMessenger(array $route): bool
