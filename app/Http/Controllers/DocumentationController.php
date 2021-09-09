@@ -31,7 +31,7 @@ class DocumentationController extends Controller
     }
 
     /**
-     * @param string $page
+     * @param  string  $page
      * @return View
      */
     public function render(string $page): View
@@ -47,7 +47,7 @@ class DocumentationController extends Controller
     }
 
     /**
-     * @param string $markdownFile
+     * @param  string  $markdownFile
      * @return HtmlString
      * @throws NotFoundHttpException
      */
