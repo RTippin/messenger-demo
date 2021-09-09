@@ -23,6 +23,7 @@ class DownloadDocsCommand extends Command
     const Calling = 'docs/Calling.md';
     const Composer = 'docs/Composer.md';
     const Helpers = 'docs/Helpers.md';
+    const Events = 'docs/Events.md';
 
     /**
      * The name and signature of the console command.
@@ -54,6 +55,7 @@ class DownloadDocsCommand extends Command
         Storage::put(self::BaseStorage.'Calling.md', file_get_contents(self::BaseUri.self::Calling));
         Storage::put(self::BaseStorage.'Composer.md', file_get_contents(self::BaseUri.self::Composer));
         Storage::put(self::BaseStorage.'Helpers.md', file_get_contents(self::BaseUri.self::Helpers));
+        Storage::put(self::BaseStorage.'Events.md', file_get_contents(self::BaseUri.self::Events));
 
         $this->info('All messenger documentation files have been downloaded and stored in "storage/app/messenger-docs/"');
     }

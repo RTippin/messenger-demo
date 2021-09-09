@@ -19,6 +19,7 @@ class DocumentationController extends Controller
         'Calling.md' => 'Calling',
         'Composer.md' => 'Messenger Composer',
         'Helpers.md' => 'Helpers and Facades',
+        'Events.md' => 'Events',
     ];
 
     /**

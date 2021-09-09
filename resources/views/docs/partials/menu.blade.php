@@ -6,6 +6,7 @@
             <a class="flex-sm-fill text-sm-center nav-link h4 {{request()->is('*Configuration.md') ? 'active' : ''}}" href="{{ route('docs.render', 'Configuration.md') }}">Configuration</a>
             <a class="flex-sm-fill text-sm-center nav-link h4 {{request()->is('*Commands.md') ? 'active' : ''}}" href="{{ route('docs.render', 'Commands.md') }}">Commands</a>
             <a class="flex-sm-fill text-sm-center nav-link h4 {{request()->is('*Broadcasting.md') ? 'active' : ''}}" href="{{ route('docs.render', 'Broadcasting.md') }}">Broadcasting</a>
+            <a class="flex-sm-fill text-sm-center nav-link h4 {{request()->is('*Events.md') ? 'active' : ''}}" href="{{ route('docs.render', 'Events.md') }}">Events</a>
             <a class="flex-sm-fill text-sm-center nav-link h4 {{request()->is('*ChatBots.md') ? 'active' : ''}}" href="{{ route('docs.render', 'ChatBots.md') }}">Chat Bots</a>
             <a class="flex-sm-fill text-sm-center nav-link h4 {{request()->is('*Calling.md') ? 'active' : ''}}" href="{{ route('docs.render', 'Calling.md') }}">Calling</a>
             <a class="flex-sm-fill text-sm-center nav-link h4 {{request()->is('*Composer.md') ? 'active' : ''}}" href="{{ route('docs.render', 'Composer.md') }}">Composer</a>
