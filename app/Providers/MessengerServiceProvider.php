@@ -12,6 +12,7 @@ use RTippin\Messenger\Facades\MessengerBots;
 /**
  * Laravel Messenger System.
  * Created by: Richard Tippin.
+ *
  * @link https://github.com/RTippin/messenger
  * @link https://github.com/RTippin/messenger-bots
  * @link https://github.com/RTippin/messenger-faker
