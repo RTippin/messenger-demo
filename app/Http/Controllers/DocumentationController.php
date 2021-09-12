@@ -49,6 +49,7 @@ class DocumentationController extends Controller
     /**
      * @param  string  $markdownFile
      * @return HtmlString
+     *
      * @throws NotFoundHttpException
      */
     private function parse(string $markdownFile): HtmlString
