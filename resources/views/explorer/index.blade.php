@@ -12,7 +12,7 @@
                 <div class="card-header h3 text-info text-center"><i class="fas fa-hand-point-down"></i> Select a route below to view responses</div>
             </div>
             <div class="card mt-2">
-                <div class="card-header h3 text-info"><i class="fas fa-link"></i> <pre class="d-inline">API Routes</pre></div>
+                <div class="card-header h3 text-info"><i class="fas fa-link"></i> <pre class="d-inline">API / Asset Routes</pre></div>
                 <div id="route_list_container" class="card-body">
                     <div class="col-12 my-2 text-center"><div class="spinner-grow text-primary" role="status"></div></div>
                 </div>

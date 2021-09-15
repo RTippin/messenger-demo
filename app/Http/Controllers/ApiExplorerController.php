@@ -145,7 +145,7 @@ class ApiExplorerController extends Controller
      */
     private function routeIsMessenger(array $route): bool
     {
-        return Str::contains($route['name'], 'api.messenger');
+        return Str::contains($route['name'], ['api.messenger', 'assets.messenger']);
     }
 
     /**
