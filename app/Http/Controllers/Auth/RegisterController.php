@@ -95,6 +95,7 @@ class RegisterController extends Controller
 
     /**
      * @param  array  $data
+     *
      * @throws InvalidProviderException|MessengerComposerException|Throwable
      */
     private function makeUser(array $data): void
