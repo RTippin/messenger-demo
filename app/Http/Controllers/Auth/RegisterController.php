@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -119,7 +120,7 @@ class RegisterController extends Controller
      */
     private function setupUserWithDemo(): void
     {
-        $admin = User::whereEmail('admin@example.net')->first();
+        $admin = User::whereEmail(DatabaseSeeder::Admin['email'])->first();
         $group = Thread::group()->oldest()->first();
         Friend::factory()->providers($admin, $this->newUser)->create();
         Friend::factory()->providers($this->newUser, $admin)->create();
