@@ -5,16 +5,18 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
-use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use RTippin\Messenger\Exceptions\InvalidProviderException;
+use RTippin\Messenger\Exceptions\MessengerComposerException;
+use RTippin\Messenger\Facades\MessengerComposer;
 use RTippin\Messenger\Models\Friend;
-use RTippin\Messenger\Models\Message;
 use RTippin\Messenger\Models\Messenger;
 use RTippin\Messenger\Models\Participant;
 use RTippin\Messenger\Models\Thread;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class RegisterController extends Controller
@@ -25,7 +27,7 @@ class RegisterController extends Controller
     |--------------------------------------------------------------------------
     |
     | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
+    | validation and creation. By default, this controller uses a trait to
     | provide this functionality without requiring any additional code.
     |
     */
@@ -38,6 +40,11 @@ class RegisterController extends Controller
      * @var string
      */
     protected string $redirectTo = RouteServiceProvider::HOME;
+
+    /**
+     * @var User
+     */
+    private User $newUser;
 
     /**
      * Create a new controller instance.
@@ -74,39 +81,56 @@ class RegisterController extends Controller
      */
     protected function create(array $data): User
     {
-        // When a new user registers, let us auto add them as
-        // friends to admin and add to the base first group.
-
-        DB::beginTransaction();
-
         try {
-            $admin = User::whereEmail('admin@example.net')->first();
-            $group = Thread::group()->oldest()->first();
-            $private = Thread::factory()->create();
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'demo' => false,
-                'admin' => false,
-                'password' => Hash::make($data['password']),
-            ]);
-            Messenger::factory()->owner($user)->create();
-            Friend::factory()->providers($admin, $user)->create();
-            Friend::factory()->providers($user, $admin)->create();
-            Participant::factory()->for($group)->owner($user)->create();
-            Participant::factory()->for($private)->owner($admin)->create();
-            Participant::factory()->for($private)->owner($user)->create();
-            Message::factory()->for($private)->owner($admin)->create(['body' => 'Welcome to the messenger demo!']);
-
-            DB::commit();
-        } catch (Exception $e) {
+            DB::transaction(fn () => $this->makeUser($data));
+        } catch (Throwable $e) {
             report($e);
 
-            DB::rollBack();
-
-            abort(500);
+            throw new HttpException(500, 'Registration failed.');
         }
 
-        return $user;
+        return $this->newUser;
+    }
+
+    /**
+     * @param  array  $data
+     * @throws InvalidProviderException|MessengerComposerException|Throwable
+     */
+    private function makeUser(array $data): void
+    {
+        $this->newUser = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'demo' => false,
+            'admin' => false,
+            'password' => Hash::make($data['password']),
+        ]);
+
+        Messenger::factory()->owner($this->newUser)->create();
+
+        // Remove this method call if you do not want new
+        // users to be setup with the admin account.
+        $this->setupUserWithDemo();
+    }
+
+    /**
+     * @throws Throwable
+     * @throws InvalidProviderException|MessengerComposerException
+     */
+    private function setupUserWithDemo(): void
+    {
+        $admin = User::whereEmail('admin@example.net')->first();
+        $group = Thread::group()->oldest()->first();
+        Friend::factory()->providers($admin, $this->newUser)->create();
+        Friend::factory()->providers($this->newUser, $admin)->create();
+        Participant::factory()->for($group)->owner($this->newUser)->create([
+            'start_calls' => true,
+            'send_knocks' => true,
+            'add_participants' => true,
+            'manage_invites' => true,
+        ]);
+        MessengerComposer::to($this->newUser)
+            ->from($admin)
+            ->message('Welcome to the messenger demo!');
     }
 }
