@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use RTippin\Messenger\Contracts\MessengerProvider;
 
 class HomeController extends Controller
 {
@@ -15,7 +16,7 @@ class HomeController extends Controller
         $users = User::demo()
             ->get()
             ->shuffle()
-            ->filter(fn (User $user) => $user->getProviderOnlineStatus() === 0)
+            ->filter(fn (User $user) => $user->getProviderOnlineStatus() === MessengerProvider::OFFLINE)
             ->take(5);
 
         return new JsonResponse([
