@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -18,12 +19,16 @@ class ApiExplorerController extends Controller
      */
     public function getRoutes(Router $router): JsonResponse
     {
-        $routes = collect($router->getRoutes())
-            ->map(fn ($route) => $this->getRouteInformation($route))
-            ->filter(fn ($route) => $this->routeIsMessenger($route))
-            ->sortBy('name')
-            ->values()
-            ->toArray();
+        $routes = Cache::remember(
+            'messenger.routes',
+            now()->addMinutes(30),
+            fn () => collect($router->getRoutes())
+                ->map(fn ($route) => $this->getRouteInformation($route))
+                ->filter(fn ($route) => $this->routeIsMessenger($route))
+                ->sortBy('name')
+                ->values()
+                ->toArray()
+        );
 
         return new JsonResponse([
             'html' => view('explorer.partials.routes')->with('routes', $routes)->render(),
@@ -71,11 +76,15 @@ class ApiExplorerController extends Controller
      */
     public function getBroadcast(): JsonResponse
     {
-        $broadcasts = collect($this->getBroadcastArray())
-            ->map(fn ($contents, $broadcast) => $this->getBroadcastInformation($broadcast, $contents))
-            ->sortBy('class')
-            ->values()
-            ->toArray();
+        $broadcasts = Cache::remember(
+            'messenger.broadcast',
+            now()->addMinutes(30),
+            fn () => collect($this->getBroadcastArray())
+                ->map(fn ($contents, $broadcast) => $this->getBroadcastInformation($broadcast, $contents))
+                ->sortBy('class')
+                ->values()
+                ->toArray()
+        );
 
         return new JsonResponse([
             'html' => view('explorer.partials.broadcasts')->with('broadcasts', $broadcasts)->render(),

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Mail\Markdown;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\HtmlString;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -60,6 +61,10 @@ class DocumentationController extends Controller
             throw new NotFoundHttpException("The { $markdownFile } markdown file was not found. Please run the command 'php artisan download:docs' to download it.");
         }
 
-        return Markdown::parse(file_get_contents($file));
+        return Cache::remember(
+            $markdownFile,
+            now()->addMinutes(10),
+            fn () => Markdown::parse(file_get_contents($file))
+        );
     }
 }
