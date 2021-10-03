@@ -20,7 +20,7 @@
         "pusher/pusher-php-server": "^7.0",
         "rtippin/janus-client": "^0.2",
         "rtippin/messenger": "^1.8",
-        "rtippin/messenger-bots": "^1.2",
+        "rtippin/messenger-bots": "^1.3",
         "rtippin/messenger-ui": "^2.1"
     },
     "require-dev": {
