@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bd9b9077b100d13a0fc2df75eafebcb8",
+    "content-hash": "c8725848c3193655f2912b84e46e71f5",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -8926,23 +8926,23 @@
         },
         {
             "name": "rtippin/messenger-faker",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-faker.git",
-                "reference": "3a54feb2683eaab347a97cf8e915bd380ed670b2"
+                "reference": "ae93b1dc5f27436cdeba8bc371ce2cdfae49a8ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/3a54feb2683eaab347a97cf8e915bd380ed670b2",
-                "reference": "3a54feb2683eaab347a97cf8e915bd380ed670b2",
+                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/ae93b1dc5f27436cdeba8bc371ce2cdfae49a8ca",
+                "reference": "ae93b1dc5f27436cdeba8bc371ce2cdfae49a8ca",
                 "shasum": ""
             },
             "require": {
                 "fakerphp/faker": "^1.13",
                 "guzzlehttp/guzzle": "^7.3",
                 "php": "^7.4||^8.0",
-                "rtippin/messenger": "^1.7"
+                "rtippin/messenger": "^1.9"
             },
             "require-dev": {
                 "orchestra/testbench": "~5|~6",
@@ -8981,9 +8981,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-faker/issues",
-                "source": "https://github.com/RTippin/messenger-faker/tree/v1.2.0"
+                "source": "https://github.com/RTippin/messenger-faker/tree/v1.3.0"
             },
-            "time": "2021-09-15T06:23:45+00:00"
+            "time": "2021-10-07T05:57:25+00:00"
         },
         {
             "name": "sebastian/cli-parser",
