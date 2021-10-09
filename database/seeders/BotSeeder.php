@@ -14,6 +14,7 @@ use RTippin\MessengerBots\Bots\CommandsBot;
 use RTippin\MessengerBots\Bots\DadJokeBot;
 use RTippin\MessengerBots\Bots\GiphyBot;
 use RTippin\MessengerBots\Bots\InsultBot;
+use RTippin\MessengerBots\Bots\InviteBot;
 use RTippin\MessengerBots\Bots\JokeBot;
 use RTippin\MessengerBots\Bots\KanyeBot;
 use RTippin\MessengerBots\Bots\KnockBot;
@@ -108,6 +109,7 @@ class BotSeeder extends Seeder
             [QuotableBot::class, 'exact:caseless', '!quote|!inspire|!quotable'],
             [CoinTossBot::class, 'starts:with:caseless', '!toss|!headsOrTails|!coinToss'],
             [FakerBot::class, 'starts:with:caseless', '!faker'],
+            [InviteBot::class, 'exact:caseless', '!invite|!inv'],
         ];
     }
 }
