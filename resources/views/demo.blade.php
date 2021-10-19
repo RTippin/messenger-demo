@@ -2,7 +2,7 @@
     <div class="col-12 col-lg-8 offset-lg-2">
         <div class="card rounded shadow">
             <div class="card-header">
-                <span class="h4"><strong><i class="fas fa-users"></i> Available Demo Accounts</strong></span>
+                <span class="h4"><strong><i class="fas fa-users"></i> Demo Accounts</strong></span>
             </div>
             <div id="available_acc_elm" class="card-body p-2">
                 <div class="col-12 my-2 text-center"><div class="spinner-grow text-primary" role="status"></div></div>
