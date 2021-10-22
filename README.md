@@ -30,12 +30,12 @@
 
 #### Clone or download this repository
 ```bash
-$  git clone git@github.com:RTippin/messenger-demo.git
+git clone git@github.com:RTippin/messenger-demo.git
 ```
 
 #### Composer install
 ```bash
-$  composer install
+composer install
 ```
 
 #### Rename the `.env.example` to `.env` and configure your environment, including your pusher keys if you use pusher.
@@ -60,7 +60,7 @@ MESSENGER_SOCKET_CLUSTER="${PUSHER_APP_CLUSTER}"
 - This command will generate your `APP_KEY` for you, as well as migrating fresh and downloading our documentation files.
   - This will `WIPE` any data in your database as it runs `migrate:fresh` under the hood.
 ```bash
-$  php artisan demo:install
+php artisan demo:install
 ```
 
 ---
@@ -69,8 +69,8 @@ $  php artisan demo:install
 
 #### Run these commands in their own terminal inside your project folder
 ```bash
-$  php artisan serve
-$  php artisan queue:work --queue=messenger,messenger-bots
+php artisan serve
+php artisan queue:work --queue=messenger,messenger-bots
 ```
 
 ---
