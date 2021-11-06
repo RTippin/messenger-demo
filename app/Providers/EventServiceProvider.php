@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Listeners\BotHandlerError;
+use App\Listeners\BroadcastError;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use RTippin\Messenger\Events\BotActionFailedEvent;
+use RTippin\Messenger\Events\BroadcastFailedEvent;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -12,16 +16,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        //
+        BotActionFailedEvent::class => [
+            BotHandlerError::class,
+        ],
+        BroadcastFailedEvent::class => [
+            BroadcastError::class,
+        ],
     ];
-
-    /**
-     * Register any events for your application.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //
-    }
 }
