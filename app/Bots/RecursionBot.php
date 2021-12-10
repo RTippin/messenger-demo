@@ -2,7 +2,7 @@
 
 namespace App\Bots;
 
-use RTippin\Messenger\Actions\Bots\BotActionHandler;
+use RTippin\Messenger\Support\BotActionHandler;
 use Throwable;
 
 class RecursionBot extends BotActionHandler
