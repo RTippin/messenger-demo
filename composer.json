@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^7.4|^8.0|^8.1",
         "ext-json": "*",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -19,9 +19,9 @@
         "laravel/ui": "^3.1",
         "pusher/pusher-php-server": "^7.0",
         "rtippin/janus-client": "^0.2",
-        "rtippin/messenger": "^1.13",
-        "rtippin/messenger-bots": "^1.7",
-        "rtippin/messenger-ui": "^2.2"
+        "rtippin/messenger": "^1.14",
+        "rtippin/messenger-bots": "^1.8",
+        "rtippin/messenger-ui": "^2.3"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
@@ -31,7 +31,7 @@
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
         "phpunit/phpunit": "^9.3.3",
-        "rtippin/messenger-faker": "^1.5"
+        "rtippin/messenger-faker": "^1.6"
     },
     "config": {
         "optimize-autoloader": true,
