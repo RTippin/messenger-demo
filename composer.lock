@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0eda2c73d061358c8ce647ffb5ce30cc",
+    "content-hash": "46b58161604ccb6fb0e409e1db400ea4",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3558,16 +3558,16 @@
         },
         {
             "name": "rtippin/messenger",
-            "version": "v1.14.0",
+            "version": "v1.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "bd3bcc19a5b3e48f73258debd271e199ab62a7d2"
+                "reference": "bf0714cd68d97c1091b86f8f2bddceb7a1552b44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/bd3bcc19a5b3e48f73258debd271e199ab62a7d2",
-                "reference": "bd3bcc19a5b3e48f73258debd271e199ab62a7d2",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/bf0714cd68d97c1091b86f8f2bddceb7a1552b44",
+                "reference": "bf0714cd68d97c1091b86f8f2bddceb7a1552b44",
                 "shasum": ""
             },
             "require": {
@@ -3621,9 +3621,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v1.14.0"
+                "source": "https://github.com/RTippin/messenger/tree/v1.15.0"
             },
-            "time": "2021-12-10T05:05:31+00:00"
+            "time": "2021-12-12T05:05:13+00:00"
         },
         {
             "name": "rtippin/messenger-bots",
@@ -10126,16 +10126,16 @@
         },
         {
             "name": "seld/phar-utils",
-            "version": "1.1.2",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/phar-utils.git",
-                "reference": "749042a2315705d2dfbbc59234dd9ceb22bf3ff0"
+                "reference": "9f3452c93ff423469c0d56450431562ca423dcee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/phar-utils/zipball/749042a2315705d2dfbbc59234dd9ceb22bf3ff0",
-                "reference": "749042a2315705d2dfbbc59234dd9ceb22bf3ff0",
+                "url": "https://api.github.com/repos/Seldaek/phar-utils/zipball/9f3452c93ff423469c0d56450431562ca423dcee",
+                "reference": "9f3452c93ff423469c0d56450431562ca423dcee",
                 "shasum": ""
             },
             "require": {
@@ -10168,9 +10168,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/phar-utils/issues",
-                "source": "https://github.com/Seldaek/phar-utils/tree/1.1.2"
+                "source": "https://github.com/Seldaek/phar-utils/tree/1.2.0"
             },
-            "time": "2021-08-19T21:01:38+00:00"
+            "time": "2021-12-10T11:20:11+00:00"
         },
         {
             "name": "symfony/filesystem",
