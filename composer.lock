@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "46b58161604ccb6fb0e409e1db400ea4",
+    "content-hash": "ea74ecc10c5c937e72b3fa71f38f65a2",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1354,16 +1354,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.75.0",
+            "version": "v8.76.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "0bb91d3176357da232da69762a64b0e0a0988637"
+                "reference": "c67acfdc968f487b6235435080eef62a7e2ed055"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/0bb91d3176357da232da69762a64b0e0a0988637",
-                "reference": "0bb91d3176357da232da69762a64b0e0a0988637",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/c67acfdc968f487b6235435080eef62a7e2ed055",
+                "reference": "c67acfdc968f487b6235435080eef62a7e2ed055",
                 "shasum": ""
             },
             "require": {
@@ -1522,7 +1522,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-12-07T14:55:46+00:00"
+            "time": "2021-12-15T14:02:14+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -3497,23 +3497,23 @@
         },
         {
             "name": "rtippin/janus-client",
-            "version": "v0.2-alpha.2",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/janus-client.git",
-                "reference": "59d668545beae99d32d4d498aa9123ec9f489f0c"
+                "reference": "011f3bce45a0dfbf859ec7bac365bda7b863c0e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/janus-client/zipball/59d668545beae99d32d4d498aa9123ec9f489f0c",
-                "reference": "59d668545beae99d32d4d498aa9123ec9f489f0c",
+                "url": "https://api.github.com/repos/RTippin/janus-client/zipball/011f3bce45a0dfbf859ec7bac365bda7b863c0e5",
+                "reference": "011f3bce45a0dfbf859ec7bac365bda7b863c0e5",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "guzzlehttp/guzzle": "^7.3",
                 "illuminate/support": "^8.0",
-                "php": "^7.4||^8.0"
+                "php": "^7.4|^8.0|^8.1"
             },
             "require-dev": {
                 "orchestra/testbench": "~5|~6",
@@ -3552,22 +3552,22 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/janus-client/issues",
-                "source": "https://github.com/RTippin/janus-client/tree/v0.2-alpha.2"
+                "source": "https://github.com/RTippin/janus-client/tree/v1.0.0"
             },
-            "time": "2021-08-11T07:10:52+00:00"
+            "time": "2021-12-15T01:10:21+00:00"
         },
         {
             "name": "rtippin/messenger",
-            "version": "v1.15.0",
+            "version": "v1.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger.git",
-                "reference": "bf0714cd68d97c1091b86f8f2bddceb7a1552b44"
+                "reference": "8b2b4f7209dc688f984ff47d3642718842f154fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger/zipball/bf0714cd68d97c1091b86f8f2bddceb7a1552b44",
-                "reference": "bf0714cd68d97c1091b86f8f2bddceb7a1552b44",
+                "url": "https://api.github.com/repos/RTippin/messenger/zipball/8b2b4f7209dc688f984ff47d3642718842f154fb",
+                "reference": "8b2b4f7209dc688f984ff47d3642718842f154fb",
                 "shasum": ""
             },
             "require": {
@@ -3621,29 +3621,29 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger/issues",
-                "source": "https://github.com/RTippin/messenger/tree/v1.15.0"
+                "source": "https://github.com/RTippin/messenger/tree/v1.16.0"
             },
-            "time": "2021-12-12T05:05:13+00:00"
+            "time": "2021-12-16T12:05:14+00:00"
         },
         {
             "name": "rtippin/messenger-bots",
-            "version": "v1.8.0",
+            "version": "v1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-bots.git",
-                "reference": "3e6c7a98d98ed46038106d1aeff020cb58b9534e"
+                "reference": "60441e8a6591c759d59aa443a5e6b4e9066bd8e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-bots/zipball/3e6c7a98d98ed46038106d1aeff020cb58b9534e",
-                "reference": "3e6c7a98d98ed46038106d1aeff020cb58b9534e",
+                "url": "https://api.github.com/repos/RTippin/messenger-bots/zipball/60441e8a6591c759d59aa443a5e6b4e9066bd8e0",
+                "reference": "60441e8a6591c759d59aa443a5e6b4e9066bd8e0",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "guzzlehttp/guzzle": "^7.3",
                 "php": "^7.4|^8.0|^8.1",
-                "rtippin/messenger": "^1.14"
+                "rtippin/messenger": "^1.16"
             },
             "require-dev": {
                 "orchestra/testbench": "~5|~6",
@@ -3682,26 +3682,26 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-bots/issues",
-                "source": "https://github.com/RTippin/messenger-bots/tree/v1.8.0"
+                "source": "https://github.com/RTippin/messenger-bots/tree/v1.9.0"
             },
-            "time": "2021-12-10T05:45:55+00:00"
+            "time": "2021-12-16T12:18:38+00:00"
         },
         {
             "name": "rtippin/messenger-ui",
-            "version": "v2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-ui.git",
-                "reference": "76aabf08d0fd407f67b9ada50da51a72448aae50"
+                "reference": "7c5751d21bfb9add41e70b2237104ed2372670aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-ui/zipball/76aabf08d0fd407f67b9ada50da51a72448aae50",
-                "reference": "76aabf08d0fd407f67b9ada50da51a72448aae50",
+                "url": "https://api.github.com/repos/RTippin/messenger-ui/zipball/7c5751d21bfb9add41e70b2237104ed2372670aa",
+                "reference": "7c5751d21bfb9add41e70b2237104ed2372670aa",
                 "shasum": ""
             },
             "require": {
-                "rtippin/messenger": "^1.14"
+                "rtippin/messenger": "^1.16"
             },
             "type": "library",
             "extra": {
@@ -3735,9 +3735,9 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-ui/issues",
-                "source": "https://github.com/RTippin/messenger-ui/tree/v2.3.0"
+                "source": "https://github.com/RTippin/messenger-ui/tree/v2.4.0"
             },
-            "time": "2021-12-10T05:50:53+00:00"
+            "time": "2021-12-16T12:14:35+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -6061,16 +6061,16 @@
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "v5.4.0",
+            "version": "v5.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "d4394d044ed69a8f244f3445bcedf8a0d7fe2403"
+                "reference": "264dce589e7ce37a7ba99cb901eed8249fbec92f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/d4394d044ed69a8f244f3445bcedf8a0d7fe2403",
-                "reference": "d4394d044ed69a8f244f3445bcedf8a0d7fe2403",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/264dce589e7ce37a7ba99cb901eed8249fbec92f",
+                "reference": "264dce589e7ce37a7ba99cb901eed8249fbec92f",
                 "shasum": ""
             },
             "require": {
@@ -6108,11 +6108,13 @@
             "authors": [
                 {
                     "name": "Graham Campbell",
-                    "email": "hello@gjcampbell.co.uk"
+                    "email": "hello@gjcampbell.co.uk",
+                    "homepage": "https://github.com/GrahamCampbell"
                 },
                 {
                     "name": "Vance Lucas",
-                    "email": "vance@vancelucas.com"
+                    "email": "vance@vancelucas.com",
+                    "homepage": "https://github.com/vlucas"
                 }
             ],
             "description": "Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.",
@@ -6123,7 +6125,7 @@
             ],
             "support": {
                 "issues": "https://github.com/vlucas/phpdotenv/issues",
-                "source": "https://github.com/vlucas/phpdotenv/tree/v5.4.0"
+                "source": "https://github.com/vlucas/phpdotenv/tree/v5.4.1"
             },
             "funding": [
                 {
@@ -6135,7 +6137,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-10T01:08:39+00:00"
+            "time": "2021-12-12T23:22:04+00:00"
         },
         {
             "name": "voku/portable-ascii",
@@ -10297,5 +10299,8 @@
         "ext-json": "*"
     },
     "platform-dev": [],
+    "platform-overrides": {
+        "php": "7.4"
+    },
     "plugin-api-version": "2.0.0"
 }

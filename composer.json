@@ -18,10 +18,10 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.1",
         "pusher/pusher-php-server": "^7.0",
-        "rtippin/janus-client": "^0.2",
-        "rtippin/messenger": "^1.15",
-        "rtippin/messenger-bots": "^1.8",
-        "rtippin/messenger-ui": "^2.3"
+        "rtippin/janus-client": "^1.0",
+        "rtippin/messenger": "^1.16",
+        "rtippin/messenger-bots": "^1.9",
+        "rtippin/messenger-ui": "^2.4"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
@@ -36,6 +36,9 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
+        "platform": {
+            "php": "7.4"
+        },
         "sort-packages": true
     },
     "extra": {
