@@ -12,6 +12,7 @@ use RTippin\MessengerBots\Bots\ChuckNorrisBot;
 use RTippin\MessengerBots\Bots\CoinTossBot;
 use RTippin\MessengerBots\Bots\CommandsBot;
 use RTippin\MessengerBots\Bots\DadJokeBot;
+use RTippin\MessengerBots\Bots\DocumentFinderBot;
 use RTippin\MessengerBots\Bots\GiphyBot;
 use RTippin\MessengerBots\Bots\InsultBot;
 use RTippin\MessengerBots\Bots\InviteBot;
@@ -87,6 +88,7 @@ class BotSeeder extends Seeder
             [ChuckNorrisBot::class, 'exact:caseless', '!chuck'],
             [CommandsBot::class, 'exact:caseless', '!commands|!c'],
             [DadJokeBot::class, 'contains:caseless', '!dadjoke|daddy|dad'],
+            [DocumentFinderBot::class, 'starts:with:caseless', '!doc|!document'],
             [GiphyBot::class, 'starts:with:caseless', '!gif|!giphy'],
             [InsultBot::class, 'contains:any:caseless', '!insult|fuck|asshole|bitch'],
             [JokeBot::class, 'exact:caseless', '!joke'],
