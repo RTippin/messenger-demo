@@ -5,8 +5,10 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use RTippin\Messenger\Models\Participant;
 use RTippin\Messenger\Models\Thread;
+use Throwable;
 
 class ThreadsTableSeeder extends Seeder
 {
@@ -14,14 +16,18 @@ class ThreadsTableSeeder extends Seeder
      * Run the database seeds.
      *
      * @return void
+     *
+     * @throws Throwable
      */
     public function run(): void
     {
-        $users = User::all();
+        DB::transaction(function () {
+            $users = User::all();
 
-        $this->makePrivates($users);
+            $this->makePrivates($users);
 
-        $this->makeGroupThread($users);
+            $this->makeGroupThread($users);
+        });
     }
 
     /**

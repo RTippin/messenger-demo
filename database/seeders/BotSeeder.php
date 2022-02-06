@@ -5,12 +5,14 @@ namespace Database\Seeders;
 use App\Bots\RecursionBot;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use RTippin\Messenger\Actions\Bots\InstallPackagedBot;
 use RTippin\Messenger\Facades\Messenger;
 use RTippin\Messenger\MessengerBots;
 use RTippin\Messenger\Models\Bot;
 use RTippin\Messenger\Models\BotAction;
 use RTippin\Messenger\Models\Thread;
+use RTippin\MessengerBots\Bots\ReactionBombBot;
 use RTippin\MessengerBots\Bots\ReplyBot;
 use RTippin\MessengerBots\Packages\GamesPackage;
 use RTippin\MessengerBots\Packages\JokesterPackage;
@@ -29,14 +31,16 @@ class BotSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = User::where('email', '=', DatabaseSeeder::Admin['email'])->first();
-        $group = Thread::group()->first();
+        DB::transaction(function () {
+            $admin = User::where('email', '=', DatabaseSeeder::Admin['email'])->first();
+            $group = Thread::group()->first();
 
-        Messenger::setProvider($admin);
+            Messenger::setProvider($admin);
 
-        $this->installMessengerBot($group, $admin);
+            $this->installMessengerBot($group, $admin);
 
-        $this->installPackagedBots($group);
+            $this->installPackagedBots($group);
+        });
     }
 
     /**
@@ -108,12 +112,16 @@ class BotSeeder extends Seeder
                 'Why hello there!',
             ],
         ];
+        $bomb = [
+            'reactions' => ['🤖', '👋'],
+        ];
 
         return [
             [ReplyBot::class, MessengerBots::MATCH_CONTAINS_CASELESS, 'help|git|package|error', $about, 300],
-            [ReplyBot::class, MessengerBots::MATCH_CONTAINS_CASELESS, 'hi|hello|test|testing|hallo', $hello, 15],
+            [ReplyBot::class, MessengerBots::MATCH_CONTAINS_CASELESS, 'hi|hello|test|testing|hallo', $hello, 45],
             [RecursionBot::class, MessengerBots::MATCH_EXACT_CASELESS, '!recursion'],
             [FakerBot::class, MessengerBots::MATCH_STARTS_WITH_CASELESS, '!faker'],
+            [ReactionBombBot::class, MessengerBots::MATCH_CONTAINS_CASELESS, 'hi|hello|test|testing|hallo', $bomb, 45],
         ];
     }
 }
