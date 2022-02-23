@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
-use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use RTippin\Messenger\Contracts\MessengerProvider;
 use RTippin\Messenger\Traits\Messageable;
 use RTippin\Messenger\Traits\Search;
+use RTippin\Messenger\Traits\Uuids;
 
 /**
- * App\Models\User.
- *
  * @property string $id
  * @property string $name
  * @property string $email
@@ -40,10 +38,10 @@ use RTippin\Messenger\Traits\Search;
  */
 class User extends Authenticatable implements MessengerProvider
 {
-    use Uuids;
-    use Messageable; //comes with messenger package
-    use Search; //comes with messenger package
-    use HasFactory;
+    use HasFactory,
+        Messageable,
+        Search,
+        Uuids;
 
     /**
      * The attributes that are mass assignable.
@@ -64,18 +62,6 @@ class User extends Authenticatable implements MessengerProvider
     ];
 
     /**
-     * @var bool
-     */
-    public $incrementing = false;
-
-    /**
-     * @var string
-     */
-    public $keyType = 'string';
-
-    /**
-     * Get the provider settings and alias override, if set.
-     *
      * @return array
      */
     public static function getProviderSettings(): array
@@ -93,8 +79,6 @@ class User extends Authenticatable implements MessengerProvider
     }
 
     /**
-     * The column name your providers avatar is stored in the database as.
-     *
      * @return string
      */
     public function getProviderAvatarColumn(): string
@@ -103,8 +87,6 @@ class User extends Authenticatable implements MessengerProvider
     }
 
     /**
-     * Scope a query for only demo users.
-     *
      * @param  Builder  $query
      * @return Builder
      */
