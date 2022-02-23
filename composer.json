@@ -8,37 +8,33 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.4|^8.0|^8.1",
+        "php": "^8.0.2|^8.1",
         "ext-json": "*",
-        "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "jenssegers/agent": "^2.6",
-        "laravel/framework": "^8.42",
+        "laravel/framework": "^9.0",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.1",
         "pusher/pusher-php-server": "^7.0",
-        "rtippin/janus-client": "^1.0",
-        "rtippin/messenger": "^1.19",
-        "rtippin/messenger-bots": "^1.12",
+        "rtippin/janus-client": "^1.1",
+        "rtippin/messenger": "^1.20",
+        "rtippin/messenger-bots": "^1.13",
         "rtippin/messenger-ui": "^2.6"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
         "beyondcode/laravel-dump-server": "^1.6",
-        "facade/ignition": "^2.5",
+        "spatie/laravel-ignition": "^1.0",
         "fakerphp/faker": "^1.9.1",
         "mockery/mockery": "^1.4.2",
-        "nunomaduro/collision": "^5.0",
+        "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.3.3",
-        "rtippin/messenger-faker": "^1.6"
+        "rtippin/messenger-faker": "^1.7"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "platform": {
-            "php": "7.4"
-        },
         "sort-packages": true
     },
     "extra": {
