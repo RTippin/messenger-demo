@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Bots\RecursionBot;
 use App\Brokers\JanusBroker;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 use RTippin\Messenger\Facades\Messenger;
 use RTippin\Messenger\Facades\MessengerBots;
@@ -25,8 +26,12 @@ class MessengerServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
+        Relation::morphMap([
+            'users' => User::class,
+        ]);
+
         Messenger::registerProviders([
             User::class,
         ]);
