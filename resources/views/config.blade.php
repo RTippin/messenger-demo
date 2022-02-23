@@ -13,13 +13,13 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-md-6">
-                                <h4>&bull; PHP 7.4</h4>
+                                <h4>&bull; PHP {{ phpversion() }}</h4>
                             </div>
                             <div class="col-12 col-md-6">
                                 <h4>&bull; Ubuntu 20</h4>
                             </div>
                             <div class="col-12 col-md-6">
-                                <h4>&bull; Laravel 8.x</h4>
+                                <h4>&bull; Laravel 9.x</h4>
                             </div>
                             <div class="col-12 col-md-6">
                                 <h4>&bull; MySQL 8</h4>

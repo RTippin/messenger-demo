@@ -13,8 +13,8 @@
 ## Checkout the [LIVE DEMO](https://tippindev.com)
 
 ### Prerequisites
-- PHP >= 7.4
-- Laravel >= 8.42
+- PHP >= 8.0.2
+- Laravel >= 9.x
 - MySQL >= 8.x
 - [PHPREDIS](https://github.com/phpredis/phpredis/blob/develop/INSTALL.markdown) if using `redis` for drivers, which our default `.env.example` has set.
 
