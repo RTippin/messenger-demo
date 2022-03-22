@@ -30,7 +30,7 @@
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.3.3",
-        "rtippin/messenger-faker": "^1.7"
+        "rtippin/messenger-faker": "^1.8"
     },
     "config": {
         "optimize-autoloader": true,
