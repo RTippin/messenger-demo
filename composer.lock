@@ -8190,27 +8190,27 @@
         },
         {
             "name": "rtippin/messenger-faker",
-            "version": "v1.8.0",
+            "version": "v1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-faker.git",
-                "reference": "0e3784bf38479e8e59b1cf1e147c24a7c0f28b9c"
+                "reference": "b02dea9e020e10987d9c5ba7c77c486cab4fe359"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/0e3784bf38479e8e59b1cf1e147c24a7c0f28b9c",
-                "reference": "0e3784bf38479e8e59b1cf1e147c24a7c0f28b9c",
+                "url": "https://api.github.com/repos/RTippin/messenger-faker/zipball/b02dea9e020e10987d9c5ba7c77c486cab4fe359",
+                "reference": "b02dea9e020e10987d9c5ba7c77c486cab4fe359",
                 "shasum": ""
             },
             "require": {
                 "fakerphp/faker": "^1.13",
                 "guzzlehttp/guzzle": "^7.3",
-                "php": "^8.0.2|^8.1",
+                "php": "^8.0.2|^8.1|^8.2",
                 "rtippin/messenger": "^1.20"
             },
             "require-dev": {
-                "orchestra/testbench": "~7",
-                "phpunit/phpunit": "~9.0"
+                "orchestra/testbench": "~7|^8.0",
+                "phpunit/phpunit": "~9.0|^10.0"
             },
             "type": "library",
             "extra": {
@@ -8245,7 +8245,7 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-faker/issues",
-                "source": "https://github.com/RTippin/messenger-faker/tree/v1.8.0"
+                "source": "https://github.com/RTippin/messenger-faker/tree/v1.9.0"
             },
             "funding": [
                 {
@@ -8253,7 +8253,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-02-23T06:18:39+00:00"
+            "time": "2023-02-26T01:39:29+00:00"
         },
         {
             "name": "sebastian/cli-parser",
