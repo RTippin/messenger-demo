@@ -8,24 +8,23 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.0.2|^8.1",
+        "php": "^8.1|^8.2",
         "ext-json": "*",
-        "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "jenssegers/agent": "^2.6",
-        "laravel/framework": "^9.0",
+        "laravel/framework": "^10.0",
         "laravel/tinker": "^2.5",
-        "laravel/ui": "^3.1",
+        "laravel/ui": "^4.0",
         "pusher/pusher-php-server": "7.0.2",
-        "rtippin/janus-client": "^1.1",
-        "rtippin/messenger": "^1.21",
-        "rtippin/messenger-bots": "^1.13",
+        "rtippin/janus-client": "^1.2",
+        "rtippin/messenger": "^1.22",
+        "rtippin/messenger-bots": "^1.14",
         "rtippin/messenger-ui": "^2.6"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
         "beyondcode/laravel-dump-server": "^1.6",
-        "spatie/laravel-ignition": "^1.0",
+        "spatie/laravel-ignition": "^2.0",
         "fakerphp/faker": "^1.9.1",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^6.1",
@@ -49,7 +48,7 @@
             "Database\\Seeders\\": "database/seeders/"
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "scripts": {
         "post-autoload-dump": [
