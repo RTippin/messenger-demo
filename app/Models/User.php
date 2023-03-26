@@ -34,6 +34,7 @@ use RTippin\Messenger\Traits\Uuids;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @method static Builder|User demo()
+ *
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements MessengerProvider
