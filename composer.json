@@ -18,8 +18,8 @@
         "pusher/pusher-php-server": "7.0.2",
         "rtippin/janus-client": "^1.2",
         "rtippin/messenger": "^1.22",
-        "rtippin/messenger-bots": "^1.14",
-        "rtippin/messenger-ui": "^2.6"
+        "rtippin/messenger-bots": "^1.14.1",
+        "rtippin/messenger-ui": "^2.7"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
@@ -29,7 +29,7 @@
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.3.3",
-        "rtippin/messenger-faker": "^1.8"
+        "rtippin/messenger-faker": "^1.9"
     },
     "config": {
         "optimize-autoloader": true,
