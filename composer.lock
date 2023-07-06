@@ -3854,16 +3854,16 @@
         },
         {
             "name": "rtippin/messenger-ui",
-            "version": "v2.7.1",
+            "version": "v2.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RTippin/messenger-ui.git",
-                "reference": "3e519da864f23941c48271f5534d9b97b744594c"
+                "reference": "aacfd10fce3b51cfb2b1dde1d1ee668603acbedd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RTippin/messenger-ui/zipball/3e519da864f23941c48271f5534d9b97b744594c",
-                "reference": "3e519da864f23941c48271f5534d9b97b744594c",
+                "url": "https://api.github.com/repos/RTippin/messenger-ui/zipball/aacfd10fce3b51cfb2b1dde1d1ee668603acbedd",
+                "reference": "aacfd10fce3b51cfb2b1dde1d1ee668603acbedd",
                 "shasum": ""
             },
             "require": {
@@ -3901,7 +3901,7 @@
             ],
             "support": {
                 "issues": "https://github.com/RTippin/messenger-ui/issues",
-                "source": "https://github.com/RTippin/messenger-ui/tree/v2.7.1"
+                "source": "https://github.com/RTippin/messenger-ui/tree/v2.7.2"
             },
             "funding": [
                 {
@@ -3909,7 +3909,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-07-04T19:48:45+00:00"
+            "time": "2023-07-06T01:02:21+00:00"
         },
         {
             "name": "symfony/console",
