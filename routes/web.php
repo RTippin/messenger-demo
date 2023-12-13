@@ -38,3 +38,4 @@ Route::prefix('docs')->name('docs.')->group(function () {
     Route::get('/', [DocumentationController::class, 'index'])->name('index');
     Route::get('/{page}', [DocumentationController::class, 'render'])->name('render');
 });
+
