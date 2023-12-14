@@ -39,3 +39,5 @@ Route::prefix('docs')->name('docs.')->group(function () {
     Route::get('/{page}', [DocumentationController::class, 'render'])->name('render');
 });
 
+
+
