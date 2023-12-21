@@ -133,6 +133,6 @@ class RegisterController extends Controller
         ]);
         MessengerComposer::to($this->newUser)
             ->from($admin)
-            ->message('Welcome to the messenger demo!');
+            ->message('Welcome to Praise Messenger App!');
     }
 }

@@ -117,7 +117,7 @@ return [
     |
     */
 
-    'redis' => [
+    'Redis' => [
 
         'client' => env('REDIS_CLIENT', 'phpredis'),
 
