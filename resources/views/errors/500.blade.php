@@ -2,6 +2,9 @@
 @section('title'){{ config('app.name') }} - Error @endsection
 @section('content')
 <div class="container mt-5">
+    
+    {{-- {{ dd(4567) }} --}}
+
     <div class="jumbotron bg-dark text-light pb-1">
         <div class="float-right d-none d-sm-block">
             <img id="FSlog" height="95" src="{{asset('vendor/messenger/images/messenger.png')}}">
