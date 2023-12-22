@@ -75,7 +75,7 @@ return [
 
         'redis' => [
             'driver' => 'redis',
-            'connection' => 'cache',
+            'connection' => 'cache',    #This is where the config cachec error is coming from
             'lock_connection' => 'default',
         ],
 
